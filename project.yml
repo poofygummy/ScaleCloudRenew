@@ -1,0 +1,115 @@
+# SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+name: ScaleCloudRenew
+options:
+  xcodeVersion: "15.4"
+  minimumXcodeVersion: "15.4"
+settings:
+  objectVersion: 56
+  base:
+    DEFINES_MODULE: "YES"
+    PRODUCT_NAME: ScaleCloudRenew
+    PRODUCT_MODULE_NAME: ScaleCloudRenew
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "14.0"
+targets:
+  ScaleCloudRenew:
+    type: framework
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Resources
+        type: folder
+        buildPhase: resources
+      - path: Sources
+        excludes:
+          - "**/Info.plist"
+          - "**/Makefile.am"
+          - "**/Makefile.in"
+          - "**/.gitignore"
+          - "**/.gitkeep"
+          - "**/README*"
+          - "**/LICENSE*"
+          - "**/*.md"
+          - "**/autogen.sh"
+          - "**/configure*"
+          - "**/config.h.in"
+          - "**/*.pc.in"
+          - "**/*.dict"
+          - "AltSign/ldid/libplist/src/plist.h"
+          - "AltSign/ldid/libplist/include"
+          - "AltSign/ldid/libplist/test"
+          - "AltStoreCore/Components/Keychain.swift"
+          - "RustBridge/lib"
+          - "AltSign/AppleAPI/ALTAppleAPI_Private.h"
+          - "AltSign/AppleAPI/ALTAppleAPI.h"
+          - "AltSign/AppleAPI/ALTAppleAPISession.h"
+          - "AltSign/Signing/ALTSigner.h"
+          - "AltSign/Model/ALTApplication.h"
+          - "AltSign/Model/AppleAPI/ALTAccount.h"
+          - "AltSign/Model/AppleAPI/ALTAnisetteData.h"
+          - "AltSign/Model/AppleAPI/ALTTeam.h"
+          - "AltSign/Model/AppleAPI/ALTDevice.h"
+          - "AltSign/Model/AppleAPI/ALTCertificate.h"
+          - "AltSign/Model/AppleAPI/ALTAppID.h"
+          - "AltSign/Model/AppleAPI/ALTAppGroup.h"
+          - "AltSign/Model/AppleAPI/ALTProvisioningProfile.h"
+          - "AltSign/Model/AppleAPI/ALTModel+Internal.h"
+          - "AltSign/Model/AppleAPI/ALTCertificateRequest.h"
+          - "AltSign/Categories/NSError+ALTErrors.h"
+          - "AltSign/Categories/NSFileManager+Zip.h"
+          - "AltSign/Categories/NSCharacterSet+ASCII.h"
+          - "AltSign/Capabilities/ALTCapabilities.h"
+    settings:
+      base:
+        SKIP_INSTALL: "NO"
+        BUILD_LIBRARY_FOR_DISTRIBUTION: "YES"
+        PRODUCT_NAME: ScaleCloudRenew
+        PRODUCT_MODULE_NAME: ScaleCloudRenew
+        SWIFT_VERSION: "5.0"
+        DEFINES_MODULE: "YES"
+        MODULEMAP_FILE: "$(SRCROOT)/Sources/module.modulemap"
+        FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SRCROOT)/../ScaleCloudGo/prebuilt $(SRCROOT)/../ScaleCloudKit/prebuilt $(SRCROOT)/Sources/RustBridge/lib"
+        INTENTS_CODEGEN_LANGUAGE: "Swift"
+        INTENTS_CODEGEN_VISIBILITY: "public"
+        GENERATE_INFOPLIST_FILE: "YES"
+        HEADER_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/AltSign/include $(SRCROOT)/Sources/AltSign $(SRCROOT)/Sources/AltSign/ldid $(SRCROOT)/Sources/AltSign/corecrypto/include $(SRCROOT)/Sources/AltSign/AppleAPI $(SRCROOT)/Sources/AltSign/Model $(SRCROOT)/Sources/AltSign/Model/AppleAPI $(SRCROOT)/Sources/AltSign/Categories $(SRCROOT)/Sources/AltSign/Capabilities $(SRCROOT)/Sources/AltSign/Signing $(SRCROOT)/Sources/Roxas $(SRCROOT)/Sources/AltStoreCore"
+        OTHER_CPLUSPLUSFLAGS: "$(inherited) -w"
+        OTHER_SWIFT_FLAGS: "$(inherited) -suppress-warnings -Xcc -fpermissive"
+        OTHER_CFLAGS: "$(inherited) -Wno-error=incompatible-pointer-types"
+        GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) unix=1 MARKETPLACE=1"
+    dependencies:
+      - framework: ../ScaleCloudGo/prebuilt/ScaleCloudGo.xcframework
+        embed: false
+      - framework: ../ScaleCloudKit/prebuilt/ScaleCloudKit.framework
+        embed: false
+      - framework: Sources/RustBridge/lib/RustBridge.xcframework
+        embed: false
+      - package: Starscream
+      - package: KeychainAccess
+      - package: ZIPFoundation
+      - package: Alamofire
+      - package: SwiftyJSON
+      - package: SwiftyXMLParser
+      - sdk: UIKit.framework
+packages:
+  Starscream:
+    url: https://github.com/daltoniam/Starscream
+    from: 4.0.0
+  KeychainAccess:
+    url: https://github.com/kishikawakatsumi/KeychainAccess
+    from: 4.2.0
+  ZIPFoundation:
+    url: https://github.com/weichsel/ZIPFoundation
+    from: 0.9.0
+  Alamofire:
+    url: https://github.com/Alamofire/Alamofire
+    from: 5.6.0
+  SwiftyJSON:
+    url: https://github.com/SwiftyJSON/SwiftyJSON
+    from: 5.0.0
+  SwiftyXMLParser:
+    url: https://github.com/yahoojapan/SwiftyXMLParser
+    from: 5.6.0
+

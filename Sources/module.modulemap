@@ -1,0 +1,5 @@
+framework module ScaleCloudRenew {
+    umbrella header "ScaleCloudRenew.h"
+    export *
+    module * { export * }
+}
