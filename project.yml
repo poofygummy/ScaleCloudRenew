@@ -37,30 +37,8 @@ targets:
           - "**/config.h.in"
           - "**/*.pc.in"
           - "**/*.dict"
-          - "AltSign/ldid/libplist/src/plist.h"
-          - "AltSign/ldid/libplist/include"
-          - "AltSign/ldid/libplist/test"
           - "AltStoreCore/Components/Keychain.swift"
           - "RustBridge/lib"
-          - "AltSign/AppleAPI/ALTAppleAPI_Private.h"
-          - "AltSign/AppleAPI/ALTAppleAPI.h"
-          - "AltSign/AppleAPI/ALTAppleAPISession.h"
-          - "AltSign/Signing/ALTSigner.h"
-          - "AltSign/Model/ALTApplication.h"
-          - "AltSign/Model/AppleAPI/ALTAccount.h"
-          - "AltSign/Model/AppleAPI/ALTAnisetteData.h"
-          - "AltSign/Model/AppleAPI/ALTTeam.h"
-          - "AltSign/Model/AppleAPI/ALTDevice.h"
-          - "AltSign/Model/AppleAPI/ALTCertificate.h"
-          - "AltSign/Model/AppleAPI/ALTAppID.h"
-          - "AltSign/Model/AppleAPI/ALTAppGroup.h"
-          - "AltSign/Model/AppleAPI/ALTProvisioningProfile.h"
-          - "AltSign/Model/AppleAPI/ALTModel+Internal.h"
-          - "AltSign/Model/AppleAPI/ALTCertificateRequest.h"
-          - "AltSign/Categories/NSError+ALTErrors.h"
-          - "AltSign/Categories/NSFileManager+Zip.h"
-          - "AltSign/Categories/NSCharacterSet+ASCII.h"
-          - "AltSign/Capabilities/ALTCapabilities.h"
     settings:
       base:
         SKIP_INSTALL: "NO"
@@ -70,16 +48,18 @@ targets:
         SWIFT_VERSION: "5.0"
         DEFINES_MODULE: "YES"
         MODULEMAP_FILE: "$(SRCROOT)/Sources/module.modulemap"
-        FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SRCROOT)/../ScaleCloudGo/prebuilt $(SRCROOT)/../ScaleCloudKit/prebuilt $(SRCROOT)/Sources/RustBridge/lib"
+        FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SRCROOT)/../ScaleCloudGo/prebuilt $(SRCROOT)/../ScaleCloudKit/prebuilt $(SRCROOT)/../ScaleCloudSign/prebuilt $(SRCROOT)/Sources/RustBridge/lib"
         INTENTS_CODEGEN_LANGUAGE: "Swift"
         INTENTS_CODEGEN_VISIBILITY: "public"
         GENERATE_INFOPLIST_FILE: "YES"
-        HEADER_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/AltSign/include $(SRCROOT)/Sources/AltSign $(SRCROOT)/Sources/AltSign/ldid $(SRCROOT)/Sources/AltSign/corecrypto/include $(SRCROOT)/Sources/AltSign/AppleAPI $(SRCROOT)/Sources/AltSign/Model $(SRCROOT)/Sources/AltSign/Model/AppleAPI $(SRCROOT)/Sources/AltSign/Categories $(SRCROOT)/Sources/AltSign/Capabilities $(SRCROOT)/Sources/AltSign/Signing $(SRCROOT)/Sources/Roxas $(SRCROOT)/Sources/AltStoreCore"
+        HEADER_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/Roxas $(SRCROOT)/Sources/AltStoreCore"
         OTHER_CPLUSPLUSFLAGS: "$(inherited) -w"
         OTHER_SWIFT_FLAGS: "$(inherited) -suppress-warnings -Xcc -fpermissive"
         OTHER_CFLAGS: "$(inherited) -Wno-error=incompatible-pointer-types"
         GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) unix=1 MARKETPLACE=1"
     dependencies:
+      - framework: ../ScaleCloudSign/prebuilt/AltSign.framework
+        embed: false
       - framework: ../ScaleCloudGo/prebuilt/ScaleCloudGo.xcframework
         embed: false
       - framework: ../ScaleCloudKit/prebuilt/ScaleCloudKit.framework

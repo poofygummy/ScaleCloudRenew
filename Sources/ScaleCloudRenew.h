@@ -81,28 +81,4 @@
 #import "NSError+ALTServerError.h"
 #import "CFNotificationName+AltStore.h"
 
-// AltSign - Apple API
-#import "ALTAppleAPI.h"
-#import "ALTAppleAPISession.h"
-
-// AltSign - Signing
-#import "ALTSigner.h"
-
-// AltSign - Model
-#import "ALTApplication.h"
-#import "ALTAccount.h"
-#import "ALTAnisetteData.h"
-#import "ALTTeam.h"
-#import "ALTDevice.h"
-#import "ALTCertificate.h"
-#import "ALTAppID.h"
-#import "ALTAppGroup.h"
-#import "ALTProvisioningProfile.h"
-
-// AltSign - Categories
-#import "NSError+ALTErrors.h"
-#import "NSFileManager+Zip.h"
-#import "NSCharacterSet+ASCII.h"
-
-// AltSign - Capabilities
-#import "ALTCapabilities.h"
+// AltSign headers are provided by AltSign.framework (ScaleCloudSign prebuilt)
