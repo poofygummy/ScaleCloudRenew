@@ -168,10 +168,15 @@ public class Keychain
     /// - Throws: Certificate parsing errors
     public func updateCertificateExpiry(from certificateData: Data) throws
     {
-        let certificate = try ALTCertificate(p12Data: certificateData, password: signingCertificatePassword ?? "")
+        // Parse expiry directly from DER data using SecCertificate (ALTCertificate has no expirationDate)
+        guard let secCert = SecCertificateCreateWithData(nil, certificateData as CFData),
+              let expirationDate = (SecCertificateCopyValues(secCert, [kSecOIDX509V1ValidityNotAfter] as CFArray, nil) as? [String: Any])
+                .flatMap({ $0[kSecOIDX509V1ValidityNotAfter as String] as? [String: Any] })
+                .flatMap({ $0[kSecPropertyKeyValue as String] as? Date })
+        else { return }
         
         // Store expiry date in UserDefaults for BGTask scheduling (Phase 4 integration)
-        UserDefaults.standard.set(certificate.expirationDate, forKey: "com.scalecloud.cert.expiry")
+        UserDefaults.standard.set(expirationDate, forKey: "com.scalecloud.cert.expiry")
     }
     
     // MARK: - Logout
