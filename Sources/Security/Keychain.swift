@@ -161,24 +161,6 @@ public class Keychain
         return true
     }
     
-    // MARK: - Certificate Expiry Management
-    
-    /// Parse certificate expiry from DER data and update UserDefaults
-    /// - Parameter certificateData: DER-encoded X.509 certificate
-    /// - Throws: Certificate parsing errors
-    public func updateCertificateExpiry(from certificateData: Data) throws
-    {
-        // Parse expiry directly from DER data using SecCertificate (ALTCertificate has no expirationDate)
-        guard let secCert = SecCertificateCreateWithData(nil, certificateData as CFData),
-              let expirationDate = (SecCertificateCopyValues(secCert, [kSecOIDX509V1ValidityNotAfter] as CFArray, nil) as? [String: Any])
-                .flatMap({ $0[kSecOIDX509V1ValidityNotAfter as String] as? [String: Any] })
-                .flatMap({ $0[kSecPropertyKeyValue as String] as? Date })
-        else { return }
-        
-        // Store expiry date in UserDefaults for BGTask scheduling (Phase 4 integration)
-        UserDefaults.standard.set(expirationDate, forKey: "com.scalecloud.cert.expiry")
-    }
-    
     // MARK: - Logout
     
     /// Clear all credentials and cached session objects
@@ -206,7 +188,7 @@ public class Keychain
         self.session = nil
         self.team = nil
         
-        // Clear UserDefaults expiry
+        // Clear certificate expiry
         UserDefaults.standard.removeObject(forKey: "com.scalecloud.cert.expiry")
         
         // Clear all extension provisioning profiles

@@ -87,17 +87,14 @@ final class BackgroundRefreshAppsOperation: ResultOperation<[String: Result<Inst
             }
             
             if !failed {
-                // Extract certificate expiry from Keychain
-                var expiryDate: Date?
-                if let certData = Keychain.shared.signingCertificate {
-                    do {
-                        try Keychain.shared.updateCertificateExpiry(from: certData)
-                        expiryDate = UserDefaults.standard.object(forKey: "com.scalecloud.cert.expiry") as? Date
-                        os_log("Certificate expires: %{public}@", log: log, type: .info, expiryDate?.description ?? "unknown")
-                    } catch {
-                        os_log("Failed to parse certificate expiry: %{public}@", log: log, type: .error, error.localizedDescription)
-                    }
-                }
+                // Get expiry from the refreshed InstalledApp objects (set from ALTProvisioningProfile.expirationDate)
+                let expiryDate = results.values.compactMap { result -> Date? in
+                    guard case .success(let app) = result else { return nil }
+                    return app.expirationDate
+                }.min()
+                // Persist to UserDefaults so SetupCompleteViewController and BGTask scheduling can read it across launches
+                UserDefaults.standard.set(expiryDate, forKey: "com.scalecloud.cert.expiry")
+                os_log("Certificate expires: %{public}@", log: log, type: .info, expiryDate?.description ?? "unknown")
                 os_log("Refresh completed successfully", log: log, type: .info)
                 refreshCompletionHandler?(true, expiryDate)
             } else {
