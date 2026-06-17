@@ -58,7 +58,7 @@ targets:
         OTHER_CFLAGS: "$(inherited) -Wno-error=incompatible-pointer-types"
         GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) unix=1 MARKETPLACE=1"
     dependencies:
-      - framework: ../ScaleCloudSign/prebuilt/AltSign.framework
+      - framework: ../ScaleCloudSign/prebuilt/ScaleCloudSign.framework
         embed: false
       - framework: ../ScaleCloudGo/prebuilt/ScaleCloudGo.xcframework
         embed: false

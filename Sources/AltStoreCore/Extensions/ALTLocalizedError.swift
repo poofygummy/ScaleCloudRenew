@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ScaleCloudSign
 
 public let ALTLocalizedTitleErrorKey = "ALTLocalizedTitle"
 public let ALTLocalizedDescriptionKey = "ALTLocalizedDescription"

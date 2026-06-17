@@ -10,13 +10,13 @@
 
 #if ALTJIT
 #import "AltJIT-Swift.h"
-@import AltSign;
+@import ScaleCloudSign;
 #elif TARGET_OS_OSX
 #import "AltServer-Swift.h"
-@import AltSign;
+@import ScaleCloudSign;
 #elif !TARGET_OS_OSX
 #import "ScaleCloudRenew-Swift.h"
-@import AltSign;
+@import ScaleCloudSign;
 #endif
 
 NSErrorDomain const AltServerErrorDomain = @"AltServer.ServerError";

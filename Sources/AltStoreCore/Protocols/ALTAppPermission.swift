@@ -7,6 +7,7 @@
 //
 
 import RegexBuilder
+import ScaleCloudSign
 
 
 extension ALTAppPermissionType

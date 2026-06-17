@@ -10,6 +10,7 @@ import Foundation
 import CommonCrypto
 import Starscream
 import ScaleCloudKit
+import ScaleCloudSign
 
 class ANISETTE_VERBOSITY: Operation {} // dummy tag iface
 

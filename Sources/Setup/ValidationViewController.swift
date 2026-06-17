@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ScaleCloudSign
 
 class ValidationViewController: SetupViewController {
     
@@ -85,7 +86,7 @@ class ValidationViewController: SetupViewController {
             Thread.sleep(forTimeInterval: 2.0)
             
             // For Phase 6, we'll accept any credentials as valid
-            // Phase 9 will implement actual validation via AltSign authentication
+            // Phase 9 will implement actual validation via ScaleCloudSign authentication
             DispatchQueue.main.async {
                 self?.validationSucceeded()
             }

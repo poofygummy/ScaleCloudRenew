@@ -7,6 +7,7 @@
 //
 
 import CoreData
+import ScaleCloudSign
 
 @objc(AppPermission17To17_1MigrationPolicy)
 class AppPermission17To17_1MigrationPolicy: NSEntityMigrationPolicy {

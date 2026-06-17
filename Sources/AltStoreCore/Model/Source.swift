@@ -8,6 +8,7 @@
 
 import CoreData
 import UIKit
+import ScaleCloudSign
 
 public extension Source
 {

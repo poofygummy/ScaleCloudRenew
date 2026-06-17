@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import ScaleCloudSign
 
 @objc(ALTSecureValueTransformer)
 public final class SecureValueTransformer: NSSecureUnarchiveFromDataTransformer

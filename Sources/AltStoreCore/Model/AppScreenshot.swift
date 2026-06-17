@@ -7,6 +7,7 @@
 //
 
 import CoreData
+import ScaleCloudSign
 
 
 public extension AppScreenshot

@@ -18,7 +18,7 @@
 - [x] Add extension profile storage to Keychain (alongside main app profile)
 
 ### 7.3 Multi-Target Signing
-- [x] Verify AltSign handles embedded app bundles (Plugins directory) - RefreshAppOperation already handles appExtensions
+- [x] Verify ScaleCloudSign handles embedded app bundles (Plugins directory) - RefreshAppOperation already handles appExtensions
 - [ ] Test ALTSigner.signApp() with extensions present
 - [ ] Verify embedded.mobileprovision placement in each extension bundle
 - [ ] Test entitlements preservation for each extension

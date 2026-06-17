@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import os.log
+import ScaleCloudSign
 
 
 typealias RefreshError = RefreshErrorCode.Error

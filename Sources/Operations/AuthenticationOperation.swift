@@ -8,6 +8,7 @@
 
 import Foundation
 import Network
+import ScaleCloudSign
 
 private extension UIColor
 {

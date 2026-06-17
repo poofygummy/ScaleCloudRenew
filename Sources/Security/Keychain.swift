@@ -8,6 +8,7 @@
 
 import Foundation
 import KeychainAccess
+import ScaleCloudSign
 
 /// Property wrapper for Keychain items supporting Data and String types
 @propertyWrapper

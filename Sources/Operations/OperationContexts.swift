@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import Network
+import ScaleCloudSign
 
 class OperationContext
 {

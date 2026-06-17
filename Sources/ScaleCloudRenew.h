@@ -81,4 +81,4 @@
 #import "NSError+ALTServerError.h"
 #import "CFNotificationName+AltStore.h"
 
-// AltSign headers are provided by AltSign.framework (ScaleCloudSign prebuilt)
+//  headers are provided by .framework (ScaleCloudSign prebuilt)

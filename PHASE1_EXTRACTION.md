@@ -5,13 +5,13 @@
 
 ## Source
 - SideStore 0.6.4: `/home/cvt/sidestore/`
-- AltSign: `a48493283bd676ad3a4d5b65dc7c039cebf7749e`
+- ScaleCloudSign: `a48493283bd676ad3a4d5b65dc7c039cebf7749e`
 - ldid: Full source copied to `Sources/AltSign/ldid/`
 - corecrypto: Headers copied to `Sources/AltSign/corecrypto/`
 
 ## Extracted (Local - Modified)
 
-### AltSign (40+ files)
+### ScaleCloudSign (40+ files)
 `Sources/AltSign/` - URLSession proxy injection needed
 
 ### Anisette (1 file)
