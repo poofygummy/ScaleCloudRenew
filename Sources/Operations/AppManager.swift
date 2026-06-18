@@ -221,6 +221,7 @@ extension AppManager
     
     func deactivateApps(for app: ALTApplication, presentingViewController: UIViewController, completion: @escaping (Result<Void, Error>) -> Void)
     {
+        /* HEADLESS: no deactivate-apps alert UI
         guard !UserDefaults.standard.isAppLimitDisabled, let activeAppsLimit = UserDefaults.standard.activeAppsLimit else { return completion(.success(())) }
         
         DispatchQueue.main.async {
@@ -284,6 +285,8 @@ extension AppManager
             
             presentingViewController.present(alertController, animated: true, completion: nil)
         }
+        */
+        completion(.success(()))
     }
     
     func clearAppCache(completion: @escaping (Result<Void, Error>) -> Void)
@@ -350,6 +353,7 @@ extension AppManager
         }
     }
     
+    /* HEADLESS: no add-source confirmation UI
     func add(@AsyncManaged _ source: Source, message: String? = NSLocalizedString("Make sure to only add sources that you trust.", comment: ""), presentingViewController: UIViewController) async throws
     {
         let (sourceName, sourceURL) = await $source.perform { ($0.name, $0.sourceURL) }
@@ -374,7 +378,9 @@ extension AppManager
         
         NotificationCenter.default.post(name: AppManager.didAddSourceNotification, object: source)
     }
+    */
     
+    /* HEADLESS: no remove-source confirmation UI
     func remove(@AsyncManaged _ source: Source, presentingViewController: UIViewController) async throws
     {
         let (sourceName, sourceID) = await $source.perform { ($0.name, $0.identifier) }
@@ -398,7 +404,9 @@ extension AppManager
         
         NotificationCenter.default.post(name: AppManager.didRemoveSourceNotification, object: source)
     }
+    */
     
+    /* HEADLESS: no add-source UI path in installAsync
     @discardableResult
     func installAsync<T: AppProtocol>(@AsyncManaged _ app: T, presentingViewController: UIViewController?, context: AuthenticatedOperationContext = AuthenticatedOperationContext(),
                                       completionHandler: @escaping (Result<InstalledApp, Error>) -> Void) async -> RefreshGroup
@@ -471,6 +479,7 @@ extension AppManager
         
         return group
     }
+    */
 }
 
 extension AppManager
