@@ -206,6 +206,29 @@ Resources directory includes Silence.m4a as bundle resource.
 ### Crypto Headers (Now Added)
 ✅ `/home/cvt/sidestore/Dependencies/AltSign/Dependencies/corecrypto/` → `Sources/AltSign/corecrypto/`
 
+## Build Fixes (Post-Extraction)
+
+### Missing Files Ported from SideStore
+✅ `NSError+AltStore.swift` → `Sources/AltStoreCore/Extensions/`
+- Provides `NSError.localizedTitle`, `localizedFailure`, `withLocalizedFailure`, `sanitizedForSerialization`, `Error.underlyingError`
+- Required by `LoggedError.swift` and `MergePolicy.swift`
+- Import changed: `AltSign` → `ScaleCloudSign`
+
+✅ `OperationError.swift` → `Sources/AltStoreCore/Shared/Errors/`
+- Provides `OperationError` struct used throughout Operations
+- Required by `RefreshAppOperation.swift`, `FetchAnisetteDataOperation.swift`, `AuthenticationOperation.swift`
+- Import changed: `AltSign` + `AltStoreCore` → `ScaleCloudSign` only
+
+✅ `MinimuxerWrapper.swift` → `Sources/Minimuxer/`
+- Provides `installProvisioningProfiles()` free function required by `RefreshAppOperation.swift`
+- `import Minimuxer` removed (Minimuxer is a class in our module, not a package)
+- `bindTunnelConfig()` stubbed (TunnelConfig not needed in our architecture)
+- `@retroactive` removed from `MinimuxerError: LocalizedError` (same module)
+
+### Certificate Expiry Fix
+- `Keychain.updateCertificateExpiry()` removed — `ALTCertificate` has no `expirationDate` in any version
+- `BackgroundRefreshAppsOperation.finish()` now reads expiry from `InstalledApp.expirationDate` (set from `ALTProvisioningProfile.expirationDate` during signing) and persists to `UserDefaults` key `com.scalecloud.cert.expiry`
+
 ## Next: Phase 2
 - Verify compilation succeeds
 - Strip UI from FetchAnisetteDataOperation
