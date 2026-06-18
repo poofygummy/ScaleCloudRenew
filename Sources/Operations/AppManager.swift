@@ -681,7 +681,8 @@ extension AppManager
         
         
         Task{
-            var app: AppProtocol = app
+            let app: AppProtocol = app
+            /* HEADLESS: no bundle ID override dialog UI
             // ---- Preflight bundle ID resolution ----
             if UserDefaults.standard.customizeAppId,      // only show prompt when enabled by user
                 let presentingViewController {
@@ -706,7 +707,7 @@ extension AppManager
                         )
                 }
             }
-            
+            */
             await self.perform([.install(app)], presentingViewController: presentingViewController, group: group)
             
         }
@@ -1150,12 +1151,14 @@ private extension AppManager
         }
         else
         {
+            /* HEADLESS: no UIApplication idle timer in headless framework
             // Disable the idleTimeout
             DispatchQueue.main.schedule {
                 if !UIApplication.shared.isIdleTimerDisabled {       // accept only once if concurrent
                     UIApplication.shared.isIdleTimerDisabled = UserDefaults.standard.isIdleTimeoutDisableEnabled
                 }
             }
+            */
             performAppOperations()
         }
         
@@ -1929,6 +1932,7 @@ private extension AppManager
     
     func finish(_ operation: AppOperation, result: Result<InstalledApp, Error>, group: RefreshGroup, progress: Progress?)
     {
+        /* HEADLESS: no UIApplication idle timer in headless framework
         // Remove disableIdleTimeout
         // TODO: This should disable for the last finish() request not the first though for batches
         //       probably if we are in batch mode, we can count expected no of finishes() to arrive
@@ -1938,6 +1942,7 @@ private extension AppManager
                 UIApplication.shared.isIdleTimerDisabled = false
             }
         }
+        */
 
         // Must remove before saving installedApp.
         if let currentProgress = self.progress(for: operation), currentProgress == progress
@@ -2093,6 +2098,7 @@ private extension AppManager
     }
 }
 
+/* HEADLESS: BundleIDAlertKeys, _isValidBundleID, and UIResponder._validateBundleIDText are only used by the bundle ID override alert UI
 private enum BundleIDAlertKeys {
     static var okAction: UInt8 = 0
 }
@@ -2119,9 +2125,11 @@ private extension UIResponder {
         }
     }
 }
+*/
 
 
 
+/* HEADLESS: _presentBundleIDOverrideDialog and _makeBundleIDOverrideAlert require UIAlertController
 private extension AppManager {
 
     func _presentBundleIDOverrideDialog(
@@ -2187,8 +2195,10 @@ private extension AppManager {
         return alert
     }
 }
+*/
         
 
+/* HEADLESS: resolveBundleID and BundleIDResolution require UIAlertController; install() no longer calls resolveBundleID in headless mode
 // ---- Part 1: Add async resolver ----
 
 private extension AppManager {
@@ -2215,3 +2225,4 @@ private extension AppManager {
         }
     }
 }
+*/
