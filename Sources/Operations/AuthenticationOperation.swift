@@ -11,10 +11,12 @@ import Network
 import UIKit
 import ScaleCloudSign
 
+/* HEADLESS: no UI color needed
 private extension UIColor
 {
     static let altInvertedPrimary = UIColor(named: "SettingsHighlighted")!
 }
+*/
 
 typealias AuthenticationError = AuthenticationErrorCode.Error
 enum AuthenticationErrorCode: Int, ALTErrorEnum, CaseIterable
@@ -42,8 +44,11 @@ final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertificate, A
 {
     let context: AuthenticatedOperationContext
     
+    /* HEADLESS: no presenting view controller
     private weak var presentingViewController: UIViewController?
+    */
     
+    /* HEADLESS: no navigation controller or storyboard
     private lazy var navigationController: UINavigationController = {
         let navigationController = self.storyboard.instantiateViewController(withIdentifier: "navigationController") as! UINavigationController
         navigationController.isModalInPresentation = true
@@ -51,6 +56,7 @@ final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertificate, A
     }()
     
     private lazy var storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+    */
     
     private var appleIDEmailAddress: String?
     private var appleIDPassword: String?
@@ -58,12 +64,16 @@ final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertificate, A
     
     private let operationQueue = OperationQueue()
     
+    /* HEADLESS: no alert action
     private var submitCodeAction: UIAlertAction?
+    */
     
     init(context: AuthenticatedOperationContext, presentingViewController: UIViewController?)
     {
         self.context = context
+        /* HEADLESS: no presenting view controller to store
         self.presentingViewController = presentingViewController
+        */
         
         super.init()
         
@@ -286,6 +296,7 @@ final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertificate, A
                 Keychain.shared.signingCertificate = altCertificate.p12Data()
                 Keychain.shared.signingCertificatePassword = altCertificate.machineIdentifier
                 
+                /* HEADLESS: no instructions or refresh screen UI
                 self.showInstructionsIfNecessary() { (didShowInstructions) in
                     
                     let signer = ALTSigner(team: altTeam, certificate: altCertificate)
@@ -298,19 +309,23 @@ final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertificate, A
                         }
                     }
                 }
+                */
+                super.finish(result)
             }
             catch
             {
                 super.finish(result)
                 
+                /* HEADLESS: no navigation controller to dismiss
                 DispatchQueue.main.async {
                     self.navigationController.dismiss(animated: true, completion: nil)
                 }
-            }
+                */
         }
     }
 }
 
+/* HEADLESS: no UI presentation needed
 private extension AuthenticationOperation
 {
     func present(_ viewController: UIViewController) -> Bool
@@ -335,11 +350,13 @@ private extension AuthenticationOperation
         return true
     }
 }
+*/
 
 private extension AuthenticationOperation
 {
     func signIn(completionHandler: @escaping (Result<(ALTAccount, ALTAppleAPISession), Swift.Error>) -> Void)
     {
+        /* HEADLESS: no AuthenticationViewController UI path
         func authenticate()
         {
             DispatchQueue.main.async {
@@ -371,6 +388,7 @@ private extension AuthenticationOperation
                 }
             }
         }
+        */
         
         if let adsid = Keychain.shared.appleIDAdsid, let xcodeToken = Keychain.shared.appleIDXcodeToken {
             Logger.sideload.notice("Authenticating Apple ID with tokens...")
@@ -407,7 +425,10 @@ private extension AuthenticationOperation
                     completionHandler(.success((account, session)))
                     
                 case .failure(ALTAppleAPIError.incorrectCredentials), .failure(ALTAppleAPIError.appSpecificPasswordRequired):
+                    /* HEADLESS: no authenticate() UI fallback
                     authenticate()
+                    */
+                    completionHandler(.failure(OperationError.notAuthenticated))
                     
                 case .failure(let error):
                     completionHandler(.failure(error))
@@ -416,7 +437,10 @@ private extension AuthenticationOperation
         }
         else
         {
+            /* HEADLESS: no authenticate() UI fallback
             authenticate()
+            */
+            completionHandler(.failure(OperationError.notAuthenticated))
         }
     }
     
@@ -451,6 +475,7 @@ private extension AuthenticationOperation
             case .success(let anisetteData):
                 let verificationHandler: ((@escaping (String?) -> Void) -> Void)?
                 
+                /* HEADLESS: no 2FA alert UI; always use nil verificationHandler
                 if let presentingViewController = self.presentingViewController
                 {
                     verificationHandler = { (completionHandler) in
@@ -494,6 +519,9 @@ private extension AuthenticationOperation
                     // No view controller to present security code alert, so don't provide verificationHandler.
                     verificationHandler = nil
                 }
+                */
+                // HEADLESS: no view controller to present security code alert, so don't provide verificationHandler.
+                verificationHandler = nil
                     
                 ALTAppleAPI.shared.authenticate(appleID: appleID, password: password, anisetteData: anisetteData,
                                                 verificationHandler: verificationHandler) { (account, session, error) in
@@ -525,6 +553,7 @@ private extension AuthenticationOperation
                      return completionHandler(.failure(AuthenticationError(.noTeam)))
                  }
              } else {
+                 /* HEADLESS: no SelectTeamViewController UI; auto-pick first team
                  DispatchQueue.main.async {
                      let selectTeamViewController = self.storyboard.instantiateViewController(withIdentifier: "selectTeamViewController") as! SelectTeamViewController
 
@@ -535,6 +564,12 @@ private extension AuthenticationOperation
                      {
                          return completionHandler(.failure(AuthenticationError(.noTeam)))
                      }
+                 }
+                 */
+                 if let team = teams.first {
+                     completionHandler(.success(team))
+                 } else {
+                     completionHandler(.failure(AuthenticationError(.noTeam)))
                  }
              }
          }
@@ -612,6 +647,7 @@ private extension AuthenticationOperation
                 }
             }
             
+            /* HEADLESS: no revoke-certificate alert UI; auto-revoke and request new
             DispatchQueue.main.async {
                 let alertController = UIAlertController(title: NSLocalizedString("Would you like to revoke your previous certificates?\n\(certsText)", comment: ""), message: nil, preferredStyle: .alert)
                 
@@ -641,6 +677,16 @@ private extension AuthenticationOperation
                     self.presentingViewController?.present(alertController, animated: true, completion: nil)
                 }
             }
+            */
+            for certificate in ourCertificates {
+                ALTAppleAPI.shared.revoke(certificate, for: team, session: session) { (success, error) in
+                    if let error = error, !success
+                    {
+                        completionHandler(.failure(error))
+                    }
+                }
+            }
+            requestCertificate()
         }
         
         ALTAppleAPI.shared.fetchCertificates(for: team, session: session) { (certificates, error) in
@@ -749,6 +795,7 @@ private extension AuthenticationOperation
     
     func showInstructionsIfNecessary(completionHandler: @escaping (Bool) -> Void)
     {
+        /* HEADLESS: no InstructionsViewController UI
         guard self.shouldShowInstructions else { return completionHandler(false) }
         
         DispatchQueue.main.async {
@@ -763,10 +810,13 @@ private extension AuthenticationOperation
                 completionHandler(false)
             }
         }
+        */
+        completionHandler(false)
     }
     
     func showRefreshScreenIfNecessary(signer: ALTSigner, session: ALTAppleAPISession, completionHandler: @escaping (Bool) -> Void)
     {
+        /* HEADLESS: no RefreshAltStoreViewController UI
         guard let application = ALTApplication(fileURL: Bundle.main.bundleURL), let provisioningProfile = application.provisioningProfile else { return completionHandler(false) }
         
         // If we're not using the same certificate used to install AltStore, warn user that they need to refresh.
@@ -792,9 +842,12 @@ private extension AuthenticationOperation
             }
         }
 //        #endif
+        */
+        completionHandler(false)
     }
 }
 
+/* HEADLESS: no text field observation needed
 extension AuthenticationOperation
 {
     @objc func textFieldTextDidChange(_ notification: Notification)
@@ -804,6 +857,7 @@ extension AuthenticationOperation
         self.submitCodeAction?.isEnabled = (textField.text ?? "").count == 6
     }
 }
+*/
 
 
 extension ALTAppleAPI {
