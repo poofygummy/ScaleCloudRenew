@@ -9,14 +9,10 @@
 import Foundation
 import UIKit
 import UserNotifications
-import MobileCoreServices
 import Intents
 import Combine
 import WidgetKit
-import AltStoreCore
-import AltSign
-import Roxas
-import Minimuxer
+import ScaleCloudSign
 
 extension AppManager
 {

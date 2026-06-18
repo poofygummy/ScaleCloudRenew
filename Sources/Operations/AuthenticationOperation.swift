@@ -7,10 +7,9 @@
 //
 
 import Foundation
-import Roxas
 import Network
-import AltStoreCore
-import AltSign
+import UIKit
+import ScaleCloudSign
 
 private extension UIColor
 {
