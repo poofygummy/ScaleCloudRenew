@@ -93,27 +93,6 @@ func removeProvisioningProfile(_ id: String) throws {
     #endif
 }
 
-/* unused for now
-func removeApp(_ bundleId: String) throws {
-    defer { print("[SideStore] removeApp(bundleId) completed") }
-    #if targetEnvironment(simulator)
-    print("[SideStore] removeApp(bundleId) is no-op on simulator")
-    #else
-    print("[SideStore] removeApp(bundleId) invoked")
-    try Minimuxer.removeApp(bundleId: bundleId)
-    #endif
-}
-
-func yeetAppAFC(_ bundleId: String, _ rawBytes: Data) throws {
-    defer { print("[SideStore] yeetAppAFC(bundleId, rawBytes) completed") }
-    #if targetEnvironment(simulator)
-    print("[SideStore] yeetAppAFC(bundleId, rawBytes) is no-op on simulator")
-    #else
-    print("[SideStore] yeetAppAFC(bundleId, rawBytes) invoked")
-    try Minimuxer.yeetAppAfc(bundleId: bundleId, ipaBytes: rawBytes)
-    #endif
-}
-
 func installIPA(_ bundleId: String) throws {
     defer { print("[SideStore] installIPA(bundleId) completed") }
     #if targetEnvironment(simulator)
@@ -132,6 +111,27 @@ func fetchUDID() -> String? {
     #else
     print("[SideStore] fetchUDID() invoked")
     return Minimuxer.fetchUDID()
+    #endif
+}
+
+/* unused for now
+func removeApp(_ bundleId: String) throws {
+    defer { print("[SideStore] removeApp(bundleId) completed") }
+    #if targetEnvironment(simulator)
+    print("[SideStore] removeApp(bundleId) is no-op on simulator")
+    #else
+    print("[SideStore] removeApp(bundleId) invoked")
+    try Minimuxer.removeApp(bundleId: bundleId)
+    #endif
+}
+
+func yeetAppAFC(_ bundleId: String, _ rawBytes: Data) throws {
+    defer { print("[SideStore] yeetAppAFC(bundleId, rawBytes) completed") }
+    #if targetEnvironment(simulator)
+    print("[SideStore] yeetAppAFC(bundleId, rawBytes) is no-op on simulator")
+    #else
+    print("[SideStore] yeetAppAFC(bundleId, rawBytes) invoked")
+    try Minimuxer.yeetAppAfc(bundleId: bundleId, ipaBytes: rawBytes)
     #endif
 }
 
