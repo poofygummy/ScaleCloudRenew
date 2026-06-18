@@ -7,6 +7,7 @@
 
 import Foundation
 
+/* unused for now
 func bindTunnelConfig() {
     defer { print("[SideStore] bindTunnelConfig() completed") }
 
@@ -15,12 +16,23 @@ func bindTunnelConfig() {
     #else
     print("[SideStore] bindTunnelConfig() invoked")
 
-    // TunnelConfig binding is handled by IfaceScanner in this module
+    Task { @MainActor in
+        let config = TunnelConfig.shared
+        Minimuxer.bindTunnelConfig(
+            TunnelConfigBinding(
+                setDeviceIP: { value in Task { @MainActor in config.deviceIP = value } },
+                setFakeIP: { value in Task { @MainActor in config.fakeIP = value } },
+                setSubnetMask: { value in Task { @MainActor in config.subnetMask = value } },
+                getOverrideFakeIP: { config.overrideFakeIP },
+                setOverrideEffective: { value in Task { @MainActor in config.overrideEffective = value } }
+            )
+        )
+    }
     #endif
 }
 
 
-var isMinimuxerReady: Bool {
+var isMinimuxerReady: Bool { // unused for now
     var result = true
     #if targetEnvironment(simulator)
     print("[SideStore] isMinimuxerReady = true on simulator")
@@ -32,7 +44,7 @@ var isMinimuxerReady: Bool {
 }
 
 
-func retargetUsbmuxdAddr() {
+func retargetUsbmuxdAddr() { // unused for now
     defer { print("[SideStore] retargetUsbmuxdAddr() completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] retargetUsbmuxdAddr() is no-op on simulator")
@@ -42,7 +54,7 @@ func retargetUsbmuxdAddr() {
     #endif
 }
 
-func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggingEnabled: Bool) throws {
+func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggingEnabled: Bool) throws { // unused for now
     defer { print("[SideStore] minimuxerStartWithLogger(pairingFile, logPath, dest, loggingEnabled) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] minimuxerStartWithLogger(pairingFile, logPath, loggingEnabled) is no-op on simulator")
@@ -59,13 +71,15 @@ func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggin
     #endif
 }
 
+*/
+
 func installProvisioningProfiles(_ profileData: Data) throws {
     defer { print("[SideStore] installProvisioningProfiles(profileData) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] installProvisioningProfiles(profileData) is no-op on simulator")
     #else
     print("[SideStore] installProvisioningProfiles(profileData) invoked")
-    try Minimuxer.installProvisioningProfile(profile: profileData)
+    try Provision.installProvisioningProfile(profile: profileData)
     #endif
 }
 
@@ -75,10 +89,11 @@ func removeProvisioningProfile(_ id: String) throws {
     print("[SideStore] removeProvisioningProfile(id) is no-op on simulator")
     #else
     print("[SideStore] removeProvisioningProfile(id) invoked")
-    try Minimuxer.removeProvisioningProfile(id: id)
+    try Provision.removeProvisioningProfile(id: id)
     #endif
 }
 
+/* unused for now
 func removeApp(_ bundleId: String) throws {
     defer { print("[SideStore] removeApp(bundleId) completed") }
     #if targetEnvironment(simulator)
@@ -166,8 +181,9 @@ func setMinimuxerDebug(_ debug: Bool) {
     print("[SideStore] setMinimuxerDebug(debug) invoked")
     Minimuxer.setDebug(debug)
 }
+*/
 
-extension MinimuxerError: LocalizedError {
+extension MinimuxerError: @retroactive LocalizedError {
     public var failureReason: String? {
         switch self {
         case .NoDevice:
