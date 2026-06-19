@@ -12,6 +12,7 @@ import UserNotifications
 import Intents
 import Combine
 import WidgetKit
+import MobileCoreServices
 import ScaleCloudSign
 
 extension AppManager
