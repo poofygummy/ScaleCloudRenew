@@ -321,6 +321,7 @@ final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertificate, A
                     self.navigationController.dismiss(animated: true, completion: nil)
                 }
                 */
+            }
         }
     }
 }

@@ -92,6 +92,8 @@ targets:
       - package: Alamofire
       - package: SwiftyJSON
       - package: SwiftyXMLParser
+      - package: SemanticVersion
+      - package: Nuke
       - sdk: UIKit.framework
 packages:
   Starscream:
@@ -112,4 +114,10 @@ packages:
   SwiftyXMLParser:
     url: https://github.com/yahoojapan/SwiftyXMLParser
     from: 5.6.0
+  SemanticVersion:
+    url: https://github.com/SwiftPackageIndex/SemanticVersion
+    exactVersion: 0.4.0
+  Nuke:
+    url: https://github.com/kean/Nuke
+    from: 10.0.0
 
