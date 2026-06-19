@@ -116,7 +116,7 @@ packages:
     from: 5.6.0
   SemanticVersion:
     url: https://github.com/SwiftPackageIndex/SemanticVersion
-    exactVersion: 0.4.0
+    exactVersion: 0.3.8
   Nuke:
     url: https://github.com/kean/Nuke
     from: 10.0.0
