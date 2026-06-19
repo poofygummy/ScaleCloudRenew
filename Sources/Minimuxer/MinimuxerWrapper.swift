@@ -30,9 +30,9 @@ func bindTunnelConfig() {
     }
     #endif
 }
+*/
 
-
-var isMinimuxerReady: Bool { // unused for now
+var isMinimuxerReady: Bool {
     var result = true
     #if targetEnvironment(simulator)
     print("[SideStore] isMinimuxerReady = true on simulator")
@@ -43,7 +43,7 @@ var isMinimuxerReady: Bool { // unused for now
     return result
 }
 
-
+/* unused for now
 func retargetUsbmuxdAddr() { // unused for now
     defer { print("[SideStore] retargetUsbmuxdAddr() completed") }
     #if targetEnvironment(simulator)
@@ -114,7 +114,6 @@ func fetchUDID() -> String? {
     #endif
 }
 
-/* unused for now
 func removeApp(_ bundleId: String) throws {
     defer { print("[SideStore] removeApp(bundleId) completed") }
     #if targetEnvironment(simulator)
@@ -135,6 +134,7 @@ func yeetAppAFC(_ bundleId: String, _ rawBytes: Data) throws {
     #endif
 }
 
+/* unused for now
 func debugApp(_ appId: String) throws {
     defer { print("[SideStore] debugApp(appId) completed") }
     #if targetEnvironment(simulator)
