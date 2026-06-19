@@ -134,7 +134,6 @@ func yeetAppAFC(_ bundleId: String, _ rawBytes: Data) throws {
     #endif
 }
 
-/* unused for now
 func debugApp(_ appId: String) throws {
     defer { print("[SideStore] debugApp(appId) completed") }
     #if targetEnvironment(simulator)
@@ -145,6 +144,7 @@ func debugApp(_ appId: String) throws {
     #endif
 }
 
+/* unused for now
 func attachDebugger(_ pid: UInt32) throws {
     defer { print("[SideStore] attachDebugger(pid) completed") }
     #if targetEnvironment(simulator)

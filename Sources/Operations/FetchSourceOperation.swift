@@ -99,7 +99,7 @@ final class FetchSourceOperation: ResultOperation<Source>
                 {
                     let (data, response) = try Result((data, response), error).get()
                     
-                    let decoder = AltStoreCore.JSONDecoder()
+                    let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .custom({ (decoder) -> Date in
                         let container = try decoder.singleValueContainer()
                         let text = try container.decode(String.self)
