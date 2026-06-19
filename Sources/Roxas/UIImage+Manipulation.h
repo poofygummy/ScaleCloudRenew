@@ -7,6 +7,7 @@
 //
 
 @import UIKit;
+#import "RSTDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

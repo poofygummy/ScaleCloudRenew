@@ -7,6 +7,7 @@
 //
 
 #import "RSTCellContentChange.h"
+#import "RSTDefines.h"
 
 #import "UITableView+CellContent.h"
 #import "UITableViewCell+CellContent.h"

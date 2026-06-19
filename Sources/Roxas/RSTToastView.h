@@ -7,6 +7,7 @@
 //
 
 @import UIKit;
+#import "RSTDefines.h"
 
 typedef NS_ENUM(NSInteger, RSTViewEdge) {
     RSTViewEdgeNone,
