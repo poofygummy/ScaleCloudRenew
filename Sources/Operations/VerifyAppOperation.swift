@@ -161,10 +161,12 @@ private extension VerifyAppOperation
             guard let presentingViewController = self.context.presentingViewController else { break } // Don't fail just because we can't show permissions.
             
             let allEntitlements = allPermissions.compactMap { $0 as? ALTEntitlement }
+            /* HEADLESS: review() is UI-only
             if !allEntitlements.isEmpty
             {
                 try await self.review(allEntitlements, for: app, mode: .all, presentingViewController: presentingViewController)
             }
+            */
             
         case .added:
             let installedAppURL = InstalledApp.fileURL(for: app)
@@ -183,7 +185,9 @@ private extension VerifyAppOperation
                 // _DO_ throw error if there isn't a presentingViewController.
                 guard let presentingViewController = self.context.presentingViewController else { throw VerificationError.addedPermissions(addedEntitlements, appVersion: appVersion) }
                 
+                /* HEADLESS: review() is UI-only
                 try await self.review(addedEntitlements, for: app, mode: .added, presentingViewController: presentingViewController)
+                */
             }
         }
     }
@@ -285,6 +289,7 @@ private extension VerifyAppOperation
         return localPermissions
     }
     
+    /* HEADLESS: ReviewPermissionsViewController is UI-only, not available in headless framework.
     @MainActor @available(iOS 15, *)
     func review(_ permissions: [ALTEntitlement], for app: AppProtocol, mode: PermissionReviewMode, presentingViewController: UIViewController) async throws
     {
@@ -303,4 +308,5 @@ private extension VerifyAppOperation
             presentingViewController.present(navigationController, animated: true)
         }
     }
+    */
 }
