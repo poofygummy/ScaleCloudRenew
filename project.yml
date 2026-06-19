@@ -71,6 +71,7 @@ targets:
         DEFINES_MODULE: "YES"
         MODULEMAP_FILE: "$(SRCROOT)/Sources/module.modulemap"
         FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SRCROOT)/../ScaleCloudGo/prebuilt $(SRCROOT)/../ScaleCloudKit/prebuilt $(SRCROOT)/Sources/RustBridge/lib"
+        CLANG_ENABLE_MODULES: "YES"
         INTENTS_CODEGEN_LANGUAGE: "Swift"
         INTENTS_CODEGEN_VISIBILITY: "public"
         GENERATE_INFOPLIST_FILE: "YES"
