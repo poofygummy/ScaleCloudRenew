@@ -37,7 +37,11 @@ public class SetupCoordinator {
     // MARK: - Initialization
     
     public init() {
-        // Check for debugger attachment and attempt debug channel handoff
+        // Initialize navigationController first so all stored properties are set before self is used
+        let credentialVC = CredentialInputViewController()
+        navigationController = UINavigationController(rootViewController: credentialVC)
+        
+        // Now self is fully initialized, safe to use
         if DebuggerUtils.isDebuggerAttached() {
             print("[Setup] Debugger detected, attempting debug channel credential handoff")
             if performDebugChannelHandoff() {
@@ -45,21 +49,17 @@ public class SetupCoordinator {
                 print("[Setup] Debug channel handoff successful, starting with validation")
                 let validationVC = ValidationViewController()
                 validationVC.coordinator = self
-                navigationController = UINavigationController(rootViewController: validationVC)
+                navigationController.setViewControllers([validationVC], animated: false)
                 currentStep = .validation
             } else {
                 // Fallback to manual entry
                 print("[Setup] Debug channel handoff failed, falling back to manual entry")
-                let credentialVC = CredentialInputViewController()
                 credentialVC.coordinator = self
-                navigationController = UINavigationController(rootViewController: credentialVC)
             }
         } else {
             // No debugger - use manual credential entry
             print("[Setup] No debugger attached, using manual credential entry")
-            let credentialVC = CredentialInputViewController()
             credentialVC.coordinator = self
-            navigationController = UINavigationController(rootViewController: credentialVC)
         }
         
         navigationController.isModalInPresentation = true // Disable swipe-to-dismiss
