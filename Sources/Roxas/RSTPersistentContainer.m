@@ -7,6 +7,7 @@
 //
 
 #import "RSTPersistentContainer.h"
+#import "RSTDefines.h"
 #import "RSTRelationshipPreservingMergePolicy.h"
 
 #import "RSTError.h"

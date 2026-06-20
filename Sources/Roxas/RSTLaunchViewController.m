@@ -7,6 +7,7 @@
 //
 
 #import "RSTLaunchViewController.h"
+#import "RSTDefines.h"
 #import "RSTHelperFile.h"
 #import "NSLayoutConstraint+Edges.h"
 

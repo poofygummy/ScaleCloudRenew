@@ -7,6 +7,7 @@
 //
 
 #import "RSTFetchedResultsDataSource.h"
+#import "RSTDefines.h"
 #import "RSTCellContentDataSource_Subclasses.h"
 
 #import "RSTBlockOperation.h"
