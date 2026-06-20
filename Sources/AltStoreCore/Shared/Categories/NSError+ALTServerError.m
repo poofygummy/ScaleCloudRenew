@@ -35,7 +35,7 @@ NSErrorUserInfoKey const ALTNSCodingPathKey = @"NSCodingPath";
 
 + (void)load
 {
-    [NSError alt_setUserInfoValueProviderForDomain:AltServerErrorDomain provider:^id _Nullable(NSError * _Nonnull error, NSErrorUserInfoKey _Nonnull userInfoKey) {
+    [NSError setUserInfoValueProviderForDomain:AltServerErrorDomain provider:^id _Nullable(NSError * _Nonnull error, NSErrorUserInfoKey _Nonnull userInfoKey) {
         if ([userInfoKey isEqualToString:NSLocalizedDescriptionKey])
         {
             return [error altserver_localizedDescription];
@@ -60,7 +60,7 @@ NSErrorUserInfoKey const ALTNSCodingPathKey = @"NSCodingPath";
         return nil;
     }];
     
-    [NSError alt_setUserInfoValueProviderForDomain:AltServerConnectionErrorDomain provider:^id _Nullable(NSError * _Nonnull error, NSErrorUserInfoKey  _Nonnull userInfoKey) {
+    [NSError setUserInfoValueProviderForDomain:AltServerConnectionErrorDomain provider:^id _Nullable(NSError * _Nonnull error, NSErrorUserInfoKey  _Nonnull userInfoKey) {
         if ([userInfoKey isEqualToString:NSLocalizedFailureReasonErrorKey])
         {
             return [error altserver_connection_localizedFailureReason];
