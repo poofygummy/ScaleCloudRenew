@@ -8,16 +8,15 @@
 
 #import "NSError+ALTServerError.h"
 
-#if ALTJIT
-#import "AltJIT-Swift.h"
 @import ScaleCloudSign;
-#elif TARGET_OS_OSX
-#import "AltServer-Swift.h"
-@import ScaleCloudSign;
-#elif !TARGET_OS_OSX
-#import "ScaleCloudRenew-Swift.h"
-@import ScaleCloudSign;
-#endif
+
+// Forward-declare the @objc Swift extensions on NSError so we don't need
+// the generated ScaleCloudRenew-Swift.h (which isn't available when ObjC
+// files are compiled before the Swift sources finish).
+@interface NSError (AltStoreSwift)
+@property (nonatomic, readonly, nullable) NSString *alt_localizedFailure;
+@property (nonatomic, readonly, nullable) NSString *alt_localizedDebugDescription;
+@end
 
 NSErrorDomain const AltServerErrorDomain = @"AltServer.ServerError";
 NSErrorDomain const AltServerInstallationErrorDomain = @"Apple.InstallationError";
