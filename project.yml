@@ -82,7 +82,7 @@ targets:
         GENERATE_INFOPLIST_FILE: "YES"
         HEADER_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/AltSign/include $(SRCROOT)/Sources/AltSign $(SRCROOT)/Sources/AltSign/ldid $(SRCROOT)/Sources/AltSign/corecrypto/include $(SRCROOT)/Sources/AltSign/AppleAPI $(SRCROOT)/Sources/AltSign/Model $(SRCROOT)/Sources/AltSign/Model/AppleAPI $(SRCROOT)/Sources/AltSign/Categories $(SRCROOT)/Sources/AltSign/Capabilities $(SRCROOT)/Sources/AltSign/Signing $(SRCROOT)/Sources/Roxas $(SRCROOT)/Sources/AltStoreCore"
         OTHER_CPLUSPLUSFLAGS: "$(inherited) -w"
-        OTHER_SWIFT_FLAGS: "$(inherited) -suppress-warnings -Xcc -fpermissive -Xcc -fmodule-map-file=$(SRCROOT)/../ScaleCloudSign/Dependencies/corecrypto/include/module.modulemap -Xcc -fmodule-map-file=$(SRCROOT)/../ScaleCloudSign/ScaleCloudSign/include/module.modulemap -Xcc -I$(SRCROOT)/../ScaleCloudSign/Dependencies/corecrypto/include -Xcc -I$(SRCROOT)/../ScaleCloudSign/ScaleCloudSign/include"
+        OTHER_SWIFT_FLAGS: "$(inherited) -suppress-warnings -Xcc -fpermissive -Xcc -fmodule-map-file=$(SRCROOT)/../ScaleCloudSign/Dependencies/corecrypto/include/module.modulemap -Xcc -fmodule-map-file=$(SRCROOT)/../ScaleCloudSign/ScaleCloudSign/include/module.modulemap -Xcc -fmodule-map-file=$(SRCROOT)/Sources/em_proxy/module.modulemap -Xcc -I$(SRCROOT)/Sources/em_proxy -Xcc -I$(SRCROOT)/../ScaleCloudSign/Dependencies/corecrypto/include -Xcc -I$(SRCROOT)/../ScaleCloudSign/ScaleCloudSign/include"
         OTHER_CFLAGS: "$(inherited) -Wno-error=incompatible-pointer-types -fobjc-arc"
         GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) unix=1 MARKETPLACE=1"
     dependencies:
