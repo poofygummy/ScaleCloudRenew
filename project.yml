@@ -61,6 +61,11 @@ targets:
           - "AltSign/Categories/NSFileManager+Zip.h"
           - "AltSign/Categories/NSCharacterSet+ASCII.h"
           - "AltSign/Capabilities/ALTCapabilities.h"
+          - "libimobiledevice/**"
+          - "libimobiledevice-glue/**"
+          - "libusbmuxd/**"
+          - "libplist/**"
+          - "em_proxy/libem_proxy-ios.a"
     settings:
       base:
         SKIP_INSTALL: "NO"
@@ -81,11 +86,14 @@ targets:
         OTHER_CFLAGS: "$(inherited) -Wno-error=incompatible-pointer-types -fobjc-arc"
         GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) unix=1 MARKETPLACE=1"
     dependencies:
+      - target: libimobiledevice
       - framework: ../ScaleCloudGo/prebuilt/ScaleCloudGo.xcframework
         embed: false
       - framework: ../ScaleCloudKit/prebuilt/ScaleCloudKit.framework
         embed: false
       - framework: Sources/RustBridge/lib/RustBridge.xcframework
+        embed: false
+      - library: Sources/em_proxy/libem_proxy-ios.a
         embed: false
       - package: Starscream
       - package: KeychainAccess
@@ -96,6 +104,52 @@ targets:
       - package: SemanticVersion
       - package: Nuke
       - sdk: UIKit.framework
+      - sdk: Network.framework
+  libimobiledevice:
+    type: library.static
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Sources/libimobiledevice/src
+        excludes:
+          - "**/*.h"
+          - "**/Makefile*"
+          - "**/*.pc.in"
+      - path: Sources/libimobiledevice/common
+        excludes:
+          - "**/*.h"
+          - "**/Makefile*"
+      - path: Sources/libimobiledevice-glue/src
+        excludes:
+          - "**/*.h"
+          - "**/Makefile*"
+      - path: Sources/libusbmuxd/src
+        excludes:
+          - "**/*.h"
+          - "**/Makefile*"
+      - path: Sources/libplist/src
+        excludes:
+          - "**/*.h"
+          - "**/Makefile*"
+      - path: Sources/libplist/libcnary
+        excludes:
+          - "include/**"
+          - "**/Makefile*"
+          - "README"
+          - "COPYING"
+    settings:
+      base:
+        EXECUTABLE_PREFIX: lib
+        PRODUCT_NAME: imobiledevice
+        SKIP_INSTALL: "YES"
+        GCC_ENABLE_CPP_EXCEPTIONS: "YES"
+        GCC_ENABLE_CPP_RTTI: "YES"
+        GCC_WARN_INHIBIT_ALL_WARNINGS: "YES"
+        GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) HAVE_OPENSSL HAVE_STPNCPY HAVE_STPCPY HAVE_VASPRINTF HAVE_ASPRINTF HAVE_GETIFADDRS HAVE_STRNDUP 'PACKAGE_STRING=\"AltServer 1.0\"'"
+        HEADER_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/libimobiledevice $(SRCROOT)/Sources/libimobiledevice/include $(SRCROOT)/Sources/libimobiledevice/src $(SRCROOT)/Sources/libimobiledevice/common $(SRCROOT)/Sources/libimobiledevice-glue/include $(SRCROOT)/Sources/libimobiledevice-glue/include/libimobiledevice-glue $(SRCROOT)/Sources/libusbmuxd/include $(SRCROOT)/Sources/libplist/include $(SRCROOT)/Sources/libplist/libcnary/include"
+        OTHER_CFLAGS: "$(inherited) -w"
+        OTHER_CPLUSPLUSFLAGS: "$(inherited) -w"
+
 packages:
   Starscream:
     url: https://github.com/daltoniam/Starscream
