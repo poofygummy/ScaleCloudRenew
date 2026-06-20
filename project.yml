@@ -146,7 +146,7 @@ targets:
         GCC_ENABLE_CPP_RTTI: "YES"
         GCC_WARN_INHIBIT_ALL_WARNINGS: "YES"
         GCC_PREPROCESSOR_DEFINITIONS: "$(inherited) HAVE_OPENSSL HAVE_STPNCPY HAVE_STPCPY HAVE_VASPRINTF HAVE_ASPRINTF HAVE_GETIFADDRS HAVE_STRNDUP 'PACKAGE_STRING=\"AltServer 1.0\"'"
-        HEADER_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/libimobiledevice $(SRCROOT)/Sources/libimobiledevice/include $(SRCROOT)/Sources/libimobiledevice/src $(SRCROOT)/Sources/libimobiledevice/common $(SRCROOT)/Sources/libimobiledevice-glue/include $(SRCROOT)/Sources/libimobiledevice-glue/include/libimobiledevice-glue $(SRCROOT)/Sources/libusbmuxd/include $(SRCROOT)/Sources/libplist/include $(SRCROOT)/Sources/libplist/libcnary/include $(SRCROOT)/../ScaleCloudSign/Dependencies/OpenSSL.xcframework/ios-arm64/OpenSSL.framework/Headers"
+        HEADER_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/libimobiledevice $(SRCROOT)/Sources/libimobiledevice/include $(SRCROOT)/Sources/libimobiledevice/src $(SRCROOT)/Sources/libimobiledevice/common $(SRCROOT)/Sources/libimobiledevice-glue/include $(SRCROOT)/Sources/libimobiledevice-glue/include/libimobiledevice-glue $(SRCROOT)/Sources/libimobiledevice-glue/src $(SRCROOT)/Sources/libusbmuxd/include $(SRCROOT)/Sources/libplist/include $(SRCROOT)/Sources/libplist/libcnary/include $(SRCROOT)/../ScaleCloudSign/Dependencies/OpenSSL.xcframework/ios-arm64/OpenSSL.framework/Headers"
         OTHER_CFLAGS: "$(inherited) -w"
         OTHER_CPLUSPLUSFLAGS: "$(inherited) -w"
 
