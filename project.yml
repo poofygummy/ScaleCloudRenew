@@ -93,7 +93,7 @@ targets:
         embed: false
       - framework: Sources/RustBridge/lib/RustBridge.xcframework
         embed: false
-      - library: Sources/em_proxy/libem_proxy-ios.a
+      - framework: Sources/em_proxy/libem_proxy-ios.a
         embed: false
       - package: Starscream
       - package: KeychainAccess
