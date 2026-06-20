@@ -76,7 +76,8 @@ targets:
         DEFINES_MODULE: "YES"
         MODULEMAP_FILE: "$(SRCROOT)/Sources/module.modulemap"
         FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SRCROOT)/../ScaleCloudGo/prebuilt $(SRCROOT)/../ScaleCloudKit/prebuilt $(SRCROOT)/Sources/RustBridge/lib"
-        LIBRARY_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/em_proxy"
+        LIBRARY_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/em_proxy $(BUILT_PRODUCTS_DIR)"
+        OTHER_LDFLAGS: "$(inherited) -force_load $(BUILT_PRODUCTS_DIR)/libimobiledevice.a -force_load $(SRCROOT)/Sources/em_proxy/libem_proxy-ios.a"
         CLANG_ENABLE_MODULES: "YES"
         INTENTS_CODEGEN_LANGUAGE: "Swift"
         INTENTS_CODEGEN_VISIBILITY: "public"
@@ -94,8 +95,7 @@ targets:
         embed: false
       - framework: Sources/RustBridge/lib/RustBridge.xcframework
         embed: false
-      - framework: Sources/em_proxy/libem_proxy-ios.a
-        embed: false
+      # em_proxy linked via OTHER_LDFLAGS force_load above
       - package: Starscream
       - package: KeychainAccess
       - package: ZIPFoundation
