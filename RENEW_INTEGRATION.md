@@ -1,5 +1,7 @@
 # ScaleCloudRenew — Integration Reference
 
+> Last updated: reflects full history audit of main-repo `ScaleCloudSign` commits and current `ScaleCloudSign` submodule state (`1d271fd`, master branch).
+
 ## What is ScaleCloudRenew?
 
 ScaleCloudRenew is a headless iOS framework extracted and refactored from [SideStore](https://github.com/SideStore/SideStore). It contains the complete app-signing and management engine — authentication against Apple's developer APIs, certificate management, provisioning profile fetching, app resigning, installation via minimuxer, and background refresh — but with every UI/UIKit interaction stripped out and replaced with callback-based or headless logic.
@@ -48,6 +50,79 @@ These are referenced with relative `../` paths in `project.yml` and must be chec
 
 ---
 
+## ScaleCloudSign Submodule — Identity and History
+
+### Name History
+
+The name `ScaleCloudSign` has referred to **two different things** at different points in the repository history. Understanding this is critical to reading old commits.
+
+| Era | What `ScaleCloudSign/` was |
+|---|---|
+| **Before Jun 16 2026** (`d0dc187901` → `9559767949`) | The signing *operations* framework — the code that is now called **ScaleCloudRenew**. It contained `AppManager.swift`, `AuthenticationOperation.swift`, the SideStore operations engine, etc. These ~50 commits were all committed **flat** directly into the main repo (no submodule). |
+| **Jun 16 2026** (commit `452a669e2c`) | Rename commit: `ScaleCloudSign → ScaleCloudRenew` (operations framework renamed), and a **new** `ScaleCloudSign` submodule introduced pointing to `github.com/poofygummy/ScaleCloudSign.git` which contains the **AltSign fork** (ObjC Apple API client library). |
+| **Jun 17 2026+** (commit `ce928ecfdc` onward) | The flat embedded files were stripped and replaced with a proper git submodule pointer. All subsequent commits on `ScaleCloudSign/` in the main repo are submodule pointer bumps. |
+
+Commit `452a669e2c` in the main repo is the watershed: before it, `ScaleCloudSign/` = operations. After it, `ScaleCloudSign/` = AltSign ObjC library.
+
+### What ScaleCloudSign Is Today
+
+`ScaleCloudSign` is the **AltSign fork** — an ObjC/Swift library that handles the low-level Apple developer API communication and code signing. It is compiled as a dynamic framework and consumed by ScaleCloudRenew via `import ScaleCloudSign`.
+
+**Package identity**: Swift Package Manager (`Package.swift`), not XcodeGen.
+
+**Module layout** (4 SPM targets compiled into one framework product):
+
+| SPM Target | Language | Role |
+|---|---|---|
+| `ScaleCloudSign` | Swift | Swift extensions: `ALTAppleAPI+Authentication`, `GSAContext`, `CoreCryptoMacros`, `Data+Encryption` |
+| `CScaleCloudSign` | ObjC/ObjC++ | All ObjC sources: `ALTAppleAPI`, `ALTSigner`, all model files, categories |
+| `CCoreCrypto` | C | Apple's corecrypto headers + `ccsrp.m` (SRP authentication) |
+| `ldid` + `ldid-core` | C++ | Code signing: `alt_ldid.cpp` wrapper + full `ldid` + `libplist` C sources |
+
+**Dependencies bundled inside the submodule**:
+- `Dependencies/OpenSSL.xcframework` — multi-platform OpenSSL (ios-arm64, simulator, macOS, tvOS, watchOS, visionOS slices)
+- `Dependencies/corecrypto/` — Apple corecrypto headers + `ccsrp.m`
+- `Dependencies/ldid/` — full ldid source tree including `libplist`
+- `Dependencies/minizip/` — minizip C sources
+- `Dependencies/ldid` (git submodule, `rileytestut/ldid`) — nested submodule
+
+**Prebuilt binary**: `ScaleCloudSign/prebuilt/ScaleCloudSign.framework/` — arm64 iOS dynamic framework built from this source tree. Contains:
+- Binary: `ScaleCloudSign`
+- `Headers/` — all public ObjC headers (`ALT*.h`, `NSError+ALTErrors.h`, etc.)
+- `Modules/module.modulemap` — `framework module ScaleCloudSign { umbrella header ... }`
+- `Modules/ScaleCloudSign.swiftmodule/` — Swift interface files (`arm64-apple-ios.swiftinterface`, `.abi.json`, `.swiftdoc`, `.swiftmodule`, `.private.swiftinterface`)
+
+### ScaleCloudSign Rename: `AltSign → ScaleCloudSign`
+
+Inside the submodule itself, the original upstream module name was `AltSign`. Commit `8016191` (in the submodule's own history) renamed everything: product name, module name, umbrella header, all public header paths. Commit `ff19013` fixed a double-rename artifact (`ScaleCloudSignoudSign` typo in three private headers).
+
+The result:
+- Umbrella header: `ScaleCloudSign/include/ScaleCloudSign.h` (was `AltSign.h`)
+- All `#import <AltSign/...>` → `#import <ScaleCloudSign/...>`
+- SPM product name: `ScaleCloudSign` (was `AltSign`)
+- The CCoreCrypto/CScaleCloudSign module bundling was attempted then reverted (`6c66b67` then `1d271fd`); current HEAD `1d271fd` has the revert, meaning CCoreCrypto and CScaleCloudSign are separate SPM targets, not baked into the framework binary directly.
+
+### CCoreCrypto / CScaleCloudSign Module Notes
+
+Commit `6c66b67` attempted to bundle `CCoreCrypto` and `CScaleCloudSign` module descriptors into the prebuilt framework's `Modules/` directory so downstream consumers wouldn't need to re-import them. This was reverted by `1d271fd` (current HEAD). The implication: **consumers of the prebuilt `ScaleCloudSign.framework` must have `CCoreCrypto` and `CScaleCloudSign` available separately**, or compile from SPM source where those targets are resolved automatically.
+
+In practice, ScaleCloudRenew's `project.yml` links `ScaleCloudSign.framework` as a prebuilt and separately declares `CCoreCrypto` / `CScaleCloudSign` availability via `FRAMEWORK_SEARCH_PATHS` pointing to the sibling submodule's source.
+
+### Build Workflow for ScaleCloudSign
+
+The `create-release.yml` workflow in the submodule builds the prebuilt:
+1. Checks out `scalecloud-ios` (sparse, `ScaleCloudKit/prebuilt` only) for `ScaleCloudKit.framework`
+2. Strips invalid OpenSSL code signatures (`find ... _CodeSignature ... rm -rf`)
+3. Runs `xcodebuild build` with `BUILD_LIBRARY_FOR_DISTRIBUTION=YES` and `-no-verify-emitted-module-interface`
+4. Manually copies the `.swiftmodule` folder from `DerivedData/Build/Intermediates.noindex` into `prebuilt/ScaleCloudSign.framework/Modules/` (SPM does not embed these in the framework automatically)
+5. Copies all public headers from `ScaleCloudSign/include/` into `prebuilt/.../Headers/`
+6. Writes a `module.modulemap` manually
+7. Uploads as a GitHub Actions artifact (not a GitHub Release)
+
+Trigger: push to a `v*` tag, or `workflow_dispatch`.
+
+---
+
 ## How This Differs from the SideStore Reference
 
 ### 1. Library Identity
@@ -58,6 +133,8 @@ These are referenced with relative `../` paths in `project.yml` and must be chec
 | AltSign import | `import AltSign` | `import ScaleCloudSign` |
 | Bundle ID (Keychain service) | `Bundle.Info.appbundleIdentifier` | `"com.scalecloud"` (hardcoded) |
 | Build output | App `.app` | Framework `.framework` |
+
+> **Historical note**: In the main repo's git history, `import AltSign` references in pre-`452a669e2c` commits referred to the old embedded `ScaleCloudSign/` source tree (the operations framework, now `ScaleCloudRenew`). After `452a669e2c`, `import ScaleCloudSign` refers to the dedicated AltSign-fork submodule. These are different things at different points in history.
 
 The rename from `AltSign` → `ScaleCloudSign` is pervasive. Every file that uses ALT types carries `import ScaleCloudSign`.
 
@@ -163,6 +240,8 @@ SideStore defines `ELOG`, `ILOG`, `DLOG` macros in an app-level file. Because Sc
 ### OpenSSL Linking (`-framework OpenSSL`)
 
 `libimobiledevice` requires OpenSSL for TLS. Rather than linking it as an XCFramework dependency (which triggers Xcode's signature verification for embedded frameworks), it is linked as `-framework OpenSSL` via `OTHER_LDFLAGS`. The framework search path points to `ScaleCloudSign/Dependencies/OpenSSL.xcframework/ios-arm64/` where the actual `.framework` lives.
+
+The `ScaleCloudSign` build workflow also strips invalid OpenSSL code signatures before building (step: `find Dependencies/OpenSSL.xcframework -name '_CodeSignature' -type d -exec rm -rf {} +`). If building locally, this step must be run manually or Xcode will refuse to process the xcframework.
 
 ### `em_proxy` Linked via `force_load`
 
@@ -316,6 +395,46 @@ OperationsLoggingControl.updateDatabase(for: SomeOperation.self, value: true)
 ```
 
 The key is `"<OperationClassName>LoggingEnabled"` in `UserDefaults.standard`. `ANISETTE_VERBOSITY` (a dummy class) controls `FetchAnisetteDataOperation` output.
+
+---
+
+## Repository History Reference
+
+### Key Commits in Main Repo That Touched `ScaleCloudSign/`
+
+This is a reference for reading `git log` output in the main repo. The path `ScaleCloudSign/` means two different things depending on the era.
+
+**Pre-rename era** (operations framework under `ScaleCloudSign/`, 50+ commits):
+
+| Commit | What it did |
+|--------|-------------|
+| `d0dc187901` | First commit: added phase docs, `Keychain.swift`, `project.yml`, AltSign C sources into the flat `ScaleCloudSign/` directory |
+| `2fb8f10f3f` → `ff0fc62a4b` | Long series adding AltStoreCore/Roxas as local sources, fixing header search paths and umbrella headers |
+| `ed9dc74cc1` | Added corecrypto headers and `GSAContext` crypto functions |
+| `0d12ed3d59` | Fixed duplicate `UserDefaults` declarations, added `CommonCrypto` import to `GSAContext` |
+| `4d2fbde45c` | Removed internal module imports — all code compiled as single ScaleCloudSign module |
+| `5786a13fd6` | Added `extern_c` attribute to CoreCrypto module map |
+| `ea4fed5d60` → `b235f141ae` | Six attempts at fixing a `corecrypto` `!` assertion failure |
+| `3f2dd9d3f3` | Toggled `!` operator in altsign (SRP authentication fix) |
+| `8f59e74286`, `5df7296a78`, `ff9d362c0a` | Rebuilt prebuilt kit with different Xcode versions |
+
+**Restructure commit** (watershed):
+
+| Commit | What it did |
+|--------|-------------|
+| `452a669e2c` | **Renamed `ScaleCloudSign → ScaleCloudRenew`** (this framework). Simultaneously introduced new `ScaleCloudSign/` as the AltSign-fork submodule. Renamed workflow file `testbuildSCSign.yml → testbuildSCRenew.yml`. Updated all references in `ScaleCloudApp.xcodeproj`, `AppDelegate+SigningRefresh.swift`, `SceneDelegate.swift`, `SCKSession.swift`. |
+| `ce928ecfdc` | Converted the remaining flat `ScaleCloudSign/` files to a proper git submodule (deleted ~500 tracked files, added the submodule pointer). |
+
+**Post-submodule era** (submodule pointer bumps):
+
+| Commit | What it did |
+|--------|-------------|
+| `ffc4555bf7` | Bump to commit after `rename AltSign > ScaleCloudSign` inside submodule |
+| `0682c519da` | Bump submodule ref |
+| `e141dd142b` | Bump to latest (renamed prebuilt) |
+| `911d233dc8` | Fix: resolve CCoreCrypto/CScaleCloudSign module deps for ScaleCloudRenew |
+| `24b988c04c` | Revert the above |
+| `08f1b7c63e` | Fix: update submodule pointers for CCoreCrypto/CScaleCloudSign fix |
 
 ---
 
