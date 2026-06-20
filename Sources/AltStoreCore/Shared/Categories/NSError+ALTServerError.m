@@ -13,9 +13,11 @@
 // Forward-declare the @objc Swift extensions on NSError so we don't need
 // the generated ScaleCloudRenew-Swift.h (which isn't available when ObjC
 // files are compiled before the Swift sources finish).
+typedef id _Nullable (^ALTUserInfoProvider)(NSError * _Nonnull, NSErrorUserInfoKey _Nonnull);
 @interface NSError (AltStoreSwift)
 @property (nonatomic, readonly, nullable) NSString *alt_localizedFailure;
 @property (nonatomic, readonly, nullable) NSString *alt_localizedDebugDescription;
++ (void)alt_setUserInfoValueProviderForDomain:(NSErrorDomain)domain provider:(ALTUserInfoProvider _Nullable)provider;
 @end
 
 NSErrorDomain const AltServerErrorDomain = @"AltServer.ServerError";
@@ -35,7 +37,7 @@ NSErrorUserInfoKey const ALTNSCodingPathKey = @"NSCodingPath";
 
 + (void)load
 {
-    [NSError setUserInfoValueProviderForDomain:AltServerErrorDomain provider:^id _Nullable(NSError * _Nonnull error, NSErrorUserInfoKey _Nonnull userInfoKey) {
+    [NSError alt_setUserInfoValueProviderForDomain:AltServerErrorDomain provider:^id _Nullable(NSError * _Nonnull error, NSErrorUserInfoKey _Nonnull userInfoKey) {
         if ([userInfoKey isEqualToString:NSLocalizedDescriptionKey])
         {
             return [error altserver_localizedDescription];
@@ -60,7 +62,7 @@ NSErrorUserInfoKey const ALTNSCodingPathKey = @"NSCodingPath";
         return nil;
     }];
     
-    [NSError setUserInfoValueProviderForDomain:AltServerConnectionErrorDomain provider:^id _Nullable(NSError * _Nonnull error, NSErrorUserInfoKey  _Nonnull userInfoKey) {
+    [NSError alt_setUserInfoValueProviderForDomain:AltServerConnectionErrorDomain provider:^id _Nullable(NSError * _Nonnull error, NSErrorUserInfoKey  _Nonnull userInfoKey) {
         if ([userInfoKey isEqualToString:NSLocalizedFailureReasonErrorKey])
         {
             return [error altserver_connection_localizedFailureReason];
