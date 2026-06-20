@@ -95,6 +95,8 @@ targets:
         embed: false
       - framework: Sources/RustBridge/lib/RustBridge.xcframework
         embed: false
+      - framework: ../ScaleCloudSign/Dependencies/OpenSSL.xcframework
+        embed: false
       # em_proxy linked via OTHER_LDFLAGS force_load above
       - package: Starscream
       - package: KeychainAccess
