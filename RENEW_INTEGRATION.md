@@ -1,6 +1,6 @@
 # ScaleCloudRenew — Integration Reference
 
-> Last updated: reflects full history audit of main-repo `ScaleCloudSign` commits and current `ScaleCloudSign` submodule state (`1d271fd`, master branch).
+> Last updated: reflects full file-by-file diff of every ScaleCloudRenew source against its SideStore counterpart. All functional differences are verified.
 
 ## What is ScaleCloudRenew?
 
@@ -199,12 +199,15 @@ The `isMinimuxerReady` global function queries `Minimuxer.ready()` and is used t
 
 ### 7. Anisette (`Sources/Anisette/`)
 
-`FetchAnisetteDataOperation` is essentially the SideStore version but with:
-- UI removed (no server trust alert).
-- `createProxySession()` uses `SCKSession.applyProxySettings()` from `ScaleCloudKit` — this applies the proxy/VPN routing needed for the loopback tunnel when the device is in LocalDevVPN mode.
-- Outdated V1 servers are **auto-trusted** with a warning log rather than presenting a trust dialog.
+`FetchAnisetteDataOperation` differs from SideStore in the following ways (verified by diff):
 
-`AnisetteManager` is copied from SideStore with minor changes (no UI dependencies).
+- **`viewContext: UIViewController?` parameter removed** from `getAnisetteServerUrl()` and `tryNextServer()`. The signature is now parameterless; all call sites updated.
+- **Toast UI replaced with `logMessage()`** — `showToast(viewContext:message:)` is replaced by `private func logMessage(_ message: String)` which calls `print("[Anisette] \(message)")`.
+- **Outdated V1 server alert removed** — SideStore presented a `UIAlertController` asking the user whether to continue with a V1 server. ScaleCloudRenew auto-accepts: logs `"WARNING: Outdated V1 server - auto-accepting"` and immediately calls `fetchAnisetteV1()`.
+- **`createProxySession()` added** — all `URLSession.shared.dataTask(...)` calls are replaced with `createProxySession().dataTask(...)`. `createProxySession()` builds a `URLSessionConfiguration.default`, sets `connectionProxyDictionary = SCKSession.applyProxySettings()`, creates a session, and calls `SCKSession.registerSession(session)`. This routes anisette traffic through the ScaleCloudKit proxy/VPN when active.
+- `import ScaleCloudKit` and `import ScaleCloudSign` replace `import AltStoreCore`, `import AltSign`, `import Roxas`.
+
+`AnisetteManager` is **identical** to SideStore (no changes).
 
 ### 8. `AppDelegate.swift` — Stub Only
 
@@ -233,6 +236,22 @@ SideStore defines `ELOG`, `ILOG`, `DLOG` macros in an app-level file. Because Sc
 
 ## Known Workarounds and Issues
 
+### `NSError+ALTServerError.m` — Import Block Replaced with Forward Declarations
+
+SideStore's `NSError+ALTServerError.m` uses a three-way `#if ALTJIT / TARGET_OS_OSX / !TARGET_OS_OSX` conditional block to import the right generated Swift header and `@import AltSign`. None of those conditions apply in a framework target. The entire block is replaced with:
+```objc
+@import ScaleCloudSign;
+
+// Forward-declare @objc Swift extensions — avoids circular import with
+// the generated ScaleCloudRenew-Swift.h (ObjC compiles before Swift finishes).
+typedef id _Nullable (^ALTUserInfoProvider)(NSError * _Nonnull, NSErrorUserInfoKey _Nonnull);
+@interface NSError (AltStoreSwift)
+@property (nonatomic, readonly, nullable) NSString *alt_localizedFailure;
+@property (nonatomic, readonly, nullable) NSString *alt_localizedDebugDescription;
++ (void)alt_setUserInfoValueProviderForDomain:(NSErrorDomain)domain provider:(ALTUserInfoProvider _Nullable)provider;
+@end
+```
+
 ### `alt_setUserInfoValueProviderForDomain` (ObjC Forward Declaration)
 
 `AppManagerErrors.swift` calls a class method on `AuthenticationOperation` from ObjC context. Because `AuthenticationOperation` is a Swift class in a framework, the generated `-Swift.h` header cannot be imported back into ObjC source in the same module. The workaround is a manual ObjC forward declaration (`@class AuthenticationOperation;`) in the `.m` file.
@@ -250,6 +269,25 @@ The `libem_proxy-ios.a` static library (the EM-proxy needed for WireGuard loopba
 ### `@_silgen_name` for `em_proxy` C Functions
 
 Since a module map approach for `em_proxy` conflicted with other C modules, the C functions `startEMProxy(bind_addr:)` and `stopEMProxy()` are declared in Swift with `@_silgen_name` matching their C symbol names.
+
+### `UIColor+AltStore.swift` — Completely Replaced
+
+SideStore's version (added 2023) provides `UIColor.altBackground` and brightness helpers (`adjustedForDisplay`, `isTooBright`, `isTooDark`). ScaleCloudRenew replaces it with a different file (dated 2019) that loads named colors from the **framework bundle** (`Bundle(for: DatabaseManager.self)`):
+
+```swift
+public extension UIColor {
+    private static let colorBundle = Bundle(for: DatabaseManager.self)
+    static let altPrimary     = UIColor(named: "Primary",       in: colorBundle, compatibleWith: nil)!
+    static let deltaPrimary   = UIColor(named: "DeltaPrimary",  in: colorBundle, compatibleWith: nil)
+    static let clipPrimary    = UIColor(named: "ClipPrimary",   in: colorBundle, compatibleWith: nil)
+    static let refreshRed     = UIColor(named: "RefreshRed",    in: colorBundle, compatibleWith: nil)!
+    static let refreshOrange  = UIColor(named: "RefreshOrange", in: colorBundle, compatibleWith: nil)!
+    static let refreshYellow  = UIColor(named: "RefreshYellow", in: colorBundle, compatibleWith: nil)!
+    static let refreshGreen   = UIColor(named: "RefreshGreen",  in: colorBundle, compatibleWith: nil)!
+}
+```
+
+The named colors are defined in `Sources/AltStoreCore/Resources/Colors.xcassets/`. The `altBackground`/`adjustedForDisplay`/`isTooBright`/`isTooDark` properties from the SideStore version are absent. The extension is `public` (the SideStore version was `internal`).
 
 ### `CLANG_ENABLE_MODULES` for Roxas
 
