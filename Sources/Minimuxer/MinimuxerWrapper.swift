@@ -53,14 +53,13 @@ func retargetUsbmuxdAddr() { // unused for now
     Minimuxer.retargetUsbmuxdAddr()
     #endif
 }
+*/
 
-func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggingEnabled: Bool) throws { // unused for now
+func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggingEnabled: Bool) throws {
     defer { print("[SideStore] minimuxerStartWithLogger(pairingFile, logPath, dest, loggingEnabled) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] minimuxerStartWithLogger(pairingFile, logPath, loggingEnabled) is no-op on simulator")
     #else
-    // refresh config if any
-    bindTunnelConfig()
     // observe network route changes (and update device endpoint from vpn(utun))
     NetworkObserver.shared.start()
     
@@ -71,7 +70,6 @@ func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggin
     #endif
 }
 
-*/
 
 func installProvisioningProfiles(_ profileData: Data) throws {
     defer { print("[SideStore] installProvisioningProfiles(profileData) completed") }
