@@ -1,6 +1,6 @@
 # ScaleCloudRenew — Integration Reference
 
-> Last updated: reflects full file-by-file diff of every ScaleCloudRenew source against its SideStore counterpart. All functional differences are verified.
+> Last updated: reflects full file-by-file diff of every ScaleCloudRenew source against its SideStore counterpart. All functional differences are verified. Current session additions: 2FA support via TwoFactorViewController, IPA source URL pipeline (UserDefaults → CoreData), and ipaSourceURL UserDefaults key.
 
 ## What is ScaleCloudRenew?
 
@@ -144,7 +144,7 @@ Every user-facing interaction in the SideStore original has been stripped. The c
 
 #### `AuthenticationOperation.swift`
 - No `UINavigationController`, no storyboard.
-- No 2FA code entry alert — `verificationHandler` is always `nil`. This means **accounts with 2FA prompts cannot complete login via password/email path**. (Token-based login bypasses this.)
+- **2FA IS now supported** via `TwoFactorViewController` — `verificationHandler` is fully implemented (see §4 New: 2FA Support below). Token-based login still bypasses 2FA entirely.
 - No `SelectTeamViewController` — when multiple teams exist, the **first team is auto-selected**.
 - No certificate revocation confirmation alert — when no locally-stored cert is valid, **all existing SideStore/AltStore certs are automatically revoked** and a new one is requested.
 - No `InstructionsViewController`, no `RefreshAltStoreViewController`.
@@ -174,7 +174,31 @@ The `Keychain` class is completely rewritten (not just moved):
 - `reset()` now also clears `signingCertificate`, `signingCertificatePassword`, the cert expiry UserDefault, and all stored extension profiles. The SideStore original did not clear those.
 - The `AltStoreCore/Components/Keychain.swift` file is explicitly excluded from the XcodeGen sources (`"AltStoreCore/Components/Keychain.swift"`) so the new version at `Sources/Security/Keychain.swift` wins.
 
-### 4. New: Setup Flow (`Sources/Setup/`)
+### 4. New: 2FA Support (`Sources/Setup/TwoFactorViewController.swift`)
+
+SideStore's 2FA path showed a `UIAlertController` requiring `presentingViewController`. ScaleCloudRenew replaces this with a self-contained modal flow tied entirely to `AuthenticationOperation` — no `AppDelegate` involvement, no global observer.
+
+#### `TwoFactorRequest`
+A one-shot callback wrapper. `AuthenticationOperation` creates one and embeds `codeCompletion` (Apple's callback) inside it. Calling `fulfill(code:)` fires the callback and is guarded against double-invocation.
+
+#### `Notification.Name.twoFactorRequired`
+Posted by `AuthenticationOperation` on the main queue with `userInfo["request"] = TwoFactorRequest`. Any observer can present `TwoFactorViewController` in response.
+
+#### `TwoFactorViewController`
+Modal UIKit screen: large monospaced `UITextField` for 6-digit input, Continue button (disabled until exactly 6 digits), Cancel button. `isModalInPresentation = true` — cannot be swiped away. On submit/cancel, calls `request.fulfill(code:)` and self-dismisses.
+
+#### How `AuthenticationOperation` uses it
+Inside the `verificationHandler` closure passed to `ALTAppleAPI.shared.authenticate()`:
+1. Registers a **one-shot** `NotificationCenter` observer for `.twoFactorRequired` on `.main` queue.
+2. Creates a `TwoFactorRequest` whose callback calls `codeCompletion(code)` then signals a `DispatchSemaphore`.
+3. Posts `.twoFactorRequired` on the main queue with the request.
+4. Blocks the background operation thread with `semaphore.wait(timeout: .now() + 120)`.
+5. The observer (main queue) finds the key window's topmost `UIViewController` and presents `TwoFactorViewController`; removes itself immediately after.
+6. On timeout: removes the observer if still present, calls `codeCompletion(nil)` (treated as cancel by Apple's API).
+
+This closure is **only invoked if Apple's server actually returns a 2FA challenge** — there is no overhead for accounts that don't trigger it.
+
+### 5. New: Setup Flow (`Sources/Setup/`)
 
 SideStore has no equivalent. ScaleCloudRenew adds a full onboarding UI flow managed by `SetupCoordinator`:
 
@@ -187,17 +211,17 @@ SideStore has no equivalent. ScaleCloudRenew adds a full onboarding UI flow mana
 
 `SetupCoordinator` also has a **debug channel credential handoff** path: when launched via `idevicedebug` (debugger attached), it receives credentials over stdin/stdout using Secure Enclave ECIES encryption (`SecureEnclaveManager`). The blocking `readLine()` call runs on a background thread — `init()` always returns immediately with a credential VC so UIKit keeps pumping; `start(from:)` detects the debugger and dispatches the handshake off the main thread. On success it transitions to `ValidationViewController` automatically. On failure the credential VC is already showing as fallback. See Option C in the Credential Flow section for the full function-level sequence.
 
-### 5. New: `BackgroundTaskManager` (Silent Audio)
+### 6. New: `BackgroundTaskManager` (Silent Audio)
 
 The `BackgroundTaskManager` (from SideStore) is retained but adapted. It plays a silent `.m4a` file from the framework bundle to extend background execution time during signing. Crucially, it now resolves the audio file from `Bundle(for: type(of: self))` (the framework bundle) rather than `Bundle.main`.
 
-### 6. Minimuxer Layer (`Sources/Minimuxer/`)
+### 7. Minimuxer Layer (`Sources/Minimuxer/`)
 
 The Minimuxer sources are copied verbatim from SideStore. `MinimuxerWrapper.swift` is new — it wraps all Minimuxer calls in `#if targetEnvironment(simulator)` guards and adds verbose logging. Several functions are left unused/commented (`bindTunnelConfig`, `retargetUsbmuxdAddr`, `minimuxerStartWithLogger`, etc.) — these were not needed for the headless path.
 
 The `isMinimuxerReady` global function queries `Minimuxer.ready()` and is used throughout operations to gate WiFi-install paths.
 
-### 7. Anisette (`Sources/Anisette/`)
+### 8. Anisette (`Sources/Anisette/`)
 
 `FetchAnisetteDataOperation` differs from SideStore in the following ways (verified by diff):
 
@@ -209,7 +233,7 @@ The `isMinimuxerReady` global function queries `Minimuxer.ready()` and is used t
 
 `AnisetteManager` is **identical** to SideStore (no changes).
 
-### 8. `AppDelegate.swift` — Stub Only
+### 9. `AppDelegate.swift` — Stub Only
 
 In SideStore, `AppDelegate` is the full app entry point. In ScaleCloudRenew it is a near-empty stub class (not annotated `@UIApplicationMain`) that only carries the two backup notification name constants that are referenced by `BackupAppOperation`:
 ```swift
@@ -220,15 +244,15 @@ class AppDelegate {
 ```
 The full `AppDelegate` implementation is commented out entirely.
 
-### 9. Build System: XcodeGen + Static libimobiledevice
+### 10. Build System: XcodeGen + Static libimobiledevice
 
 SideStore builds `libimobiledevice` etc. as SPM dependencies. ScaleCloudRenew bundles the C sources directly and defines a `libimobiledevice` static library target in `project.yml`. This avoids SPM's build system and allows explicit control over compiler flags needed for iOS cross-compilation. The link is done via `OTHER_LDFLAGS: -force_load $(BUILT_PRODUCTS_DIR)/libimobiledevice.a`.
 
-### 10. `SemanticVersion` Downgraded to 0.3.8
+### 11. `SemanticVersion` Downgraded to 0.3.8
 
 SideStore uses `SemanticVersion` from SwiftPackageIndex. This project pins it to `exactVersion: 0.3.8` to avoid a `swiftinterface` binary compatibility bug in 0.4.0 that prevented the prebuilt framework from loading correctly.
 
-### 11. `OSLog+SideStore.swift` (Macros `ELOG`, `ILOG`, `DLOG`)
+### 12. `OSLog+SideStore.swift` (Macros `ELOG`, `ILOG`, `DLOG`)
 
 SideStore defines `ELOG`, `ILOG`, `DLOG` macros in an app-level file. Because ScaleCloudRenew is a framework without a bridging header, the file is copied into `Sources/Extensions/OSLog+SideStore.swift` to provide these logging helpers.
 
@@ -303,7 +327,7 @@ Many operations accept `presentingViewController: UIViewController?` but never u
 
 ### 2FA / Multi-Team Accounts
 
-- **2FA during email+password login**: Not supported. If Apple requires a verification code, the login will fail with an `incorrectCredentials` or similar error. The only workaround is to use token-based login (ADSID + Xcode token) which does not trigger 2FA.
+- **2FA during email+password login**: **Supported** via `TwoFactorViewController`. When Apple returns a 2FA challenge, the app presents a modal 6-digit code entry screen and blocks the signing operation thread (up to 2 minutes) waiting for user input. Token-based login (ADSID + Xcode token) never triggers 2FA and is still the preferred production path.
 - **Multiple teams**: The first team in the list is selected automatically. There is no way to choose a specific team in headless mode other than ensuring only one team is active in the Apple developer portal.
 
 ### `validateAppExtensionsOperation` Commented Out
@@ -357,7 +381,7 @@ During initial device provisioning, iloader installs the app, then launches it v
 5. Prints bare base64 public key then `SCALECLOUD_PUBKEY_READY` to stdout; `fflush(stdout)`.
 6. Blocks the background thread on `readLine()` until iloader responds. Reads 4 positional lines then `SCALECLOUD_PAYLOAD_COMPLETE`.
 7. `SecureEnclaveManager.decrypt(encryptedData:using:)`: calls `SecKeyCreateDecryptedData` with `.eciesEncryptionStandardVariableIVX963SHA256AESGCM` — decryption happens inside the Secure Enclave chip, private key never exposed.
-8. Stores email → `Keychain.shared.appleIDEmailAddress`, password → `Keychain.shared.appleIDPassword`, anisette URL → `UserDefaults.standard.menuAnisetteServersList` + `menuAnisetteURL`. Tailscale hostname (line 4) is logged but not stored — it belongs to ScaleCloudApp's Nextcloud login flow.
+8. Stores email → `Keychain.shared.appleIDEmailAddress`, password → `Keychain.shared.appleIDPassword`, anisette URL → `UserDefaults.standard.menuAnisetteServersList` + `menuAnisetteURL`. Tailscale hostname (line 4) is stored as `UserDefaults.standard.ipaSourceURL = "http://<host>/ScaleCloud.ipa"` — the IPA source URL for background refresh.
 9. Prints `SCALECLOUD_CREDENTIALS_OK` to stdout; `fflush(stdout)`. Returns `true`.
 10. Back on main thread: replaces `CredentialInputViewController` with `ValidationViewController`, auto-triggers `startValidation()` after 0.3s. Setup flow continues normally from there.
 
@@ -429,6 +453,7 @@ Refresh requires:
 | `com.scalecloud.setupCompleted` | `Bool` | Set by `SetupCoordinator.setupCompleted()` |
 | `com.scalecloud.lastSetupDate` | `Date` | Timestamp of last completed setup |
 | `com.scalecloud.cert.expiry` | `Date` | Certificate expiry, written by `BackgroundRefreshAppsOperation` |
+| `com.scalecloud.ipaSourceURL` | `String?` | IPA download URL, set by debug channel handoff. Staging value: `DatabaseManager.prepareDatabase()` syncs it into `AppVersion.downloadURL` in CoreData on every launch. Format: `http://<tailscale-host>/ScaleCloud.ipa`. Also cleared by `resetSetup()`. |
 | `menuAnisetteServersList` | `[String]` | Candidate anisette server URLs |
 | `menuAnisetteURL` | `String` | Currently active anisette server URL |
 
@@ -486,11 +511,26 @@ This is a reference for reading `git log` output in the main repo. The path `Sca
 
 ---
 
+## IPA Source URL Pipeline
+
+The signing engine (`BackgroundRefreshAppsOperation` → `AppManager.refresh()` → `InstallAppOperation`) needs to re-download the IPA when its local cached copy is missing or stale. It reads the download URL from `AppVersion.downloadURL` in CoreData — never from `UserDefaults`.
+
+The pipeline that gets the URL there:
+
+1. **iloader** sends the Tailscale hostname on line 4 of the debug channel handshake.
+2. **`SetupCoordinator.performDebugChannelHandoff()`** receives it and writes `UserDefaults.standard.ipaSourceURL = "http://<host>/ScaleCloud.ipa"`. This persists across app restarts.
+3. **`DatabaseManager.prepareDatabase()`** runs on every launch (inside `start(completionHandler:)`). It reads `UserDefaults.standard.ipaSourceURL` and calls `latestVersion.mutateForData(downloadURL: ipaURL)` to write it into the `StoreApp`'s `AppVersion` record in CoreData. This sync runs every launch, so if the Tailscale address changes on re-setup the DB record is always updated.
+4. The signing pipeline reads `AppVersion.downloadURL` normally — no knowledge of `UserDefaults`.
+
+**Note**: The actual HTTP server on the Tailscale machine that serves `ScaleCloud.ipa` at that URL **does not exist yet** (iloader side). This is the next required piece.
+
+---
+
 ## Readiness for Headless Operation
 
 | Capability | Status | Notes |
 |-----------|--------|-------|
-| Email+password login (no 2FA) | ✅ Works | Requires app-specific password; 2FA prompts will fail |
+| Email+password login (no 2FA) | ✅ Works | Requires app-specific password |
 | Token-based login (ADSID/XcodeToken) | ✅ Works | Best path for headless use |
 | Multi-team accounts | ⚠️ Auto-picks first | No way to select a specific team |
 | Anisette v3 provisioning | ✅ Works | Requires reachable anisette server |
@@ -500,7 +540,7 @@ This is a reference for reading `git log` output in the main repo. The path `Sca
 | Background refresh | ✅ Works | Silent audio workaround included |
 | Setup UI flow | ✅ Functional | Still requires UIKit host (ScaleCloudApp) |
 | Debug channel credential handoff | ✅ Implemented | Requires attached debugger (LLDB) |
-| 2FA / verification code input | ❌ Not supported | Would need stdin/callback mechanism |
+| 2FA / verification code input | ✅ Supported | `TwoFactorViewController` via `NotificationCenter` + semaphore; 2-minute timeout |
 | Selective team choice | ❌ Not supported | Always picks first |
 | Source management UI (add/remove) | ❌ Removed | Must be done programmatically if needed |
 | Permission review UI | ❌ Removed | Permissions verified silently; may throw on added perms |
@@ -511,6 +551,6 @@ This is a reference for reading `git log` output in the main repo. The path `Sca
 
 ### Summary
 
-The submodule is functionally complete for its intended role as a headless signing engine. The biggest outstanding limitation for fully unattended operation is **2FA**. For production use, Apple IDs should use an app-specific password (which does not trigger 2FA) or pre-extracted ADSID/Xcode tokens.
+The submodule is functionally complete for its intended role as a headless signing engine. 2FA is now handled via `TwoFactorViewController` — the last significant gap for email+password login flows is closed. The only remaining production concern is that ADSID/Xcode token login is still the preferred path (faster, no 2FA risk), and the HTTP server on the iloader/Tailscale side that serves the IPA has not yet been built.
 
 The prebuilt framework (`prebuilt/ScaleCloudRenew.framework`) is available for integration without rebuilding from source. The framework binary is arm64-only and was built with `BUILD_LIBRARY_FOR_DISTRIBUTION = YES` for ABI stability.
