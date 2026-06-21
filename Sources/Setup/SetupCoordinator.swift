@@ -37,30 +37,12 @@ public class SetupCoordinator {
     // MARK: - Initialization
     
     public init() {
-        // Initialize navigationController first so all stored properties are set before self is used
+        // Always start with the credential VC — it will be replaced if/when the debug
+        // channel handshake succeeds, but UIKit needs a real root view controller
+        // immediately so the main run loop keeps pumping.
         let credentialVC = CredentialInputViewController()
         navigationController = UINavigationController(rootViewController: credentialVC)
-        
-        // Now self is fully initialized, safe to use
-        if DebuggerUtils.isDebuggerAttached() {
-            print("[Setup] Debugger detected, attempting debug channel credential handoff")
-            if performDebugChannelHandoff() {
-                // Credentials successfully received via debug channel
-                print("[Setup] Debug channel handoff successful, starting with validation")
-                let validationVC = ValidationViewController()
-                validationVC.coordinator = self
-                navigationController.setViewControllers([validationVC], animated: false)
-                currentStep = .validation
-            } else {
-                // Fallback to manual entry
-                print("[Setup] Debug channel handoff failed, falling back to manual entry")
-                credentialVC.coordinator = self
-            }
-        } else {
-            // No debugger - use manual credential entry
-            print("[Setup] No debugger attached, using manual credential entry")
-            credentialVC.coordinator = self
-        }
+        credentialVC.coordinator = self
         
         navigationController.isModalInPresentation = true // Disable swipe-to-dismiss
         navigationController.navigationBar.prefersLargeTitles = true
@@ -68,15 +50,39 @@ public class SetupCoordinator {
     
     // MARK: - Public Interface
     
-    /// Present setup flow modally
+    /// Present setup flow modally.
+    /// If a debugger is attached (i.e. launched via idevicedebug), the credential handshake
+    /// runs on a background thread so the main run loop is never blocked by readLine().
     public func start(from presentingViewController: UIViewController) {
         presentingViewController.present(navigationController, animated: true)
         
-        // If we started with validation (credentials from debug channel), auto-trigger it
-        if currentStep == .validation {
-            if let validationVC = navigationController.topViewController as? ValidationViewController {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    validationVC.startValidation()
+        guard DebuggerUtils.isDebuggerAttached() else {
+            print("[Setup] No debugger attached, using manual credential entry")
+            return
+        }
+        
+        // Debugger is attached — perform the stdin/stdout handshake on a background thread.
+        // readLine() is a blocking syscall; calling it on the main thread would freeze UIKit
+        // and could deadlock the debug bridge's own run-loop pumping.
+        print("[Setup] Debugger detected, starting debug channel handoff on background thread")
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self else { return }
+            let success = self.performDebugChannelHandoff()
+            
+            DispatchQueue.main.async {
+                if success {
+                    print("[Setup] Debug channel handoff successful, transitioning to validation")
+                    self.currentStep = .validation
+                    let validationVC = ValidationViewController()
+                    validationVC.coordinator = self
+                    // Replace the credential VC with validation — no back button possible
+                    self.navigationController.setViewControllers([validationVC], animated: true)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        validationVC.startValidation()
+                    }
+                } else {
+                    print("[Setup] Debug channel handoff failed, staying on manual credential entry")
+                    // credentialVC is already the root — nothing to do
                 }
             }
         }
