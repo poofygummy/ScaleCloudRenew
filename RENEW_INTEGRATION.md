@@ -338,20 +338,27 @@ In `AppManager._refresh`, a `validateAppExtensionsOperation` is defined but its 
    ```
 3. `AuthenticationOperation.signIn` will use these first, before trying email+password.
 
-### Option C: Setup Flow Debug Channel
+### Option C: Setup Flow Debug Channel (iloader)
 
-During development/CI, with a debugger attached to the device:
+During initial device provisioning, iloader launches the app via `idevicedebug` and performs a credential handoff over stdin/stdout:
 1. `SetupCoordinator.init()` detects the debugger via `DebuggerUtils.isDebuggerAttached()`.
-2. It generates a Secure Enclave ECDH key pair, prints `SCALECLOUD_PUBKEY:<base64>` to stdout.
-3. The Mac-side tool reads the public key, encrypts the Apple ID password with ECIES, and writes back:
+2. It generates a transient Secure Enclave P-256 key pair and prints to stdout:
    ```
-   SCALECLOUD_APPLEID:<email>
-   SCALECLOUD_PASSWORD:<encrypted_base64>
-   SCALECLOUD_ANISETTE:<url>       # optional
+   <base64-encoded public key>
+   SCALECLOUD_PUBKEY_READY
+   ```
+   The public key line is **bare base64 with no prefix**. iloader captures the last non-empty line before the sentinel.
+3. iloader encrypts the password using ECIES (`kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA256AESGCM`: X9.63 KDF → AES-128-GCM with 16-byte IV) and writes 5 positional lines to stdin:
+   ```
+   <base64-encrypted-password>
+   <plaintext-email>
+   <anisette-url>
+   <tailscale-hostname>
    SCALECLOUD_PAYLOAD_COMPLETE
    ```
-4. The framework decrypts with the Secure Enclave private key and stores credentials.
-5. Sends `SCALECLOUD_CREDENTIALS_OK` to confirm.
+   Lines are **positional**, not key-value prefixed. The app reads them by line number.
+4. The app decrypts with `SecureEnclaveManager` (using `eciesEncryptionStandardVariableIVX963SHA256AESGCM`) and stores credentials in Keychain. The anisette URL is stored in `menuAnisetteServersList`. The tailscale hostname (line 4) is logged but not stored — it belongs to ScaleCloudApp's Nextcloud login flow, not ScaleCloudRenew.
+5. Sends `SCALECLOUD_CREDENTIALS_OK` to confirm. iloader waits 1 second then kills the debug process.
 
 ---
 

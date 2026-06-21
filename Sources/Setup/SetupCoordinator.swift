@@ -208,34 +208,53 @@ public class SetupCoordinator {
             let (publicKeyBytes, privateKey) = try SecureEnclaveManager.generateKeyPair()
             
             // Step 2: Send public key to computer via stdout
+            // Protocol: bare base64 line immediately followed by sentinel — no prefix on the key line.
+            // iloader captures the last non-empty line before SCALECLOUD_PUBKEY_READY as the key.
             let publicKeyBase64 = publicKeyBytes.base64EncodedString()
-            print("SCALECLOUD_PUBKEY:\(publicKeyBase64)")
+            print(publicKeyBase64)
             print("SCALECLOUD_PUBKEY_READY")
             fflush(stdout)
             
             print("[DebugChannel] Sent public key, waiting for encrypted payload...")
             
-            // Step 3: Read encrypted payload from stdin
+            // Step 3: Read credential payload from stdin.
+            // iloader sends 5 plain lines (no key: prefixes):
+            //   Line 1: base64-encoded encrypted password
+            //   Line 2: plaintext email
+            //   Line 3: anisette server URL
+            //   Line 4: tailscale hostname
+            //   Line 5: SCALECLOUD_PAYLOAD_COMPLETE
             var encryptedPasswordBase64: String?
             var appleID: String?
             var anisetteURL: String?
+            var tailscaleHost: String?
+            var lineIndex = 0
             
             while let line = readLine() {
                 let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
                 
-                if trimmed.hasPrefix("SCALECLOUD_PASSWORD:") {
-                    encryptedPasswordBase64 = String(trimmed.dropFirst("SCALECLOUD_PASSWORD:".count))
-                    print("[DebugChannel] Received encrypted password (\(encryptedPasswordBase64?.count ?? 0) chars)")
-                } else if trimmed.hasPrefix("SCALECLOUD_APPLEID:") {
-                    appleID = String(trimmed.dropFirst("SCALECLOUD_APPLEID:".count))
-                    print("[DebugChannel] Received Apple ID: \(appleID ?? "(none)")")
-                } else if trimmed.hasPrefix("SCALECLOUD_ANISETTE:") {
-                    anisetteURL = String(trimmed.dropFirst("SCALECLOUD_ANISETTE:".count))
-                    print("[DebugChannel] Received Anisette URL: \(anisetteURL ?? "(none)")")
-                } else if trimmed == "SCALECLOUD_PAYLOAD_COMPLETE" {
+                if trimmed == "SCALECLOUD_PAYLOAD_COMPLETE" {
                     print("[DebugChannel] Payload transmission complete")
                     break
                 }
+                
+                switch lineIndex {
+                case 0:
+                    encryptedPasswordBase64 = trimmed
+                    print("[DebugChannel] Received encrypted password (\(trimmed.count) chars)")
+                case 1:
+                    appleID = trimmed
+                    print("[DebugChannel] Received Apple ID: \(trimmed)")
+                case 2:
+                    anisetteURL = trimmed
+                    print("[DebugChannel] Received Anisette URL: \(trimmed)")
+                case 3:
+                    tailscaleHost = trimmed
+                    print("[DebugChannel] Received Tailscale host: \(trimmed)")
+                default:
+                    break
+                }
+                lineIndex += 1
             }
             
             // Step 4: Validate received data
@@ -247,7 +266,12 @@ public class SetupCoordinator {
                 return false
             }
             
-            // Step 5: Decrypt password using Secure Enclave
+            // Step 5: Decrypt password using Secure Enclave.
+            // iloader encrypts with: X9.63 KDF (SHA-256) → AES-128-GCM, 16-byte IV, no AAD,
+            // wire format: ephemeral_pubkey(65) || ciphertext || tag(16).
+            // This matches exactly what Apple's eciesEncryptionStandardVariableIVX963SHA256AESGCM
+            // expects — the "VariableIV" name indicates the non-standard 16-byte IV derived from
+            // the KDF rather than a 12-byte counter IV. SecureEnclaveManager uses that algorithm.
             let passwordData = try SecureEnclaveManager.decrypt(encryptedData: encryptedPasswordData, using: privateKey)
             guard let password = String(data: passwordData, encoding: .utf8), !password.isEmpty else {
                 print("[DebugChannel] ERROR: Decrypted password is invalid")
@@ -270,6 +294,13 @@ public class SetupCoordinator {
                 }
                 UserDefaults.standard.menuAnisetteURL = anisetteURL
                 print("[DebugChannel] Stored Anisette URL: \(anisetteURL)")
+            }
+            
+            // Step 7b: Tailscale hostname is received but not stored here.
+            // It is the Nextcloud server address for ScaleCloudApp's login flow (NCLogin),
+            // which is outside ScaleCloudRenew's scope.
+            if let tailscaleHost = tailscaleHost {
+                print("[DebugChannel] Received Tailscale host (not stored by ScaleCloudRenew): \(tailscaleHost)")
             }
             
             // Step 8: Send success confirmation
