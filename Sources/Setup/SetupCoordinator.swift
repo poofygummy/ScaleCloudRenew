@@ -238,11 +238,15 @@ public class SetupCoordinator {
                 print("[DebugChannel] Stored Anisette URL: \(anisetteURL)")
             }
             
-            // Step 7b: Tailscale hostname is received but not stored here.
-            // It is the Nextcloud server address for ScaleCloudApp's login flow (NCLogin),
-            // which is outside ScaleCloudRenew's scope.
-            if let tailscaleHost = tailscaleHost {
-                print("[DebugChannel] Received Tailscale host (not stored by ScaleCloudRenew): \(tailscaleHost)")
+            // Step 7b: Tailscale hostname is the machine where iloader lives and where
+            // the ScaleCloud.ipa is served. Store it as the IPA source URL so that
+            // InstalledApp bootstrap and BackgroundRefreshAppsOperation can re-download
+            // the IPA if the local cached copy is ever deleted.
+            // iloader serves the IPA at http://<host>/ScaleCloud.ipa by convention.
+            if let tailscaleHost = tailscaleHost, !tailscaleHost.isEmpty {
+                let ipaURL = "http://\(tailscaleHost)/ScaleCloud.ipa"
+                UserDefaults.standard.ipaSourceURL = ipaURL
+                print("[DebugChannel] Stored IPA source URL: \(ipaURL)")
             }
             
             // Step 8: Send success confirmation

@@ -521,8 +521,27 @@ private extension AuthenticationOperation
                     verificationHandler = nil
                 }
                 */
-                // HEADLESS: no view controller to present security code alert, so don't provide verificationHandler.
-                verificationHandler = nil
+                // Post a notification so TwoFactorViewController can present itself
+                // from whatever window is currently visible. Block this background thread
+                // with a semaphore until the user submits (or cancels) the code.
+                verificationHandler = { codeCompletion in
+                    let semaphore = DispatchSemaphore(value: 0)
+                    let request = TwoFactorRequest { code in
+                        codeCompletion(code)
+                        semaphore.signal()
+                    }
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(
+                            name: .twoFactorRequired,
+                            object: nil,
+                            userInfo: ["request": request]
+                        )
+                    }
+                    // Wait up to 2 minutes for user input
+                    if semaphore.wait(timeout: .now() + 120) == .timedOut {
+                        codeCompletion(nil) // treat timeout as cancel
+                    }
+                }
                     
                 ALTAppleAPI.shared.authenticate(appleID: appleID, password: password, anisetteData: anisetteData,
                                                 verificationHandler: verificationHandler) { (account, session, error) in

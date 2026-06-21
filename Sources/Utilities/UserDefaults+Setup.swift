@@ -31,6 +31,19 @@ extension UserDefaults {
         }
     }
     
+    /// The URL where the ScaleCloud IPA can be downloaded for re-signing.
+    /// Set during debug channel handoff from the Tailscale host address sent by iloader.
+    /// Used by InstalledApp bootstrap so BackgroundRefreshAppsOperation can re-fetch
+    /// the IPA if the local cached copy is missing.
+    @objc dynamic var ipaSourceURL: String? {
+        get {
+            return string(forKey: "com.scalecloud.ipaSourceURL")
+        }
+        set {
+            set(newValue, forKey: "com.scalecloud.ipaSourceURL")
+        }
+    }
+
     #if DEBUG
     /// Debug-only method to reset setup state and credentials
     /// Useful for testing setup flow without reinstalling app
@@ -39,6 +52,7 @@ extension UserDefaults {
         removeObject(forKey: "com.scalecloud.lastSetupDate")
         removeObject(forKey: "menuAnisetteServersList")
         removeObject(forKey: "menuAnisetteURL")
+        removeObject(forKey: "com.scalecloud.ipaSourceURL")
         
         // Clear credentials from Keychain
         ScaleCloudRenew.Keychain.shared.reset()
