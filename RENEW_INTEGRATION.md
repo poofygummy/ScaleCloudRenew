@@ -185,7 +185,7 @@ SideStore has no equivalent. ScaleCloudRenew adds a full onboarding UI flow mana
 5. **Anisette** (`AnisetteConfigViewController`) — optionally configure a custom anisette server URL.
 6. **Complete** (`SetupCompleteViewController`) — shows cert expiry date, marks setup done.
 
-`SetupCoordinator` also has a **debug channel credential handoff** path: when a debugger is attached, it tries to receive credentials over stdin/stdout using Secure Enclave ECIES encryption (`SecureEnclaveManager`). This is designed for headless CI provisioning from a Mac.
+`SetupCoordinator` also has a **debug channel credential handoff** path: when launched via `idevicedebug` (debugger attached), it receives credentials over stdin/stdout using Secure Enclave ECIES encryption (`SecureEnclaveManager`). The blocking `readLine()` call runs on a background thread — `init()` always returns immediately with a credential VC so UIKit keeps pumping; `start(from:)` detects the debugger and dispatches the handshake off the main thread. On success it transitions to `ValidationViewController` automatically. On failure the credential VC is already showing as fallback. See Option C in the Credential Flow section for the full function-level sequence.
 
 ### 5. New: `BackgroundTaskManager` (Silent Audio)
 
@@ -340,25 +340,28 @@ In `AppManager._refresh`, a `validateAppExtensionsOperation` is defined but its 
 
 ### Option C: Setup Flow Debug Channel (iloader)
 
-During initial device provisioning, iloader launches the app via `idevicedebug` and performs a credential handoff over stdin/stdout:
-1. `SetupCoordinator.init()` detects the debugger via `DebuggerUtils.isDebuggerAttached()`.
-2. It generates a transient Secure Enclave P-256 key pair and prints to stdout:
-   ```
-   <base64-encoded public key>
-   SCALECLOUD_PUBKEY_READY
-   ```
-   The public key line is **bare base64 with no prefix**. iloader captures the last non-empty line before the sentinel.
-3. iloader encrypts the password using ECIES (`kSecKeyAlgorithmECIESEncryptionStandardVariableIVX963SHA256AESGCM`: X9.63 KDF → AES-128-GCM with 16-byte IV) and writes 5 positional lines to stdin:
-   ```
-   <base64-encrypted-password>
-   <plaintext-email>
-   <anisette-url>
-   <tailscale-hostname>
-   SCALECLOUD_PAYLOAD_COMPLETE
-   ```
-   Lines are **positional**, not key-value prefixed. The app reads them by line number.
-4. The app decrypts with `SecureEnclaveManager` (using `eciesEncryptionStandardVariableIVX963SHA256AESGCM`) and stores credentials in Keychain. The anisette URL is stored in `menuAnisetteServersList`. The tailscale hostname (line 4) is logged but not stored — it belongs to ScaleCloudApp's Nextcloud login flow, not ScaleCloudRenew.
-5. Sends `SCALECLOUD_CREDENTIALS_OK` to confirm. iloader waits 1 second then kills the debug process.
+During initial device provisioning, iloader installs the app, then launches it via `idevicedebug` and performs a credential handoff over stdin/stdout. This is the primary path for the ScaleCloud installer flow. The full sequence across both sides:
+
+**iloader side** (`scalecloud.rs → scalecloud_credential_injection()`):
+1. Spawns `idevicedebug -u <udid> run com.scalecloud.app` — keeping stdin/stdout as live pipes.
+2. Reads stdout line by line. Tracks the last non-empty line seen. When it sees `SCALECLOUD_PUBKEY_READY`, the previous non-empty line is the base64-encoded public key.
+3. Decrypts credentials from the in-memory `ScalecloudSession` (ChaCha20-Poly1305).
+4. Calls `apple_ecies_encrypt()`: ephemeral ECDH on P-256 → X9.63 KDF (SHA-256) → AES-128-GCM with 16-byte IV. Wire format: `ephemeral_pubkey(65B) || ciphertext || tag(16B)`.
+5. Writes 5 positional lines to stdin, then kills the process 1 second after receiving confirmation.
+
+**iOS app side** (`SetupCoordinator.start(from:)` → `performDebugChannelHandoff()`):
+1. `SetupCoordinator.init()` always creates `CredentialInputViewController` immediately so UIKit has a root view and the main run loop keeps pumping.
+2. `start(from:)` presents the navigation controller, then calls `DebuggerUtils.isDebuggerAttached()` — uses `sysctl(CTL_KERN, KERN_PROC, KERN_PROC_PID)` and checks `P_TRACED` flag. Returns `true` when `idevicedebug`/`debugserver` is attached.
+3. If debugger detected, dispatches `performDebugChannelHandoff()` to `DispatchQueue.global(qos: .userInitiated)` — **never blocks the main thread**.
+4. `SecureEnclaveManager.generateKeyPair()`: calls `SecKeyCreateRandomKey` with `kSecAttrTokenIDSecureEnclave`, non-permanent. Exports the public key via `SecKeyCopyExternalRepresentation` (65-byte uncompressed P-256 point).
+5. Prints bare base64 public key then `SCALECLOUD_PUBKEY_READY` to stdout; `fflush(stdout)`.
+6. Blocks the background thread on `readLine()` until iloader responds. Reads 4 positional lines then `SCALECLOUD_PAYLOAD_COMPLETE`.
+7. `SecureEnclaveManager.decrypt(encryptedData:using:)`: calls `SecKeyCreateDecryptedData` with `.eciesEncryptionStandardVariableIVX963SHA256AESGCM` — decryption happens inside the Secure Enclave chip, private key never exposed.
+8. Stores email → `Keychain.shared.appleIDEmailAddress`, password → `Keychain.shared.appleIDPassword`, anisette URL → `UserDefaults.standard.menuAnisetteServersList` + `menuAnisetteURL`. Tailscale hostname (line 4) is logged but not stored — it belongs to ScaleCloudApp's Nextcloud login flow.
+9. Prints `SCALECLOUD_CREDENTIALS_OK` to stdout; `fflush(stdout)`. Returns `true`.
+10. Back on main thread: replaces `CredentialInputViewController` with `ValidationViewController`, auto-triggers `startValidation()` after 0.3s. Setup flow continues normally from there.
+
+On failure at any step, `performDebugChannelHandoff()` returns `false` and the credential VC is already showing as a manual-entry fallback.
 
 ---
 
