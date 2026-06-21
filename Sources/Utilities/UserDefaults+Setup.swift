@@ -31,10 +31,12 @@ extension UserDefaults {
         }
     }
     
-    /// The URL where the ScaleCloud IPA can be downloaded for re-signing.
-    /// Set during debug channel handoff from the Tailscale host address sent by iloader.
-    /// Used by InstalledApp bootstrap so BackgroundRefreshAppsOperation can re-fetch
-    /// the IPA if the local cached copy is missing.
+    /// The IPA download URL received from iloader via the debug channel.
+    /// Derived from the Tailscale host: http://<tailscale-host>/ScaleCloud.ipa
+    ///
+    /// This is a persistent staging value. On every launch, DatabaseManager.prepareDatabase()
+    /// reads it and writes it into the StoreApp's AppVersion.downloadURL in CoreData — which is
+    /// the authoritative location the signing engine reads when it needs to re-fetch the IPA.
     @objc dynamic var ipaSourceURL: String? {
         get {
             return string(forKey: "com.scalecloud.ipaSourceURL")

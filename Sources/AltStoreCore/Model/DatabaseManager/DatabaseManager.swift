@@ -384,6 +384,19 @@ private extension DatabaseManager
                 storeApp = StoreApp.makeAltStoreApp(version: localApp.version, buildVersion: nil, in: context)
                 storeApp.source = altStoreSource
             }
+            
+            // Update the IPA download URL from whatever was stored during debug channel handoff.
+            // UserDefaults.ipaSourceURL is set by SetupCoordinator when iloader sends the
+            // Tailscale host over the debug channel. We always sync it into the StoreApp's
+            // AppVersion here (every launch) so the DB record stays current even if the
+            // Tailscale address ever changes on a re-setup.
+            if let ipaURLString = UserDefaults.standard.ipaSourceURL,
+               let ipaURL = URL(string: ipaURLString),
+               let latestVersion = storeApp.latestSupportedVersion ?? storeApp.latestAvailableVersion
+            {
+                _ = latestVersion.mutateForData(downloadURL: ipaURL)
+                print("[DatabaseManager] Updated IPA download URL: \(ipaURLString)")
+            }
                         
             let serialNumber = Bundle.main.object(forInfoDictionaryKey: Bundle.Info.certificateID) as? String
             let installedApp: InstalledApp
