@@ -10,6 +10,7 @@ import Foundation
 import WebKit
 import UniformTypeIdentifiers
 import ScaleCloudSign
+import ScaleCloudKit
 
 @objc(DownloadAppOperation)
 final class DownloadAppOperation: ResultOperation<ALTApplication>
@@ -24,7 +25,13 @@ final class DownloadAppOperation: ResultOperation<ALTApplication>
     private var sourceURL: URL?
     private let destinationURL: URL
 
-    private let session = URLSession(configuration: .default)
+    private let session: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.connectionProxyDictionary = SCKSession.applyProxySettings()
+        let session = URLSession(configuration: config)
+        SCKSession.registerSession(session)
+        return session
+    }()
     private let temporaryDirectory = FileManager.default.uniqueTemporaryURL()
 
     init(app: AppProtocol, destinationURL: URL, context: InstallAppOperationContext)
