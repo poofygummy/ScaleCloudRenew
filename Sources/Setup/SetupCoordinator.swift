@@ -28,9 +28,6 @@ public class SetupCoordinator {
     private enum SetupStep {
         case credentials
         case validation
-        case developerMode
-        case certificateTrust
-        case anisette
         case complete
     }
     
@@ -106,24 +103,11 @@ public class SetupCoordinator {
     }
     
     func validationSucceeded() {
-        currentStep = .developerMode
-        
-        // Check iOS version - Developer Mode only exists on iOS 16+
-        if #available(iOS 16.0, *) {
-            // Check if already enabled
-            if isDeveloperModeEnabled() {
-                print("[Setup] Developer Mode already enabled, skipping screen")
-                developerModeConfirmed()
-            } else {
-                let developerModeVC = DeveloperModeViewController()
-                developerModeVC.coordinator = self
-                navigationController.pushViewController(developerModeVC, animated: true)
-            }
-        } else {
-            // iOS 15 or earlier - skip Developer Mode screen
-            print("[Setup] iOS < 16, skipping Developer Mode screen")
-            developerModeConfirmed()
-        }
+        // Developer mode must already be on to sideload the app at all.
+        // Certificate trust must be done before the app can run.
+        // Anisette URL is already injected via the debug channel.
+        // Nothing left to show — go straight to done.
+        setupCompleted()
     }
     
     func validationFailed(error: Error) {
@@ -139,36 +123,6 @@ public class SetupCoordinator {
         navigationController.topViewController?.present(alert, animated: true)
     }
     
-    func developerModeConfirmed() {
-        currentStep = .certificateTrust
-        let trustVC = TrustCertificateViewController()
-        trustVC.coordinator = self
-        navigationController.pushViewController(trustVC, animated: true)
-    }
-    
-    func certificateTrustConfirmed() {
-        currentStep = .anisette
-        let anisetteVC = AnisetteConfigViewController()
-        anisetteVC.coordinator = self
-        navigationController.pushViewController(anisetteVC, animated: true)
-    }
-    
-    func anisetteConfigured(serverURL: String?) {
-        // Store Anisette server if provided
-        if let serverURL = serverURL, !serverURL.isEmpty {
-            var servers = UserDefaults.standard.menuAnisetteServersList
-            if !servers.contains(serverURL) {
-                servers.append(serverURL)
-                UserDefaults.standard.menuAnisetteServersList = servers
-            }
-            UserDefaults.standard.menuAnisetteURL = serverURL
-        }
-        
-        currentStep = .complete
-        let completeVC = SetupCompleteViewController()
-        completeVC.coordinator = self
-        navigationController.pushViewController(completeVC, animated: true)
-    }
     
     func setupCompleted() {
         // Mark setup as complete
@@ -182,24 +136,6 @@ public class SetupCoordinator {
         navigationController.dismiss(animated: true) {
             self.onCompletion?()
         }
-    }
-    
-    // MARK: - Developer Mode Detection
-    
-    /// Check if Developer Mode is enabled (iOS 16+)
-    /// Uses private API _CSIsInternalInstallCapable() which returns true when Developer Mode is on
-    @available(iOS 16.0, *)
-    private func isDeveloperModeEnabled() -> Bool {
-        // Try to call private API via dlsym
-        guard let handle = dlopen(nil, RTLD_NOW),
-              let symbol = dlsym(handle, "_CSIsInternalInstallCapable") else {
-            // If private API unavailable, assume not enabled
-            return false
-        }
-        
-        typealias CheckFunction = @convention(c) () -> Bool
-        let checkFunc = unsafeBitCast(symbol, to: CheckFunction.self)
-        return checkFunc()
     }
     
     // MARK: - Debug Channel Handoff

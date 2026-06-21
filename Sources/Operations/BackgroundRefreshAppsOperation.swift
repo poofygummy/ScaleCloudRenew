@@ -92,7 +92,7 @@ final class BackgroundRefreshAppsOperation: ResultOperation<[String: Result<Inst
                     guard case .success(let app) = result else { return nil }
                     return app.expirationDate
                 }.min()
-                // Persist to UserDefaults so SetupCompleteViewController and BGTask scheduling can read it across launches
+                // Persist to UserDefaults so BGTask scheduling can read it across launches
                 UserDefaults.standard.set(expiryDate, forKey: "com.scalecloud.cert.expiry")
                 os_log("Certificate expires: %{public}@", log: log, type: .info, expiryDate?.description ?? "unknown")
                 os_log("Refresh completed successfully", log: log, type: .info)
