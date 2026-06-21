@@ -2,15 +2,11 @@
 //  TwoFactorViewController.swift
 //  ScaleCloudRenew
 //
-//  Presented whenever Apple requires a 2FA verification code.
-//  Works both during initial setup and during background re-sign attempts.
-//
-//  Design:
-//    AuthenticationOperation posts Notification.Name.twoFactorRequired with a
-//    TwoFactorRequest object in userInfo["request"].
-//    Any visible window root presents this VC modally.
-//    When the user submits (or cancels), the VC calls request.fulfill(code:) and
-//    dismisses itself.
+//  Presented whenever Apple requires a 2FA verification code during
+//  AuthenticationOperation. The operation registers a one-shot
+//  NotificationCenter observer for .twoFactorRequired, posts the notification
+//  with a TwoFactorRequest, then blocks until the user submits or cancels.
+//  No external setup call required.
 //
 
 import UIKit
@@ -172,38 +168,4 @@ public class TwoFactorViewController: UIViewController {
     }
 }
 
-// MARK: - Global presenter helper
 
-/// Listen for .twoFactorRequired on the main queue and present the VC
-/// from whatever window is currently key.
-/// Call once at app startup (e.g. in SceneDelegate or AppDelegate).
-public enum TwoFactorPresenter {
-    private static var observer: NSObjectProtocol?
-
-    public static func install() {
-        guard observer == nil else { return }
-        observer = NotificationCenter.default.addObserver(
-            forName: .twoFactorRequired,
-            object: nil,
-            queue: .main
-        ) { notification in
-            guard let request = notification.userInfo?["request"] as? TwoFactorRequest else { return }
-
-            let vc = TwoFactorViewController()
-            vc.request = request
-            vc.modalPresentationStyle = .formSheet
-
-            // Find the topmost presented view controller to present from
-            if let root = UIApplication.shared
-                .connectedScenes
-                .compactMap({ $0 as? UIWindowScene })
-                .flatMap({ $0.windows })
-                .first(where: { $0.isKeyWindow })?
-                .rootViewController {
-                var top = root
-                while let presented = top.presentedViewController { top = presented }
-                top.present(vc, animated: true)
-            }
-        }
-    }
-}

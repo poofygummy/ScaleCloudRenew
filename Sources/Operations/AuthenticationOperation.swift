@@ -521,11 +521,36 @@ private extension AuthenticationOperation
                     verificationHandler = nil
                 }
                 */
-                // Post a notification so TwoFactorViewController can present itself
-                // from whatever window is currently visible. Block this background thread
-                // with a semaphore until the user submits (or cancels) the code.
+                // When Apple returns a 2FA challenge, register a one-shot NotificationCenter
+                // observer so TwoFactorViewController can present itself from the key window,
+                // then block this background thread until the user submits or cancels.
+                // The observer is removed as soon as the code is received (or times out).
                 verificationHandler = { codeCompletion in
                     let semaphore = DispatchSemaphore(value: 0)
+                    var observer: NSObjectProtocol?
+                    observer = NotificationCenter.default.addObserver(
+                        forName: .twoFactorRequired,
+                        object: nil,
+                        queue: .main
+                    ) { notification in
+                        // Remove ourselves immediately — this fires at most once
+                        if let o = observer { NotificationCenter.default.removeObserver(o) }
+                        guard let request = notification.userInfo?["request"] as? TwoFactorRequest else { return }
+                        let vc = TwoFactorViewController()
+                        vc.request = request
+                        vc.modalPresentationStyle = .formSheet
+                        if let root = UIApplication.shared
+                            .connectedScenes
+                            .compactMap({ $0 as? UIWindowScene })
+                            .flatMap({ $0.windows })
+                            .first(where: { $0.isKeyWindow })?
+                            .rootViewController
+                        {
+                            var top = root
+                            while let presented = top.presentedViewController { top = presented }
+                            top.present(vc, animated: true)
+                        }
+                    }
                     let request = TwoFactorRequest { code in
                         codeCompletion(code)
                         semaphore.signal()
@@ -539,6 +564,7 @@ private extension AuthenticationOperation
                     }
                     // Wait up to 2 minutes for user input
                     if semaphore.wait(timeout: .now() + 120) == .timedOut {
+                        if let o = observer { NotificationCenter.default.removeObserver(o) }
                         codeCompletion(nil) // treat timeout as cancel
                     }
                 }
