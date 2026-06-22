@@ -609,6 +609,16 @@ SWIFT_CLASS_NAMED("Team")
 @property (nonatomic, readonly, copy) NSSet<AppID *> * _Nonnull appIDs;
 @end
 
+@class NSBundle;
+/// Modal 6-digit code entry screen.
+/// Present this when .twoFactorRequired fires; dismiss when request is fulfilled.
+SWIFT_CLASS("_TtC15ScaleCloudRenew23TwoFactorViewController")
+@interface TwoFactorViewController : UIViewController
+- (void)viewDidLoad;
+- (nonnull instancetype)initWithNibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil OBJC_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)coder OBJC_DESIGNATED_INITIALIZER;
+@end
+
 @interface NSUserDefaults (SWIFT_EXTENSION(ScaleCloudRenew))
 @property (nonatomic, copy) NSDate * _Nullable firstLaunch;
 @property (nonatomic) BOOL requiresAppGroupMigration;
@@ -690,7 +700,6 @@ typedef SWIFT_ENUM(NSInteger, ViewAppIntentResponseCode, open) {
   ViewAppIntentResponseCodeFailureRequiringAppLaunch = 6,
 };
 
-@class NSBundle;
 SWIFT_CLASS("_TtC15ScaleCloudRenew17WebViewController")
 @interface WebViewController : UIViewController
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)coder SWIFT_UNAVAILABLE;

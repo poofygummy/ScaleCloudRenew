@@ -4790,16 +4790,6 @@
       },
       {
         "kind": "Import",
-        "name": "UIKit",
-        "printedName": "UIKit",
-        "declKind": "Import",
-        "moduleName": "ScaleCloudRenew",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
-        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
@@ -12716,16 +12706,6 @@
       },
       {
         "kind": "Import",
-        "name": "UIKit",
-        "printedName": "UIKit",
-        "declKind": "Import",
-        "moduleName": "ScaleCloudRenew",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
-        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
@@ -12858,6 +12838,13 @@
         "kind": "Import",
         "name": "ScaleCloudSign",
         "printedName": "ScaleCloudSign",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
         "declKind": "Import",
         "moduleName": "ScaleCloudRenew"
       },
@@ -38739,16 +38726,6 @@
         ]
       },
       {
-        "kind": "Import",
-        "name": "UIKit",
-        "printedName": "UIKit",
-        "declKind": "Import",
-        "moduleName": "ScaleCloudRenew",
-        "declAttributes": [
-          "RawDocComment"
-        ]
-      },
-      {
         "kind": "TypeDecl",
         "name": "SetupCoordinator",
         "printedName": "SetupCoordinator",
@@ -48443,6 +48420,274 @@
         "moduleName": "ScaleCloudRenew",
         "declAttributes": [
           "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "TwoFactorRequest",
+        "printedName": "TwoFactorRequest",
+        "declKind": "Class",
+        "usr": "s:15ScaleCloudRenew16TwoFactorRequestC",
+        "mangledName": "$s15ScaleCloudRenew16TwoFactorRequestC",
+        "moduleName": "ScaleCloudRenew",
+        "declAttributes": [
+          "Final",
+          "AccessControl",
+          "RawDocComment"
+        ],
+        "hasMissingDesignatedInitializers": true,
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "TwoFactorViewController",
+        "printedName": "TwoFactorViewController",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "viewDidLoad",
+            "printedName": "viewDidLoad()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@ScaleCloudRenew@objc(cs)TwoFactorViewController(im)viewDidLoad",
+            "mangledName": "$s15ScaleCloudRenew23TwoFactorViewControllerC11viewDidLoadyyF",
+            "moduleName": "ScaleCloudRenew",
+            "overriding": true,
+            "objc_name": "viewDidLoad",
+            "declAttributes": [
+              "Dynamic",
+              "ObjC",
+              "Preconcurrency",
+              "Custom",
+              "Override",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(nibName:bundle:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "TwoFactorViewController",
+                "printedName": "ScaleCloudRenew.TwoFactorViewController",
+                "usr": "c:@M@ScaleCloudRenew@objc(cs)TwoFactorViewController"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Bundle?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bundle",
+                    "printedName": "Foundation.Bundle",
+                    "usr": "c:objc(cs)NSBundle"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "c:@M@ScaleCloudRenew@objc(cs)TwoFactorViewController(im)initWithNibName:bundle:",
+            "mangledName": "$s15ScaleCloudRenew23TwoFactorViewControllerC7nibName6bundleACSSSg_So8NSBundleCSgtcfc",
+            "moduleName": "ScaleCloudRenew",
+            "overriding": true,
+            "implicit": true,
+            "objc_name": "initWithNibName:bundle:",
+            "declAttributes": [
+              "Dynamic",
+              "ObjC",
+              "Preconcurrency",
+              "Custom",
+              "Override"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(coder:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ScaleCloudRenew.TwoFactorViewController?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TwoFactorViewController",
+                    "printedName": "ScaleCloudRenew.TwoFactorViewController",
+                    "usr": "c:@M@ScaleCloudRenew@objc(cs)TwoFactorViewController"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSCoder",
+                "printedName": "Foundation.NSCoder",
+                "usr": "c:objc(cs)NSCoder"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "c:@M@ScaleCloudRenew@objc(cs)TwoFactorViewController(im)initWithCoder:",
+            "mangledName": "$s15ScaleCloudRenew23TwoFactorViewControllerC5coderACSgSo7NSCoderC_tcfc",
+            "moduleName": "ScaleCloudRenew",
+            "overriding": true,
+            "implicit": true,
+            "objc_name": "initWithCoder:",
+            "declAttributes": [
+              "Dynamic",
+              "ObjC",
+              "Preconcurrency",
+              "Custom",
+              "Required"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:@M@ScaleCloudRenew@objc(cs)TwoFactorViewController",
+        "mangledName": "$s15ScaleCloudRenew23TwoFactorViewControllerC",
+        "moduleName": "ScaleCloudRenew",
+        "declAttributes": [
+          "Preconcurrency",
+          "Custom",
+          "AccessControl",
+          "RawDocComment",
+          "ObjC"
+        ],
+        "superclassUsr": "c:objc(cs)UIViewController",
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "UIKit.UIViewController",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP",
+            "mangledName": "$ss16SendableMetatypeP"
+          }
         ]
       },
       {
@@ -62179,6 +62424,55 @@
                 "accessorKind": "get"
               }
             ]
+          },
+          {
+            "kind": "Var",
+            "name": "twoFactorRequired",
+            "printedName": "twoFactorRequired",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Name",
+                "printedName": "Foundation.NSNotification.Name",
+                "usr": "c:@T@NSNotificationName"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:So18NSNotificationNamea15ScaleCloudRenewE17twoFactorRequiredABvpZ",
+            "mangledName": "$sSo18NSNotificationNamea15ScaleCloudRenewE17twoFactorRequiredABvpZ",
+            "moduleName": "ScaleCloudRenew",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Name",
+                    "printedName": "Foundation.NSNotification.Name",
+                    "usr": "c:@T@NSNotificationName"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:So18NSNotificationNamea15ScaleCloudRenewE17twoFactorRequiredABvgZ",
+                "mangledName": "$sSo18NSNotificationNamea15ScaleCloudRenewE17twoFactorRequiredABvgZ",
+                "moduleName": "ScaleCloudRenew",
+                "static": true,
+                "implicit": true,
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
           }
         ],
         "declKind": "Struct",
@@ -64285,202 +64579,6 @@
       "value": "\"ALTLocalizedDescription\""
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 421,
-      "length": 27,
-      "value": "\"Configure Anisette Server\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 490,
-      "length": 2,
-      "value": "28"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 539,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 672,
-      "length": 133,
-      "value": "\"ScaleCloud requires an Anisette provisioning server to sign apps. This should be the Tailscale address of your toth-adattar server.\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 847,
-      "length": 2,
-      "value": "15"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 923,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 1056,
-      "length": 112,
-      "value": "\"To find your server address, run this command on any Tailscale device:\n\ntailscale status | grep toth-adattar\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1210,
-      "length": 2,
-      "value": "14"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1303,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1385,
-      "length": 1,
-      "value": "8"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "BooleanLiteral",
-      "offset": 1423,
-      "length": 4,
-      "value": "true"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1494,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 1641,
-      "length": 23,
-      "value": "\"http:\/\/100.x.y.z:6969\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 2005,
-      "length": 17,
-      "value": "\"Test Connection\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2092,
-      "length": 2,
-      "value": "17"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2247,
-      "length": 2,
-      "value": "10"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 2377,
-      "length": 2,
-      "value": "\"\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2421,
-      "length": 2,
-      "value": "14"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2493,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "BooleanLiteral",
-      "offset": 2520,
-      "length": 4,
-      "value": "true"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 2673,
-      "length": 10,
-      "value": "\"Continue\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2753,
-      "length": 2,
-      "value": "17"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2909,
-      "length": 2,
-      "value": "10"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "BooleanLiteral",
-      "offset": 2939,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "FloatLiteral",
-      "offset": 2968,
-      "length": 3,
-      "value": "0.5"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 3117,
-      "length": 26,
-      "value": "\"Skip (Signing will fail)\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 3213,
-      "length": 2,
-      "value": "15"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/AnisetteConfigViewController.swift",
-      "kind": "BooleanLiteral",
-      "offset": 3339,
-      "length": 5,
-      "value": "false"
-    },
-    {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppDelegate.swift",
       "kind": "StringLiteral",
       "offset": 644,
@@ -65090,135 +65188,16 @@
       "value": "false"
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 436,
-      "length": 23,
-      "value": "\"Enable Developer Mode\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 501,
-      "length": 2,
-      "value": "28"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 550,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 683,
-      "length": 197,
-      "value": "\"iOS 16 and later require Developer Mode to be enabled before installing development-signed apps.\n\nAfter enabling, your device will restart. Once restarted, return to this app to continue setup.\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 922,
-      "length": 2,
-      "value": "15"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 998,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 1131,
-      "length": 27,
-      "value": "\"To enable Developer Mode:\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1200,
-      "length": 2,
-      "value": "15"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "Array",
-      "offset": 1319,
-      "length": 295,
-      "value": "[\"1. Tap \"Open Settings\" below\", \"2. Navigate to Privacy & Security\", \"3. Scroll down to Developer Mode\", \"4. Toggle Developer Mode ON\", \"5. Tap \"Restart\" in the alert\", \"6. After restart, return to this app\"]"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1759,
-      "length": 2,
-      "value": "14"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1843,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 2011,
-      "length": 15,
-      "value": "\"Open Settings\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2096,
-      "length": 2,
-      "value": "17"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2251,
-      "length": 2,
-      "value": "10"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 2404,
-      "length": 17,
-      "value": "\"I've Enabled It\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2491,
-      "length": 2,
-      "value": "17"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/DeveloperModeViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2647,
-      "length": 2,
-      "value": "10"
-    },
-    {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/DownloadAppOperation.swift",
       "kind": "StringLiteral",
-      "offset": 13587,
+      "offset": 13845,
       "length": 17,
       "value": "\"ALTDependencies\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/DownloadAppOperation.swift",
       "kind": "StringLiteral",
-      "offset": 14631,
+      "offset": 14889,
       "length": 33,
       "value": "\"downloadURL is not a valid URL.\""
     },
@@ -66126,167 +66105,6 @@
       "value": "\"com.sidestore.SendAppOperation\""
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 422,
-      "length": 2,
-      "value": "60"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 484,
-      "length": 23,
-      "value": "\"checkmark.circle.fill\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 806,
-      "length": 17,
-      "value": "\"Setup Complete!\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 865,
-      "length": 2,
-      "value": "32"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 952,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 1085,
-      "length": 68,
-      "value": "\"ScaleCloud is now configured and ready to sign apps automatically.\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1195,
-      "length": 2,
-      "value": "17"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1309,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1493,
-      "length": 2,
-      "value": "12"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1646,
-      "length": 2,
-      "value": "14"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 1730,
-      "length": 20,
-      "value": "\"Certificate Status\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1907,
-      "length": 2,
-      "value": "15"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1974,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2127,
-      "length": 2,
-      "value": "14"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 2211,
-      "length": 24,
-      "value": "\"Next Automatic Refresh\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2392,
-      "length": 2,
-      "value": "15"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2459,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 2589,
-      "length": 134,
-      "value": "\"Remember to trust the development certificate in Settings → General → VPN & Device Management after your first app installation.\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2765,
-      "length": 2,
-      "value": "13"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2877,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 3023,
-      "length": 6,
-      "value": "\"Done\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 3099,
-      "length": 2,
-      "value": "17"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCompleteViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 3255,
-      "length": 2,
-      "value": "10"
-    },
-    {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "StringLiteral",
       "offset": 288,
@@ -66295,29 +66113,15 @@
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
-      "kind": "StringLiteral",
-      "offset": 7090,
-      "length": 29,
-      "value": "\"_CSIsInternalInstallCapable\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
-      "kind": "BooleanLiteral",
-      "offset": 7209,
-      "length": 5,
-      "value": "false"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 11905,
+      "offset": 11629,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 11968,
+      "offset": 11692,
       "length": 1,
       "value": "5"
     },
@@ -66518,144 +66322,158 @@
       "value": "10"
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 807,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
       "kind": "StringLiteral",
-      "offset": 423,
-      "length": 31,
-      "value": "\"Trust Development Certificate\""
+      "offset": 1331,
+      "length": 34,
+      "value": "\"com.scalecloud.twoFactorRequired\""
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 496,
-      "length": 2,
-      "value": "28"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 545,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
       "kind": "StringLiteral",
-      "offset": 678,
-      "length": 183,
-      "value": "\"After installing a development-signed app for the first time, you must trust the development certificate in Settings.\n\nWithout this step, the app will crash immediately on launch.\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 903,
-      "length": 2,
-      "value": "15"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 979,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 1108,
-      "length": 159,
-      "value": "\"⚠️ The certificate will appear after the first app installation attempt. If you don't see it yet, that's normal - you can trust it after setup completes.\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1309,
-      "length": 2,
-      "value": "14"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 1383,
-      "length": 1,
-      "value": "0"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 1516,
+      "offset": 1755,
       "length": 27,
-      "value": "\"To trust the certificate:\""
+      "value": "\"Two-Factor Authentication\""
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
       "kind": "IntegerLiteral",
-      "offset": 1585,
+      "offset": 1820,
+      "length": 2,
+      "value": "22"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1927,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 2041,
+      "length": 89,
+      "value": "\"Enter the 6-digit verification code sent to your trusted Apple devices or phone number.\""
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2168,
       "length": 2,
       "value": "15"
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "Array",
-      "offset": 1704,
-      "length": 313,
-      "value": "[\"1. Tap \"Open Settings\" below\", \"2. Navigate to General\", \"3. Tap \"VPN & Device Management\"\", \"4. Under \"Developer App\", tap your Apple ID\", \"5. Tap \"Trust [Your Apple ID]\"\", \"6. Confirm by tapping \"Trust\" in the alert\"]"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
       "kind": "IntegerLiteral",
-      "offset": 2162,
-      "length": 2,
-      "value": "14"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 2246,
+      "offset": 2270,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "StringLiteral",
-      "offset": 2414,
-      "length": 15,
-      "value": "\"Open Settings\""
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 2326,
+      "length": 5,
+      "value": "false"
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 2455,
+      "length": 8,
+      "value": "\"000000\""
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
       "kind": "IntegerLiteral",
-      "offset": 2499,
+      "offset": 2586,
+      "length": 2,
+      "value": "34"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 2733,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "StringLiteral",
+      "offset": 2867,
+      "length": 10,
+      "value": "\"Continue\""
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2942,
       "length": 2,
       "value": "17"
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "FloatLiteral",
+      "offset": 3101,
+      "length": 3,
+      "value": "0.4"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
       "kind": "IntegerLiteral",
-      "offset": 2654,
+      "offset": 3154,
       "length": 2,
-      "value": "10"
+      "value": "14"
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3189,
+      "length": 4,
+      "value": "true"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3248,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3276,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
       "kind": "StringLiteral",
-      "offset": 2807,
-      "length": 33,
-      "value": "\"I've Trusted It (or Will Later)\""
+      "offset": 3410,
+      "length": 8,
+      "value": "\"Cancel\""
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
       "kind": "IntegerLiteral",
-      "offset": 2910,
+      "offset": 3483,
       "length": 2,
       "value": "17"
     },
     {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TrustCertificateViewController.swift",
-      "kind": "IntegerLiteral",
-      "offset": 3066,
-      "length": 2,
-      "value": "10"
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/TwoFactorViewController.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3541,
+      "length": 5,
+      "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/UIColor+AltStore.swift",

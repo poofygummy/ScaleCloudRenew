@@ -150,13 +150,11 @@
 		5F5204C80F06D8A4B698EE7E /* RefreshGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DE066CCDFDAEC23BCCA9F1 /* RefreshGroup.swift */; };
 		5F73043DA9B6F973205599F5 /* RSTCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F2E244DF1E842F58FE4C9EA8 /* RSTCollectionViewCell.xib */; };
 		61189558B509579DAE1218AC /* UserInfoValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB216BD7849E347D6F00D2D4 /* UserInfoValue.swift */; };
-		61758C931C9B4542CDEE9E41 /* SetupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F5C5C5956F463CF9FAF4AB /* SetupCompleteViewController.swift */; };
 		61B358AB5A06963692C27F5F /* Permissions.plist in Resources */ = {isa = PBXBuildFile; fileRef = A06ECD80A904CCE2AFC7DA39 /* Permissions.plist */; };
 		61DB0657D215E2DED095363A /* hashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 769EA7AAC25ACAAAC107BBC3 /* hashtable.c */; };
 		62CA8A33AD1F8A3C637DD1A3 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF97CB3437D6F53F235074A /* Device.swift */; };
 		6371495893429E064DBF6DD5 /* InstallAppOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD94AAF20B0513456765288 /* InstallAppOperation.swift */; };
 		6393FD207CCFD6BC775E212E /* AppScreenshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C09E71927098A5088E68 /* AppScreenshot.swift */; };
-		6484658F61B923575CB34C15 /* AnisetteConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D4ABF6783FF28A67CA8C11 /* AnisetteConfigViewController.swift */; };
 		6669F6DAEFAC231CA7F381A3 /* AppID.swift in Sources */ = {isa = PBXBuildFile; fileRef = D432A740406F26CD6DD8AEF0 /* AppID.swift */; };
 		667D8F48FD7B2DBFBCC08FC8 /* Logger+AltStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23328586452EB1432C308804 /* Logger+AltStore.swift */; };
 		6711A5F5C3EBDF51E7144BE7 /* ProcessInfo+AltStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC312CF0A55CB0703B162E /* ProcessInfo+AltStore.swift */; };
@@ -220,7 +218,6 @@
 		8CA53B8D59A8DE55D21CBCA7 /* JSONDecoder+Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A1F23096B9E84494C433F3 /* JSONDecoder+Properties.swift */; };
 		8D54A9CD550BEDCBFDAE44E6 /* RSTCellContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = B9E02FC0578B03985A37BAE7 /* RSTCellContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8F90F471AAF017CAB8194B23 /* out-limd.c in Sources */ = {isa = PBXBuildFile; fileRef = E9FBD73FFA9EB85DAB35060D /* out-limd.c */; };
-		8FF2743D752F02FCFE872808 /* TrustCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE8827BAC13E3B4A613962C /* TrustCertificateViewController.swift */; };
 		902C7024B4545DE62E02618B /* StoreApp11To17_1MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A144F266F076D4F2AB4F04D /* StoreApp11To17_1MigrationPolicy.swift */; };
 		907BC9A288761185AF210942 /* MergePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF8FA0417545E84E420A710 /* MergePolicy.swift */; };
 		92DB2E96C6BE644ABE47859A /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 77E3019F38219CCA9ECA2D0A /* Dictionary.cpp */; };
@@ -319,7 +316,6 @@
 		DE8FEF9F617550021F69DDAF /* URL+Normalized.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95CA5587EF6EAD38B307CAF /* URL+Normalized.swift */; };
 		E24E1881502311C337AFBC35 /* termcolors.c in Sources */ = {isa = PBXBuildFile; fileRef = B13F8BDE36E8383FA074284B /* termcolors.c */; };
 		E2D724D96F5DB11EE4CE9128 /* UserDefaults+AltStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463051044F0BE3DA56A41D21 /* UserDefaults+AltStore.swift */; };
-		E2F2DFF7A899A7A2E68D2BE8 /* DeveloperModeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01892AFE74A97C1108F52C02 /* DeveloperModeViewController.swift */; };
 		E34A09DABC4759BC1DAD1AAA /* AltStore10ToAltStore11.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = EA9DDCCF809D92AD16B9DE6A /* AltStore10ToAltStore11.xcmappingmodel */; };
 		E42CB6DFB031715C62BC7CDC /* RSTHasher.m in Sources */ = {isa = PBXBuildFile; fileRef = E4196D8726DD401BF0E0C0E5 /* RSTHasher.m */; };
 		E6921D3CAE6F8929033D9BDF /* Install.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2D18880C6DDEF3BCBB8EDF /* Install.swift */; };
@@ -355,6 +351,7 @@
 		F8AB4664ECB9DAA4FB23B2B0 /* AltStore4ToAltStore5.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 427B73FD475FCA2E9071B10A /* AltStore4ToAltStore5.xcmappingmodel */; };
 		F8B9219AF24CD8A7C44457AC /* ALTLocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19C23402E62DC1EAE101354 /* ALTLocalizedError.swift */; };
 		F9B78A032B5DA94D8D73AE8C /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 494ADD518E4D1A477BEBF40B /* Network.framework */; };
+		FA30AF8FB8C556358FDEC7EC /* TwoFactorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9597CDB531CDCB2E8CDAC548 /* TwoFactorViewController.swift */; };
 		FB47B698466EA038DDE40427 /* NSBundle+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5A3E905AEDBCDC51021446 /* NSBundle+Extensions.m */; };
 		FD0CF427ECD47F76E37A86D1 /* UITableViewCell+CellContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 5ABCAC7D3CF2771C170838B8 /* UITableViewCell+CellContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FD32DE6BB5F68098B7FFCB3E /* Uid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37D91AAB94B72733C3CA478A /* Uid.cpp */; };
@@ -372,7 +369,6 @@
 
 /* Begin PBXFileReference section */
 		0120E0ADBC3F206F18C8F789 /* VerifyAppOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyAppOperation.swift; sourceTree = "<group>"; };
-		01892AFE74A97C1108F52C02 /* DeveloperModeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperModeViewController.swift; sourceTree = "<group>"; };
 		02151376CCC613C37B65FA2F /* AppPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPermission.swift; sourceTree = "<group>"; };
 		03143EDA4C4F5D5CB4647CBF /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		055D44B8D1A95E8C7A1A3A79 /* OperationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationError.swift; sourceTree = "<group>"; };
@@ -535,7 +531,6 @@
 		72EC4AEEAE300D2EBF2D3702 /* AnisetteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnisetteManager.swift; sourceTree = "<group>"; };
 		738B45FCD0DA6A86D15E29AD /* AltStore 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "AltStore 10.xcdatamodel"; sourceTree = "<group>"; };
 		7479AAFA7D0D2AFB4905D2DD /* OptionalProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalProtocol.swift; sourceTree = "<group>"; };
-		74D4ABF6783FF28A67CA8C11 /* AnisetteConfigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnisetteConfigViewController.swift; sourceTree = "<group>"; };
 		7509FBD9426C2F1629685727 /* RSTPlaceholderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSTPlaceholderView.m; sourceTree = "<group>"; };
 		7524CC436AE5FA3C57319533 /* RSTToastView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RSTToastView.h; sourceTree = "<group>"; };
 		755D6BB519C558639B262D43 /* Date.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Date.cpp; sourceTree = "<group>"; };
@@ -576,7 +571,6 @@
 		8D141BDDA9BF02E135E86E7E /* collection.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = collection.c; sourceTree = "<group>"; };
 		8D64FD7D090B6592F2744D84 /* AppExtensionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtensionView.swift; sourceTree = "<group>"; };
 		8D99B072370A4AF1BF0A373B /* Node.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
-		8EE8827BAC13E3B4A613962C /* TrustCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustCertificateViewController.swift; sourceTree = "<group>"; };
 		8F260096B3E6916DA118B6AF /* RSTActivityIndicating.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RSTActivityIndicating.h; sourceTree = "<group>"; };
 		9199BF626C17E5438D408B77 /* Bundle+AltStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+AltStore.swift"; sourceTree = "<group>"; };
 		92AA95B90C254401EFD0969D /* RSTLaunchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSTLaunchViewController.m; sourceTree = "<group>"; };
@@ -586,6 +580,7 @@
 		947C41F22AD1A4CC0D3EC1E9 /* utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
 		9543B09C1EA8662E58F85BED /* UIAlertAction+Actions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIAlertAction+Actions.m"; sourceTree = "<group>"; };
 		95886A1E374EC21B2F1C4BCC /* AfcFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfcFileManager.swift; sourceTree = "<group>"; };
+		9597CDB531CDCB2E8CDAC548 /* TwoFactorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoFactorViewController.swift; sourceTree = "<group>"; };
 		96D386480704E05FCA5B0ECB /* ALTSourceUserInfoKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ALTSourceUserInfoKey.h; sourceTree = "<group>"; };
 		9781CCA50AC1C28281D8D606 /* RSTRelationshipPreservingMergePolicy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RSTRelationshipPreservingMergePolicy.h; sourceTree = "<group>"; };
 		9801F899CEA08408BA8AB61A /* libusbmuxd.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = libusbmuxd.c; sourceTree = "<group>"; };
@@ -685,7 +680,6 @@
 		E0FE156485A74E1347936336 /* bytearray.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bytearray.c; sourceTree = "<group>"; };
 		E1187999D1635C6914B157B3 /* AltStore11ToAltStore17_1.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = AltStore11ToAltStore17_1.xcmappingmodel; sourceTree = "<group>"; };
 		E16E52A123A3DBAFF56B352D /* ALTWrappedError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ALTWrappedError.m; sourceTree = "<group>"; };
-		E1F5C5C5956F463CF9FAF4AB /* SetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupCompleteViewController.swift; sourceTree = "<group>"; };
 		E25C5B4896549FB1EA50ACAC /* bplist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bplist.c; sourceTree = "<group>"; };
 		E415D0F9FD945BE489B62F28 /* MinimuxerBridgeIdevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimuxerBridgeIdevice.swift; sourceTree = "<group>"; };
 		E4196D8726DD401BF0E0C0E5 /* RSTHasher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSTHasher.m; sourceTree = "<group>"; };
@@ -1286,12 +1280,9 @@
 		B01EA78AF3EF9586A95CF7BF /* Setup */ = {
 			isa = PBXGroup;
 			children = (
-				74D4ABF6783FF28A67CA8C11 /* AnisetteConfigViewController.swift */,
 				C27FD87AEE032486E2F6F2B7 /* CredentialInputViewController.swift */,
-				01892AFE74A97C1108F52C02 /* DeveloperModeViewController.swift */,
-				E1F5C5C5956F463CF9FAF4AB /* SetupCompleteViewController.swift */,
 				D2C0F7E2B103121B345F2419 /* SetupCoordinator.swift */,
-				8EE8827BAC13E3B4A613962C /* TrustCertificateViewController.swift */,
+				9597CDB531CDCB2E8CDAC548 /* TwoFactorViewController.swift */,
 				234ADE68E412FB49B93A752C /* ValidationViewController.swift */,
 			);
 			path = Setup;
@@ -1722,7 +1713,6 @@
 				6DE5C0D31971CBA3B63066AC /* AltStore8ToAltStore9.xcmappingmodel in Sources */,
 				8681E767DA2050EADBA5359F /* AltStore9ToAltStore10.xcmappingmodel in Sources */,
 				B2D9F9BDE756BC24F3054850 /* AltStoreToAltStore2.xcmappingmodel in Sources */,
-				6484658F61B923575CB34C15 /* AnisetteConfigViewController.swift in Sources */,
 				B451D2684F9E92DEE8846D5F /* AnisetteManager.swift in Sources */,
 				36F944AD97962BF2E3C708BA /* AppDelegate.swift in Sources */,
 				F5111468189F774614C0495C /* AppExtensionView.swift in Sources */,
@@ -1752,7 +1742,6 @@
 				3BE08B9CA148A1C2316D235B /* Date+RelativeDate.swift in Sources */,
 				AF54DBC2C2794D5128F9A459 /* DeactivateAppOperation.swift in Sources */,
 				AD37B9CD979639ACE8F4C413 /* DebuggerUtils.swift in Sources */,
-				E2F2DFF7A899A7A2E68D2BE8 /* DeveloperModeViewController.swift in Sources */,
 				62CA8A33AD1F8A3C637DD1A3 /* Device.swift in Sources */,
 				D06B36384EF54A7236ADA0FF /* DeviceEndpoint.swift in Sources */,
 				78BE8946CC17E36A1B935504 /* DownloadAppOperation.swift in Sources */,
@@ -1852,7 +1841,6 @@
 				7111607D042D46ED69F29890 /* SecureEnclaveManager.swift in Sources */,
 				4DC13BE6D0BA6EBF2834A4F5 /* SecureValueTransformer.swift in Sources */,
 				C41641345AB4F42A92A1B653 /* SendAppOperation.swift in Sources */,
-				61758C931C9B4542CDEE9E41 /* SetupCompleteViewController.swift in Sources */,
 				3592A03D579BBB7B77CE7AF2 /* SetupCoordinator.swift in Sources */,
 				31106BE1A4B24AA77F94D37D /* SimpleSemanticVersion.swift in Sources */,
 				4B5ECEDDEEF4101E20E2719B /* Source.swift in Sources */,
@@ -1869,7 +1857,7 @@
 				2D34EC5B8E0FA478249EF71D /* StoreCategory.swift in Sources */,
 				3089927C93E7189EF68EDC47 /* String+SideStore.swift in Sources */,
 				85B16634093C731BCBA29829 /* Team.swift in Sources */,
-				8FF2743D752F02FCFE872808 /* TrustCertificateViewController.swift in Sources */,
+				FA30AF8FB8C556358FDEC7EC /* TwoFactorViewController.swift in Sources */,
 				B1CF93365FAD87FE68887742 /* UIAlertAction+Actions.m in Sources */,
 				0B25BBFDB3531DA7CACC7BE1 /* UIApplication+AppExtension.swift in Sources */,
 				D429FD28FD078FC1D26FE274 /* UICollectionView+CellContent.m in Sources */,
