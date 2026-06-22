@@ -84,19 +84,23 @@ public class TwoFactorViewController: UIViewController {
     }()
 
     private let submitButton: UIButton = {
-        var config = UIButton.Configuration.filled()
-        config.title = "Continue"
-        config.cornerStyle = .large
-        let b = UIButton(configuration: config)
+        let b = UIButton(type: .system)
+        b.setTitle("Continue", for: .normal)
+        b.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
+        b.backgroundColor = .systemBlue
+        b.setTitleColor(.white, for: .normal)
+        b.setTitleColor(.white.withAlphaComponent(0.4), for: .disabled)
+        b.layer.cornerRadius = 14
+        b.layer.masksToBounds = true
         b.translatesAutoresizingMaskIntoConstraints = false
         b.isEnabled = false
         return b
     }()
 
     private let cancelButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.title = "Cancel"
-        let b = UIButton(configuration: config)
+        let b = UIButton(type: .system)
+        b.setTitle("Cancel", for: .normal)
+        b.titleLabel?.font = .systemFont(ofSize: 17)
         b.translatesAutoresizingMaskIntoConstraints = false
         return b
     }()
