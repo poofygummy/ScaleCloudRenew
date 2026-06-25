@@ -14,6 +14,7 @@ import Intents
 import AltStoreCore
 import AltSign
 import Roxas
+import OSLog
 
 
 import Nuke

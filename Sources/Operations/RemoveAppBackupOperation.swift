@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OSLog
 
 @objc(RemoveAppBackupOperation)
 final class RemoveAppBackupOperation: ResultOperation<Void>

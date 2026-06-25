@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OSLog
 
 @objc(RemoveAppOperation)
 final class RemoveAppOperation: ResultOperation<InstalledApp>
