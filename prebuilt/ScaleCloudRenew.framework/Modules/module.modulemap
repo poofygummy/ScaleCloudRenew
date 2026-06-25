@@ -3,7 +3,3 @@ framework module ScaleCloudRenew {
     export *
     module * { export * }
 }
-
-module ScaleCloudRenew.Swift {
-  header "ScaleCloudRenew-Swift.h"
-}
