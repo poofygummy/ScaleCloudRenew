@@ -6,7 +6,7 @@
 //  Copyright © 2023 Riley Testut. All rights reserved.
 //
 
-@_exported import OSLog
+import OSLog
 
 public extension Logger
 {
