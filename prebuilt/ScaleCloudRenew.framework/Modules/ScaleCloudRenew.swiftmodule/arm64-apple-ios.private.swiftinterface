@@ -1164,7 +1164,7 @@ extension os.Logger {
   public static let fugu14: os.Logger
 }
 @available(iOS 15, *)
-extension OSLog.OSLogEntryLog.Level {
+extension OSLogEntryLog.Level {
   public var localizedName: Swift.String {
     get
   }
