@@ -32,7 +32,7 @@ func bindTunnelConfig() {
 }
 */
 
-var isMinimuxerReady: Bool {
+public var isMinimuxerReady: Bool {
     var result = true
     #if targetEnvironment(simulator)
     print("[SideStore] isMinimuxerReady = true on simulator")
@@ -55,7 +55,7 @@ func retargetUsbmuxdAddr() { // unused for now
 }
 */
 
-func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggingEnabled: Bool) throws {
+public func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggingEnabled: Bool) throws {
     defer { print("[SideStore] minimuxerStartWithLogger(pairingFile, logPath, dest, loggingEnabled) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] minimuxerStartWithLogger(pairingFile, logPath, loggingEnabled) is no-op on simulator")
@@ -71,7 +71,7 @@ func minimuxerStartWithLogger(_ pairingFile: String, _ logPath: String, _ loggin
 }
 
 
-func installProvisioningProfiles(_ profileData: Data) throws {
+public func installProvisioningProfiles(_ profileData: Data) throws {
     defer { print("[SideStore] installProvisioningProfiles(profileData) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] installProvisioningProfiles(profileData) is no-op on simulator")
@@ -81,7 +81,7 @@ func installProvisioningProfiles(_ profileData: Data) throws {
     #endif
 }
 
-func removeProvisioningProfile(_ id: String) throws {
+public func removeProvisioningProfile(_ id: String) throws {
     defer { print("[SideStore] removeProvisioningProfile(id) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] removeProvisioningProfile(id) is no-op on simulator")
@@ -91,7 +91,7 @@ func removeProvisioningProfile(_ id: String) throws {
     #endif
 }
 
-func installIPA(_ bundleId: String) throws {
+public func installIPA(_ bundleId: String) throws {
     defer { print("[SideStore] installIPA(bundleId) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] installIPA(bundleId) is no-op on simulator")
@@ -101,7 +101,7 @@ func installIPA(_ bundleId: String) throws {
     #endif
 }
 
-func fetchUDID() -> String? {
+public func fetchUDID() -> String? {
     defer { print("[SideStore] fetchUDID() completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] fetchUDID() is no-op on simulator")
@@ -112,7 +112,7 @@ func fetchUDID() -> String? {
     #endif
 }
 
-func removeApp(_ bundleId: String) throws {
+public func removeApp(_ bundleId: String) throws {
     defer { print("[SideStore] removeApp(bundleId) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] removeApp(bundleId) is no-op on simulator")
@@ -122,7 +122,7 @@ func removeApp(_ bundleId: String) throws {
     #endif
 }
 
-func yeetAppAFC(_ bundleId: String, _ rawBytes: Data) throws {
+public func yeetAppAFC(_ bundleId: String, _ rawBytes: Data) throws {
     defer { print("[SideStore] yeetAppAFC(bundleId, rawBytes) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] yeetAppAFC(bundleId, rawBytes) is no-op on simulator")
@@ -132,7 +132,7 @@ func yeetAppAFC(_ bundleId: String, _ rawBytes: Data) throws {
     #endif
 }
 
-func debugApp(_ appId: String) throws {
+public func debugApp(_ appId: String) throws {
     defer { print("[SideStore] debugApp(appId) completed") }
     #if targetEnvironment(simulator)
     print("[SideStore] debugApp(appId) is no-op on simulator")

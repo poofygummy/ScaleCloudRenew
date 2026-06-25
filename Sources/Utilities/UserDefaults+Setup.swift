@@ -7,11 +7,11 @@
 
 import Foundation
 
-extension UserDefaults {
+public extension UserDefaults {
     
     /// Flag indicating setup flow has been completed
     /// Once true, app will not present setup flow on launch
-    @objc dynamic var setupCompleted: Bool {
+    @objc dynamic public var setupCompleted: Bool {
         get {
             return bool(forKey: "com.scalecloud.setupCompleted")
         }
@@ -22,7 +22,7 @@ extension UserDefaults {
     
     /// Timestamp when setup was last completed
     /// Used for diagnostics only
-    @objc dynamic var lastSetupDate: Date? {
+    @objc dynamic public var lastSetupDate: Date? {
         get {
             return object(forKey: "com.scalecloud.lastSetupDate") as? Date
         }
@@ -37,7 +37,7 @@ extension UserDefaults {
     /// This is a persistent staging value. On every launch, DatabaseManager.prepareDatabase()
     /// reads it and writes it into the StoreApp's AppVersion.downloadURL in CoreData — which is
     /// the authoritative location the signing engine reads when it needs to re-fetch the IPA.
-    @objc dynamic var ipaSourceURL: String? {
+    @objc dynamic public var ipaSourceURL: String? {
         get {
             return string(forKey: "com.scalecloud.ipaSourceURL")
         }
