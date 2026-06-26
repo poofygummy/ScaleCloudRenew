@@ -52,22 +52,22 @@ private let ReceivedApplicationState: @convention(c) (CFNotificationCenter?, Uns
 }
 
 @objc(BackgroundRefreshAppsOperation)
-final class BackgroundRefreshAppsOperation: ResultOperation<[String: Result<InstalledApp, Error>]>
+public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Result<InstalledApp, Error>]>
 {
-    let installedApps: [InstalledApp]
+    public let installedApps: [InstalledApp]
     private let managedObjectContext: NSManagedObjectContext
     
-    var presentsFinishedNotification: Bool = true
-    var ignoresServerNotFoundError: Bool = true
+    public var presentsFinishedNotification: Bool = true
+    public var ignoresServerNotFoundError: Bool = true
     
     private let refreshIdentifier: String = UUID().uuidString
     private var runningApplications: Set<String> = []
     private let log = OSLog(subsystem: "com.scalecloud.sign", category: "refresh")
     
     // Completion handler to report signing results back to caller (BGTask handler)
-    var refreshCompletionHandler: ((Bool, Date?) -> Void)?
+    public var refreshCompletionHandler: ((Bool, Date?) -> Void)?
     
-    init(installedApps: [InstalledApp])
+    public init(installedApps: [InstalledApp])
     {
         self.installedApps = installedApps
         self.managedObjectContext = installedApps.compactMap({ $0.managedObjectContext }).first ?? DatabaseManager.shared.persistentContainer.newBackgroundContext()
