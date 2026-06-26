@@ -58,7 +58,7 @@ public class Operation: RSTOperation, ProgressReporting
     
     private var backgroundTaskID: UIBackgroundTaskIdentifier?
     
-    override var isAsynchronous: Bool {
+    public override var isAsynchronous: Bool {
         return true
     }
     
