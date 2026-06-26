@@ -19,6 +19,9 @@ public extension Logger
     static let fugu14 = Logger(subsystem: altstoreSubsystem, category: "Fugu14")
 }
 
+/* Commented out: OSLogEntryLog lives in the Swift OSLog module, but "OSLog" is also a C type name.
+   The compiler qualifies this as "OSLog.OSLogEntryLog.Level" in the swiftinterface, which then
+   fails to re-compile because OSLog resolves as the C type. Unused — restore in ScaleCloudApp if needed.
 @available(iOS 15, *)
 public extension OSLogEntryLog.Level
 {
@@ -35,3 +38,4 @@ public extension OSLogEntryLog.Level
         }
     }
 }
+*/
