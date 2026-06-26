@@ -1,0 +1,2474 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.3.2 effective-5.10 (swiftlang-6.3.2.1.108 clang-2100.1.1.101)
+// swift-module-flags: -target arm64-apple-ios14.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name ScaleCloudRenew
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.2
+import AVFoundation
+import Combine
+import CommonCrypto
+import CoreData
+import CryptoKit
+import Darwin
+import DeveloperToolsSupport
+import Foundation
+import Intents
+import KeychainAccess
+import MobileCoreServices
+import Network
+import Nuke
+import OSLog
+import RegexBuilder
+import ScaleCloudKit
+@_exported import ScaleCloudRenew
+import ScaleCloudSign
+import Security
+import SemanticVersion
+import Starscream
+import Swift
+import SwiftUI
+import UIKit
+import UniformTypeIdentifiers
+import UserNotifications
+import WebKit
+import WidgetKit
+import ZIPFoundation
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import os.log
+import os
+extension ScaleCloudRenew.ALTAppPermissionType {
+  public var localizedName: Swift.String? {
+    get
+  }
+}
+public protocol ALTAppPermission : Swift.Hashable, Swift.RawRepresentable where Self.RawValue == Swift.String {
+  var type: ScaleCloudRenew.ALTAppPermissionType { get }
+  var synthesizedName: Swift.String? { get }
+  var localizedName: Swift.String? { get }
+  var localizedDescription: Swift.String? { get }
+  var symbolName: Swift.String? { get }
+  var isKnown: Swift.Bool { get }
+  var effectiveSymbolName: Swift.String { get }
+  var localizedDisplayName: Swift.String { get }
+}
+extension ScaleCloudRenew.ALTAppPermission {
+  public var localizedName: Swift.String? {
+    get
+  }
+  public var localizedDescription: Swift.String? {
+    get
+  }
+  public var symbolName: Swift.String? {
+    get
+  }
+}
+extension ScaleCloudRenew.ALTAppPermission {
+  public var isKnown: Swift.Bool {
+    get
+  }
+  public var effectiveSymbolName: Swift.String {
+    get
+  }
+  public var localizedDisplayName: Swift.String {
+    get
+  }
+  public func isEqual(_ permission: any ScaleCloudRenew.ALTAppPermission) -> Swift.Bool
+  public static func == (lhs: Self, rhs: any ScaleCloudRenew.ALTAppPermission) -> Swift.Bool
+}
+public struct UnknownAppPermission : ScaleCloudRenew.ALTAppPermission {
+  public var type: ScaleCloudRenew.ALTAppPermissionType {
+    get
+  }
+  public var synthesizedName: Swift.String? {
+    get
+  }
+  public var rawValue: Swift.String
+  public init(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+}
+extension CScaleCloudSign.ALTEntitlement : ScaleCloudRenew.ALTAppPermission {
+  public var type: ScaleCloudRenew.ALTAppPermissionType {
+    get
+  }
+  public var synthesizedName: Swift.String? {
+    get
+  }
+}
+extension ScaleCloudRenew.ALTAppPrivacyPermission : ScaleCloudRenew.ALTAppPermission {
+  public var type: ScaleCloudRenew.ALTAppPermissionType {
+    get
+  }
+  public var synthesizedName: Swift.String? {
+    get
+  }
+}
+public let ALTLocalizedTitleErrorKey: Swift.String
+public let ALTLocalizedDescriptionKey: Swift.String
+public protocol ALTLocalizedError<Code> : Foundation.CustomNSError, Foundation.LocalizedError, Swift.CustomStringConvertible {
+  associatedtype Code : ScaleCloudRenew.ALTErrorCode
+  var code: Self.Code { get }
+  var errorFailureReason: Swift.String { get }
+  var errorTitle: Swift.String? { get set }
+  var errorFailure: Swift.String? { get set }
+  var sourceFile: Swift.String? { get set }
+  var sourceLine: Swift.UInt? { get set }
+}
+extension ScaleCloudRenew.ALTLocalizedError {
+  public var sourceFile: Swift.String? {
+    get
+    set
+  }
+  public var sourceLine: Swift.UInt? {
+    get
+    set
+  }
+}
+public protocol ALTErrorCode : Swift.RawRepresentable where Self.RawValue == Swift.Int {
+  associatedtype Error : ScaleCloudRenew.ALTLocalizedError where Self == Self.Error.Code
+  static var errorDomain: Swift.String { get }
+}
+public protocol ALTErrorEnum : ScaleCloudRenew.ALTErrorCode {
+  associatedtype Error = ScaleCloudRenew.DefaultLocalizedError<Self>
+  var errorFailureReason: Swift.String { get }
+}
+extension ScaleCloudRenew.ALTLocalizedError {
+  public var errorCode: Swift.Int {
+    get
+  }
+  public var errorDescription: Swift.String? {
+    get
+  }
+  public var failureReason: Swift.String? {
+    get
+  }
+  public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+}
+extension ScaleCloudRenew.ALTLocalizedError where Self.Code : ScaleCloudRenew.ALTErrorEnum {
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public var errorFailureReason: Swift.String {
+    get
+  }
+}
+extension ScaleCloudRenew.ALTErrorCode {
+  public static var errorDomain: Swift.String {
+    get
+  }
+}
+extension ScaleCloudRenew.ALTLocalizedError {
+  public init(_ error: Self, localizedTitle: Swift.String? = nil, localizedFailure: Swift.String? = nil)
+}
+public struct DefaultLocalizedError<Code> : ScaleCloudRenew.ALTLocalizedError where Code : ScaleCloudRenew.ALTErrorEnum {
+  public let code: Code
+  public var errorTitle: Swift.String?
+  public var errorFailure: Swift.String?
+  public var sourceFile: Swift.String?
+  public var sourceLine: Swift.UInt?
+  public init(_ code: Code, localizedTitle: Swift.String? = nil, localizedFailure: Swift.String? = nil, sourceFile: Swift.String? = #fileID, sourceLine: Swift.UInt? = #line)
+}
+prefix operator ~
+prefix public func ~ <Code>(expression: Code) -> Foundation.NSError where Code : ScaleCloudRenew.ALTErrorCode
+public func ~= (pattern: any Swift.Error, value: any Swift.Error) -> Swift.Bool
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(Account) nonisolated public class Account : ScaleCloudRenew.BaseEntity {
+  nonisolated public var localizedName: Swift.String {
+    get
+  }
+  @objc @NSManaged nonisolated dynamic public var appleID: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var identifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var firstName: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var lastName: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var isActiveAccount: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var teams: Swift.Set<ScaleCloudRenew.Team> {
+    @objc get
+    @objc set
+  }
+  nonisolated public init(_ account: CScaleCloudSign.ALTAccount, context: CoreData.NSManagedObjectContext)
+  nonisolated public func update(account: CScaleCloudSign.ALTAccount)
+  @objc deinit
+}
+extension ScaleCloudRenew.Account {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.Account>
+}
+public struct RustDirectoryEntry {
+  public let path: Swift.String
+  public let parent: Swift.String
+  public let isFile: Swift.Bool
+  public let size: Swift.UInt32?
+  public let children: [ScaleCloudRenew.RustDirectoryEntry]
+}
+@_hasMissingDesignatedInitializers public class AfcFileManager {
+  public static func remove(path: Swift.String) throws
+  public static func createDirectory(path: Swift.String) throws
+  public static func writeFile(to path: Swift.String, bytes: Foundation.Data) throws
+  public static func copyFileOutsideAfc(from sourcePath: Swift.String, to destPath: Swift.String) throws
+  public static func contents() -> [ScaleCloudRenew.RustDirectoryEntry]
+  @objc deinit
+}
+extension CoreData.NSManagedObjectContext {
+  nonisolated public func performAsync<T>(_ closure: @escaping () -> T) async -> T
+  nonisolated public func performAsync<T>(_ closure: @escaping () throws -> T) async throws -> T
+}
+extension UIKit.UIViewController {
+  @_Concurrency.MainActor public func presentAlert(title: Swift.String, message: Swift.String?, action: UIKit.UIAlertAction? = nil) async
+  @_Concurrency.MainActor public func presentConfirmationAlert(title: Swift.String, message: Swift.String, primaryAction: UIKit.UIAlertAction, cancelAction: UIKit.UIAlertAction? = nil) async throws
+  @_Concurrency.MainActor public func presentConfirmationAlert(title: Swift.String, message: Swift.String, actions: [UIKit.UIAlertAction], cancelAction: UIKit.UIAlertAction? = nil) async throws -> UIKit.UIAlertAction
+}
+public struct AnisetteManager {
+}
+extension CScaleCloudSign.ALTApplication : Swift.Identifiable {
+  public typealias ID = Swift.ObjectIdentifier
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AppID) nonisolated public class AppID : ScaleCloudRenew.BaseEntity {
+  @objc @NSManaged nonisolated dynamic public var name: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var identifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var bundleIdentifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var features: [CScaleCloudSign.ALTFeature : Any] {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var expirationDate: Foundation.Date? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var team: ScaleCloudRenew.Team? {
+    @objc get
+  }
+  nonisolated public init(_ appID: CScaleCloudSign.ALTAppID, team: ScaleCloudRenew.Team, context: CoreData.NSManagedObjectContext)
+  @objc deinit
+}
+extension ScaleCloudRenew.AppID {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.AppID>
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AppPermission) @dynamicMemberLookup nonisolated public class AppPermission : ScaleCloudRenew.BaseEntity {
+  @objc @NSManaged nonisolated dynamic public var type: ScaleCloudRenew.ALTAppPermissionType {
+    @objc get
+    @objc set
+  }
+  @nonobjc nonisolated public var usageDescription: Swift.String? {
+    get
+    set
+  }
+  @nonobjc nonisolated public var permission: any ScaleCloudRenew.ALTAppPermission {
+    get
+  }
+  @NSManaged @objc(permission) nonisolated dynamic public var _permission: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var appBundleID: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var sourceID: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var app: ScaleCloudRenew.StoreApp? {
+    @objc get
+  }
+  @objc deinit
+}
+extension ScaleCloudRenew.AppPermission {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.AppPermission>
+}
+extension ScaleCloudRenew.AppPermission {
+  nonisolated public subscript<T>(dynamicMember keyPath: Swift.KeyPath<any ScaleCloudRenew.ALTAppPermission, T>) -> T {
+    get
+  }
+}
+public protocol AppProtocol {
+  var name: Swift.String { get }
+  var bundleIdentifier: Swift.String { get }
+  var url: Foundation.URL? { get }
+  var storeApp: ScaleCloudRenew.StoreApp? { get }
+}
+public struct AnyApp : ScaleCloudRenew.AppProtocol {
+  public var name: Swift.String
+  public var bundleIdentifier: Swift.String
+  public var url: Foundation.URL?
+  public var storeApp: ScaleCloudRenew.StoreApp?
+  public init(name: Swift.String, bundleIdentifier: Swift.String, url: Foundation.URL?, storeApp: ScaleCloudRenew.StoreApp?)
+  public init(from app: any ScaleCloudRenew.AppProtocol, name: Swift.String? = nil, bundleId: Swift.String? = nil, url: Foundation.URL? = nil, storeApp: ScaleCloudRenew.StoreApp? = nil)
+}
+extension CScaleCloudSign.ALTApplication : ScaleCloudRenew.AppProtocol {
+  public var url: Foundation.URL? {
+    get
+  }
+  public var storeApp: ScaleCloudRenew.StoreApp? {
+    get
+  }
+}
+extension ScaleCloudRenew.StoreApp : ScaleCloudRenew.AppProtocol {
+  nonisolated public var url: Foundation.URL? {
+    get
+  }
+  nonisolated public var storeApp: ScaleCloudRenew.StoreApp? {
+    get
+  }
+}
+extension ScaleCloudRenew.InstalledApp : ScaleCloudRenew.AppProtocol {
+  nonisolated public var url: Foundation.URL? {
+    get
+  }
+}
+extension ScaleCloudRenew.AppVersion : ScaleCloudRenew.AppProtocol {
+  nonisolated public var name: Swift.String {
+    get
+  }
+  nonisolated public var bundleIdentifier: Swift.String {
+    get
+  }
+  nonisolated public var url: Foundation.URL? {
+    get
+  }
+  nonisolated public var storeApp: ScaleCloudRenew.StoreApp? {
+    get
+  }
+}
+extension ScaleCloudRenew.AppScreenshot {
+  public static let defaultAspectRatio: CoreFoundation.CGSize
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AppScreenshot) nonisolated public class AppScreenshot : ScaleCloudRenew.BaseEntity, Swift.Decodable {
+  @objc @NSManaged nonisolated dynamic public var imageURL: Foundation.URL {
+    @objc get
+  }
+  nonisolated public var size: CoreFoundation.CGSize? {
+    get
+  }
+  @nonobjc nonisolated public var deviceType: CScaleCloudSign.ALTDeviceType {
+    get
+    set
+  }
+  @objc @NSManaged nonisolated dynamic public var appBundleID: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var sourceID: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var app: ScaleCloudRenew.StoreApp? {
+    @objc get
+  }
+  required nonisolated public init(from decoder: any Swift.Decoder) throws
+  @objc override nonisolated dynamic public func awakeFromInsert()
+  @objc deinit
+}
+extension ScaleCloudRenew.AppScreenshot {
+  nonisolated public var aspectRatio: CoreFoundation.CGSize {
+    get
+  }
+}
+extension ScaleCloudRenew.AppScreenshot {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.AppScreenshot>
+}
+public enum AppSorting : Swift.String, Swift.CaseIterable {
+  case `default`
+  case name
+  case developer
+  case lastUpdated
+  public var localizedName: Swift.String {
+    get
+  }
+  public var isAscending: Swift.Bool {
+    get
+  }
+  public init?(rawValue: Swift.String)
+  public typealias AllCases = [ScaleCloudRenew.AppSorting]
+  public typealias RawValue = Swift.String
+  nonisolated public static var allCases: [ScaleCloudRenew.AppSorting] {
+    get
+  }
+  public var rawValue: Swift.String {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(AppVersion) nonisolated public class AppVersion : ScaleCloudRenew.BaseEntity, Swift.Decodable {
+  @objc @NSManaged nonisolated dynamic public var version: Swift.String {
+    @objc get
+    @objc set
+  }
+  @nonobjc nonisolated public var buildVersion: Swift.String? {
+    get
+    set
+  }
+  @NSManaged @objc(buildVersion) nonisolated dynamic public var _buildVersion: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var date: Foundation.Date {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var localizedDescription: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var downloadURL: Foundation.URL {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var size: Swift.Int64 {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var sha256: Swift.String? {
+    @objc get
+  }
+  @NSManaged @objc(channel) nonisolated dynamic public var _channel: Swift.String? {
+    @objc get
+  }
+  @nonobjc nonisolated public var minOSVersion: Foundation.OperatingSystemVersion? {
+    get
+  }
+  @nonobjc nonisolated public var maxOSVersion: Foundation.OperatingSystemVersion? {
+    get
+  }
+  @objc @NSManaged nonisolated dynamic public var appBundleID: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var sourceID: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @NSManaged @objc(app) nonisolated dynamic public var _app: ScaleCloudRenew.StoreApp? {
+    @objc get
+  }
+  @NSManaged @objc(latestVersionApp) nonisolated dynamic public var latestSupportedVersionApp: ScaleCloudRenew.StoreApp? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var releaseTrack: ScaleCloudRenew.ReleaseTrack? {
+    @objc get
+    @objc set
+  }
+  nonisolated public var app: ScaleCloudRenew.StoreApp? {
+    get
+  }
+  nonisolated public var channel: ScaleCloudRenew.ReleaseTracks {
+    get
+  }
+  required nonisolated public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+}
+extension ScaleCloudRenew.AppVersion {
+  nonisolated public var localizedVersion: Swift.String {
+    get
+  }
+  nonisolated public var versionID: Swift.String {
+    get
+  }
+}
+extension ScaleCloudRenew.AppVersion {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.AppVersion>
+  public class func makeAppVersion(version: Swift.String, buildVersion: Swift.String?, channel: Swift.String? = nil, date: Foundation.Date, localizedDescription: Swift.String? = nil, downloadURL: Foundation.URL, size: Swift.Int64, sha256: Swift.String? = nil, appBundleID: Swift.String, sourceID: Swift.String? = nil, in context: CoreData.NSManagedObjectContext) -> ScaleCloudRenew.AppVersion
+  nonisolated public func mutateForData(version: Swift.String? = nil, channel: Swift.String? = nil, buildVersion: Swift.String? = nil, date: Foundation.Date? = nil, localizedDescription: Swift.String? = nil, downloadURL: Foundation.URL? = nil, size: Swift.Int64? = nil, sha256: Swift.String? = nil, appBundleID: Swift.String? = nil, sourceID: Swift.String? = nil) -> ScaleCloudRenew.AppVersion
+  nonisolated public var isSupported: Swift.Bool {
+    get
+  }
+}
+@propertyWrapper @dynamicMemberLookup public struct AsyncManaged<ManagedObject> {
+  public var wrappedValue: ManagedObject {
+    get
+    set
+  }
+  public var projectedValue: ScaleCloudRenew.AsyncManaged<ManagedObject> {
+    get
+  }
+  public init(wrappedValue: ManagedObject)
+}
+extension ScaleCloudRenew.AsyncManaged {
+  public func perform<T>(_ closure: @escaping (ManagedObject) -> T) async -> T
+  public func perform<T>(_ closure: @escaping (ManagedObject) throws -> T) async throws -> T
+}
+extension ScaleCloudRenew.AsyncManaged {
+  public subscript<T>(dynamicMember keyPath: Swift.KeyPath<ManagedObject, T>) -> T {
+    get async
+  }
+  public subscript<Wrapped, T>(dynamicMember keyPath: Swift.KeyPath<Wrapped, T>) -> T? where ManagedObject == Wrapped? {
+    get async
+  }
+  public subscript<Wrapped, T>(dynamicMember keyPath: Swift.KeyPath<Wrapped, T>) -> T where ManagedObject == Wrapped?, T : ScaleCloudRenew.OptionalProtocol {
+    get async
+  }
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers nonisolated public class BaseEntity : CoreData.NSManagedObject, ScaleCloudRenew.Fetchable {
+  @objc deinit
+}
+extension Foundation.Bundle {
+  public struct Info {
+    public static let deviceID: Swift.String
+    public static let serverID: Swift.String
+    public static let certificateID: Swift.String
+    public static let appGroups: Swift.String
+    public static let altBundleID: Swift.String
+    public static let orgbundleIdentifier: Swift.String
+    public static let appbundleIdentifier: Swift.String
+    public static let devicePairingString: Swift.String
+    public static let urlTypes: Swift.String
+    public static let exportedUTIs: Swift.String
+    public static let backgroundModes: Swift.String
+    public static let untetherURL: Swift.String
+    public static let untetherRequired: Swift.String
+    public static let untetherMinimumiOSVersion: Swift.String
+    public static let untetherMaximumiOSVersion: Swift.String
+  }
+}
+extension Foundation.Bundle {
+  public var infoPlistURL: Foundation.URL {
+    get
+  }
+  public var provisioningProfileURL: Foundation.URL {
+    get
+  }
+  public var certificateURL: Foundation.URL {
+    get
+  }
+  public var altstorePlistURL: Foundation.URL {
+    get
+  }
+}
+extension Foundation.Bundle {
+  public static var baseAltStoreAppGroupID: Swift.String
+  public var appGroups: [Swift.String] {
+    get
+  }
+  public var altstoreAppGroup: Swift.String? {
+    get
+  }
+  public var completeInfoDictionary: [Swift.String : Any]? {
+    get
+  }
+}
+public enum MuxerConstants {
+  public static let lockdowndPort: Swift.UInt16
+  public static let rsdPort: Swift.UInt16
+  public static let usbmuxdHost: Swift.String
+  public static let usbmuxdPort: Swift.UInt16
+  public static let usbmuxdSocket: Swift.String
+  public static let heartbeatTimeoutMs: Swift.UInt32
+  public static let deviceFetchTimeoutMs: Swift.UInt16
+  public static let deviceFetchSleepMs: Swift.UInt32
+  public static let pkgPath: Swift.String
+  public static let usbmuxdEnvKey: Swift.String
+  public static let pre17VersionsURL: Swift.String
+  public static let ddiImageURL: Swift.String
+  public static let ddiTrustcacheURL: Swift.String
+  public static let ddiManifestURL: Swift.String
+}
+extension ScaleCloudRenew.DatabaseManager {
+  public func start() async throws
+}
+@_hasMissingDesignatedInitializers public class DatabaseManager {
+  public static var shared: ScaleCloudRenew.DatabaseManager {
+    get
+  }
+  final public let persistentContainer: ScaleCloudRenew.RSTPersistentContainer
+  public var isStarted: Swift.Bool {
+    get
+  }
+  @objc deinit
+}
+extension ScaleCloudRenew.DatabaseManager {
+  public class func deleteDatabase() -> Swift.Bool
+  public class func recreateDatabase()
+}
+extension ScaleCloudRenew.DatabaseManager {
+  public func start(completionHandler: @escaping ((any Swift.Error)?) -> Swift.Void)
+  public func signOut(completionHandler: @escaping ((any Swift.Error)?) -> Swift.Void)
+  public func purgeLoggedErrors(before date: Foundation.Date? = nil, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func updateFeaturedSortIDs() async
+}
+extension ScaleCloudRenew.DatabaseManager {
+  public func startForPreview()
+}
+extension ScaleCloudRenew.DatabaseManager {
+  public var viewContext: CoreData.NSManagedObjectContext {
+    get
+  }
+  public func activeAccount(in context: CoreData.NSManagedObjectContext = DatabaseManager.shared.viewContext) -> ScaleCloudRenew.Account?
+  public func activeTeam(in context: CoreData.NSManagedObjectContext = DatabaseManager.shared.viewContext) -> ScaleCloudRenew.Team?
+}
+extension Foundation.Date {
+  public static let shortDateFormatter: Foundation.DateFormatter
+  public static let mediumDateFormatter: Foundation.DateFormatter
+  public func numberOfCalendarDays(since date: Foundation.Date) -> Swift.Int
+  public func relativeDateString(since date: Foundation.Date, dateFormatter: Foundation.DateFormatter? = nil) -> Swift.String
+}
+public enum DebuggerUtils {
+  public static func isDebuggerAttached() -> Swift.Bool
+}
+@_hasMissingDesignatedInitializers final public class Device {
+  public static func getFirstDevice() throws -> ScaleCloudRenew.Device
+  final public func getUDID() -> Swift.String?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers final public class ExtensionManager {
+  public static func discoverExtensions(in appBundleURL: Foundation.URL) throws -> [ScaleCloudRenew.AppExtension]
+  public static func validateExtensions(discovered: [ScaleCloudRenew.AppExtension], expected: [ScaleCloudRenew.AppExtension]) -> [Swift.String]
+  public static func verifyExtensionBundle(at extensionURL: Foundation.URL) -> Swift.Bool
+  @objc deinit
+}
+public enum ExtensionError : Foundation.LocalizedError {
+  case missingInfoPlist(path: Swift.String)
+  case invalidInfoPlist(path: Swift.String)
+  case missingBundleIdentifier(path: Swift.String)
+  case extensionNotFound(bundleIdentifier: Swift.String)
+  public var errorDescription: Swift.String? {
+    get
+  }
+}
+public struct AppExtension : Swift.Codable, Swift.Equatable {
+  public let name: Swift.String
+  public let bundleIdentifier: Swift.String
+  public let type: ScaleCloudRenew.ExtensionType
+  public let relativePath: Swift.String
+  public init(name: Swift.String, bundleIdentifier: Swift.String, type: ScaleCloudRenew.ExtensionType, relativePath: Swift.String)
+  public static let knownExtensions: [ScaleCloudRenew.AppExtension]
+  public static func == (a: ScaleCloudRenew.AppExtension, b: ScaleCloudRenew.AppExtension) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public enum ExtensionType : Swift.String, Swift.Codable {
+  case share
+  case fileProvider
+  case fileProviderUI
+  case notificationService
+  case widget
+  case intents
+  case action
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct ExtensionProvisioningProfile : Swift.Codable {
+  public let bundleIdentifier: Swift.String
+  public let profileData: Foundation.Data
+  public let expirationDate: Foundation.Date
+  public let teamIdentifier: Swift.String
+  public init(bundleIdentifier: Swift.String, profileData: Foundation.Data, expirationDate: Foundation.Date, teamIdentifier: Swift.String)
+  public var isExpired: Swift.Bool {
+    get
+  }
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public typealias FetchRequest = CoreData.NSFetchRequest<any CoreData.NSFetchRequestResult>
+public protocol Fetchable : CoreData.NSManagedObject {
+}
+extension ScaleCloudRenew.Fetchable {
+  public static func first(satisfying predicate: Foundation.NSPredicate? = nil, sortedBy sortDescriptors: [Foundation.NSSortDescriptor]? = nil, in context: CoreData.NSManagedObjectContext, requestProperties: [Swift.PartialKeyPath<ScaleCloudRenew.FetchRequest> : Any?] = [:]) -> Self?
+  public static func all(satisfying predicate: Foundation.NSPredicate? = nil, sortedBy sortDescriptors: [Foundation.NSSortDescriptor]? = nil, in context: CoreData.NSManagedObjectContext, requestProperties: [Swift.PartialKeyPath<ScaleCloudRenew.FetchRequest> : Any?] = [:]) -> [Self]
+  public static func fetch(_ fetchRequest: CoreData.NSFetchRequest<Self>, in context: CoreData.NSManagedObjectContext) -> [Self]
+}
+extension Foundation.FileManager {
+  public var altstoreSharedDirectory: Foundation.URL? {
+    get
+  }
+  public var appBackupsDirectory: Foundation.URL? {
+    get
+  }
+  public func backupDirectoryURL(for app: ScaleCloudRenew.InstalledApp) -> Foundation.URL?
+}
+@_hasMissingDesignatedInitializers public class Heartbeat {
+  public static var lastBeatSuccessful: Swift.Bool
+  public static func startBeat()
+  @objc deinit
+}
+public struct NetInfo : Swift.Hashable, Swift.CustomStringConvertible {
+  public let name: Swift.String
+  public let hostIP: Swift.String
+  public let maskIP: Swift.String
+  public var description: Swift.String {
+    get
+  }
+  public static func == (a: ScaleCloudRenew.NetInfo, b: ScaleCloudRenew.NetInfo) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+final public class TunnelConfigBinding : Swift.Sendable {
+  final public let setDeviceIP: @Sendable (Swift.String?) -> Swift.Void
+  final public let setFakeIP: @Sendable (Swift.String?) -> Swift.Void
+  final public let setSubnetMask: @Sendable (Swift.String?) -> Swift.Void
+  final public let getOverrideFakeIP: @Sendable () -> Swift.String
+  final public let setOverrideEffective: @Sendable (Swift.Bool) -> Swift.Void
+  public init(setDeviceIP: @escaping @Sendable (Swift.String?) -> Swift.Void, setFakeIP: @escaping @Sendable (Swift.String?) -> Swift.Void, setSubnetMask: @escaping @Sendable (Swift.String?) -> Swift.Void, getOverrideFakeIP: @escaping @Sendable () -> Swift.String, setOverrideEffective: @escaping @Sendable (Swift.Bool) -> Swift.Void)
+  @objc deinit
+}
+public protocol InstallProvider {
+  func yeetAppAfc(bundleId: Swift.String, ipaBytes: Foundation.Data) throws
+  func installIpa(bundleId: Swift.String) throws
+  func removeApp(bundleId: Swift.String) throws
+}
+@_hasMissingDesignatedInitializers public class Install {
+  public static var provider: (any ScaleCloudRenew.InstallProvider)?
+  public static func yeetAppAfc(bundleId: Swift.String, ipaBytes: Foundation.Data) throws
+  public static func installIpa(bundleId: Swift.String) throws
+  public static func removeApp(bundleId: Swift.String) throws
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class LockDownInstall : ScaleCloudRenew.InstallProvider {
+  public func yeetAppAfc(bundleId: Swift.String, ipaBytes: Foundation.Data) throws
+  public func installIpa(bundleId: Swift.String) throws
+  public func removeApp(bundleId: Swift.String) throws
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class RPInstall : ScaleCloudRenew.InstallProvider {
+  public func yeetAppAfc(bundleId: Swift.String, ipaBytes: Foundation.Data) throws
+  public func installIpa(bundleId: Swift.String) throws
+  public func removeApp(bundleId: Swift.String) throws
+  @objc deinit
+}
+extension ScaleCloudRenew.InstalledApp {
+  public static var freeAccountActiveAppsLimit: Swift.Int {
+    get
+  }
+}
+public protocol InstalledAppProtocol : ScaleCloudRenew.Fetchable {
+  var name: Swift.String { get }
+  var bundleIdentifier: Swift.String { get }
+  var resignedBundleIdentifier: Swift.String { get }
+  var version: Swift.String { get }
+  var refreshedDate: Foundation.Date { get }
+  var expirationDate: Foundation.Date { get }
+  var installedDate: Foundation.Date { get }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(InstalledApp) nonisolated public class InstalledApp : ScaleCloudRenew.BaseEntity, ScaleCloudRenew.InstalledAppProtocol {
+  @objc @NSManaged nonisolated dynamic public var name: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var bundleIdentifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var resignedBundleIdentifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var version: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var buildVersion: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var refreshedDate: Foundation.Date {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var expirationDate: Foundation.Date {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var installedDate: Foundation.Date {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var isActive: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var needsResign: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var hasAlternateIcon: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var useMainProfile: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var certificateSerialNumber: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var storeBuildVersion: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var isRefreshing: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var storeApp: ScaleCloudRenew.StoreApp? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var team: ScaleCloudRenew.Team? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var appExtensions: Swift.Set<ScaleCloudRenew.InstalledExtension> {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var loggedErrors: Foundation.NSSet {
+    @objc get
+  }
+  nonisolated public var isSideloaded: Swift.Bool {
+    get
+  }
+  @objc nonisolated public var hasUpdate: Swift.Bool {
+    @objc get
+  }
+  nonisolated public var appIDCount: Swift.Int {
+    get
+  }
+  nonisolated public var requiredActiveSlots: Swift.Int {
+    get
+  }
+  nonisolated public init(resignedApp: CScaleCloudSign.ALTApplication, originalBundleIdentifier: Swift.String, certificateSerialNumber: Swift.String?, storeBuildVersion: Swift.String?, context: CoreData.NSManagedObjectContext)
+  @objc deinit
+}
+extension ScaleCloudRenew.InstalledApp {
+  nonisolated public var localizedVersion: Swift.String {
+    get
+  }
+  nonisolated public func update(resignedApp: CScaleCloudSign.ALTApplication, certificateSerialNumber: Swift.String?, storeBuildVersion: Swift.String?)
+  nonisolated public func update(provisioningProfile: CScaleCloudSign.ALTProvisioningProfile)
+  nonisolated public func loadIcon(completion: @escaping (Swift.Result<UIKit.UIImage?, any Swift.Error>) -> Swift.Void)
+  nonisolated public func matches(_ appVersion: ScaleCloudRenew.AppVersion) -> Swift.Bool
+}
+extension ScaleCloudRenew.InstalledApp {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.InstalledApp>
+  public class func supportedUpdatesFetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.InstalledApp>
+  public class func activeAppsFetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.InstalledApp>
+  public class func fetchAltStore(in context: CoreData.NSManagedObjectContext) -> ScaleCloudRenew.InstalledApp?
+  public class func fetchActiveApps(in context: CoreData.NSManagedObjectContext) -> [ScaleCloudRenew.InstalledApp]
+  public class func fetchAppsForRefreshingAll(in context: CoreData.NSManagedObjectContext) -> [ScaleCloudRenew.InstalledApp]
+  public class func fetchAppsForBackgroundRefresh(in context: CoreData.NSManagedObjectContext) -> [ScaleCloudRenew.InstalledApp]
+}
+extension ScaleCloudRenew.InstalledApp {
+  nonisolated public var openAppURL: Foundation.URL {
+    get
+  }
+  public class func openAppURL(for app: any ScaleCloudRenew.AppProtocol) -> Foundation.URL
+}
+extension ScaleCloudRenew.InstalledApp {
+  public class var appsDirectoryURL: Foundation.URL {
+    get
+  }
+  public class var legacyAppsDirectoryURL: Foundation.URL {
+    get
+  }
+  public class func fileURL(for app: any ScaleCloudRenew.AppProtocol) -> Foundation.URL
+  public class func refreshedIPAURL(for app: any ScaleCloudRenew.AppProtocol) -> Foundation.URL
+  public class func directoryURL(for app: any ScaleCloudRenew.AppProtocol) -> Foundation.URL
+  public class func installedAppUTI(forBundleIdentifier bundleIdentifier: Swift.String) -> Swift.String
+  public class func installedBackupAppUTI(forBundleIdentifier bundleIdentifier: Swift.String) -> Swift.String
+  public class func alternateIconURL(for app: any ScaleCloudRenew.AppProtocol) -> Foundation.URL
+  nonisolated public var directoryURL: Foundation.URL {
+    get
+  }
+  nonisolated public var fileURL: Foundation.URL {
+    get
+  }
+  nonisolated public var refreshedIPAURL: Foundation.URL {
+    get
+  }
+  nonisolated public var installedAppUTI: Swift.String {
+    get
+  }
+  nonisolated public var installedBackupAppUTI: Swift.String {
+    get
+  }
+  nonisolated public var alternateIconURL: Foundation.URL {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(InstalledExtension) nonisolated public class InstalledExtension : ScaleCloudRenew.BaseEntity, ScaleCloudRenew.InstalledAppProtocol {
+  @objc @NSManaged nonisolated dynamic public var name: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var bundleIdentifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var resignedBundleIdentifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var version: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var refreshedDate: Foundation.Date {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var expirationDate: Foundation.Date {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var installedDate: Foundation.Date {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var parentApp: ScaleCloudRenew.InstalledApp? {
+    @objc get
+    @objc set
+  }
+  nonisolated public init(resignedAppExtension: CScaleCloudSign.ALTApplication, originalBundleIdentifier: Swift.String, context: CoreData.NSManagedObjectContext)
+  nonisolated public func update(resignedAppExtension: CScaleCloudSign.ALTApplication)
+  nonisolated public func update(provisioningProfile: CScaleCloudSign.ALTProvisioningProfile)
+  @objc deinit
+}
+extension ScaleCloudRenew.InstalledExtension {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.InstalledExtension>
+}
+extension Swift.CodingUserInfoKey {
+  public static let managedObjectContext: Swift.CodingUserInfoKey
+  public static let sourceURL: Swift.CodingUserInfoKey
+}
+@_inheritsConvenienceInitializers final public class JSONDecoder : Foundation.JSONDecoder {
+  @ScaleCloudRenew.DecoderItem<CoreData.NSManagedObjectContext> final public var managedObjectContext: CoreData.NSManagedObjectContext? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.DecoderItem<Foundation.URL> final public var sourceURL: Foundation.URL? {
+    get
+    set
+    _modify
+  }
+  override public init()
+  @objc deinit
+}
+extension Swift.Decoder {
+  public var managedObjectContext: CoreData.NSManagedObjectContext? {
+    get
+  }
+  public var sourceURL: Foundation.URL? {
+    get
+  }
+}
+@propertyWrapper public struct DecoderItem<Value> {
+  public let key: Swift.CodingUserInfoKey
+  public var wrappedValue: Value? {
+    get
+    set
+  }
+  public init(key: Swift.CodingUserInfoKey)
+  public static subscript<OuterSelf>(_enclosingInstance decoder: OuterSelf, wrapped wrappedKeyPath: Swift.ReferenceWritableKeyPath<OuterSelf, Value?>, storage storageKeyPath: Swift.ReferenceWritableKeyPath<OuterSelf, ScaleCloudRenew.DecoderItem<Value>>) -> Value? where OuterSelf : ScaleCloudRenew.JSONDecoder {
+    get
+    set
+  }
+}
+public protocol JITProvider {
+  func debugApp(appId: Swift.String) throws
+  func attachDebugger(pid: Swift.UInt32) throws
+}
+@_hasMissingDesignatedInitializers public class JIT {
+  public static func debugApp(appId: Swift.String) throws
+  public static func attachDebugger(pid: Swift.UInt32) throws
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class LockDownJIT : ScaleCloudRenew.JITProvider {
+  public func debugApp(appId: Swift.String) throws
+  public func attachDebugger(pid: Swift.UInt32) throws
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class RPJit : ScaleCloudRenew.JITProvider {
+  public func debugApp(appId: Swift.String) throws
+  public func attachDebugger(pid: Swift.UInt32) throws
+  @objc deinit
+}
+@propertyWrapper public struct KeychainItem<Value> {
+  public let key: Swift.String
+  public var wrappedValue: Value? {
+    get
+    set
+  }
+  public init(key: Swift.String)
+}
+@_hasMissingDesignatedInitializers public class Keychain {
+  public static let shared: ScaleCloudRenew.Keychain
+  @ScaleCloudRenew.KeychainItem<Swift.String> public var appleIDEmailAddress: Swift.String? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Swift.String> public var appleIDPassword: Swift.String? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Swift.String> public var appleIDAdsid: Swift.String? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Swift.String> public var appleIDXcodeToken: Swift.String? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Foundation.Data> public var signingCertificatePrivateKey: Foundation.Data? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Swift.String> public var signingCertificateSerialNumber: Swift.String? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Foundation.Data> public var signingCertificate: Foundation.Data? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Swift.String> public var signingCertificatePassword: Swift.String? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Swift.String> public var identifier: Swift.String? {
+    get
+    set
+    _modify
+  }
+  @ScaleCloudRenew.KeychainItem<Swift.String> public var adiPb: Swift.String? {
+    get
+    set
+    _modify
+  }
+  public func setExtensionProvisioningProfile(_ profileData: Foundation.Data, forBundleID bundleIdentifier: Swift.String)
+  public func extensionProvisioningProfile(forBundleID bundleIdentifier: Swift.String) -> Foundation.Data?
+  public func removeExtensionProvisioningProfile(forBundleID bundleIdentifier: Swift.String)
+  public func removeAllExtensionProvisioningProfiles()
+  public var certificate: CScaleCloudSign.ALTCertificate?
+  public var session: CScaleCloudSign.ALTAppleAPISession?
+  public var team: CScaleCloudSign.ALTTeam?
+  public func hasValidCredentials() -> Swift.Bool
+  public func reset()
+  @objc deinit
+}
+public struct KnownSource : Swift.Decodable {
+  public var identifier: Swift.String
+  public var sourceURL: Foundation.URL?
+  public var bundleIDs: [Swift.String]?
+  public init(from decoder: any Swift.Decoder) throws
+}
+extension Foundation.UserDefaults {
+  @nonobjc public var recommendedSources: [ScaleCloudRenew.KnownSource]? {
+    get
+    set
+  }
+  @nonobjc public var blockedSources: [ScaleCloudRenew.KnownSource]? {
+    get
+    set
+  }
+}
+extension ScaleCloudRenew.LoggedError {
+  public enum Operation : Swift.String {
+    case install
+    case update
+    case refresh
+    case activate
+    case deactivate
+    case backup
+    case restore
+    case enableJIT
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(LoggedError) nonisolated public class LoggedError : ScaleCloudRenew.BaseEntity {
+  @objc @NSManaged nonisolated dynamic public var date: Foundation.Date {
+    @objc get
+  }
+  @nonobjc nonisolated public var operation: ScaleCloudRenew.LoggedError.Operation? {
+    get
+  }
+  @objc @NSManaged nonisolated dynamic public var domain: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var code: Swift.Int32 {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var userInfo: [Swift.String : Any] {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var appName: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var appBundleID: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var storeApp: ScaleCloudRenew.StoreApp? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var installedApp: ScaleCloudRenew.InstalledApp? {
+    @objc get
+  }
+  nonisolated public init(error: any Swift.Error, app: any ScaleCloudRenew.AppProtocol, date: Foundation.Date = Date(), operation: ScaleCloudRenew.LoggedError.Operation? = nil, context: CoreData.NSManagedObjectContext)
+  @objc deinit
+}
+extension ScaleCloudRenew.LoggedError {
+  nonisolated public var app: any ScaleCloudRenew.AppProtocol {
+    get
+  }
+  nonisolated public var error: Foundation.NSError {
+    get
+  }
+  @objc nonisolated dynamic public var localizedDateString: Swift.String {
+    @objc get
+  }
+  nonisolated public var localizedFailure: Swift.String? {
+    get
+  }
+}
+extension ScaleCloudRenew.LoggedError {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.LoggedError>
+}
+extension os.Logger {
+  public static let altstoreSubsystem: Swift.String
+  public static let main: os.Logger
+  public static let sideload: os.Logger
+  public static let altjit: os.Logger
+  public static let fugu14: os.Logger
+}
+@available(iOS 15, *)
+extension OSLog.OSLogEntryLog.Level {
+  public var localizedName: Swift.String {
+    get
+  }
+}
+@propertyWrapper @dynamicMemberLookup public struct Managed<ManagedObject> {
+  public var wrappedValue: ManagedObject {
+    get
+    set
+  }
+  public var projectedValue: ScaleCloudRenew.Managed<ManagedObject> {
+    get
+  }
+  public init(wrappedValue: ManagedObject)
+}
+extension ScaleCloudRenew.Managed {
+  public func perform<T>(_ closure: @escaping (ManagedObject) -> T) -> T
+  public func perform<T>(_ closure: @escaping (ManagedObject) throws -> T) throws -> T
+}
+extension ScaleCloudRenew.Managed {
+  public subscript<T>(dynamicMember keyPath: Swift.KeyPath<ManagedObject, T>) -> T {
+    get
+  }
+  public subscript<Wrapped, T>(dynamicMember keyPath: Swift.KeyPath<Wrapped, T>) -> T? where ManagedObject == Wrapped? {
+    get
+  }
+  public subscript<Wrapped, T>(dynamicMember keyPath: Swift.KeyPath<Wrapped, T>) -> T where ManagedObject == Wrapped?, T : ScaleCloudRenew.OptionalProtocol {
+    get
+  }
+}
+extension ScaleCloudRenew.MergeError {
+  public enum Code : Swift.Int, ScaleCloudRenew.ALTErrorCode {
+    public typealias Error = ScaleCloudRenew.MergeError
+    case noVersions
+    case incorrectVersionOrder
+    case incorrectPermissions
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+}
+public struct MergeError : ScaleCloudRenew.ALTLocalizedError {
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public let code: ScaleCloudRenew.MergeError.Code
+  public var errorTitle: Swift.String?
+  public var errorFailure: Swift.String?
+  public var appName: Swift.String?
+  public var appBundleID: Swift.String?
+  public var sourceID: Swift.String?
+  public var errorFailureReason: Swift.String {
+    get
+  }
+  public var recoverySuggestion: Swift.String? {
+    get
+  }
+}
+extension ScaleCloudRenew.MergeError : Foundation._ObjectiveCBridgeableError {
+  public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+  public init?(_bridgedNSError error: Foundation.NSError)
+}
+@objc @_inheritsConvenienceInitializers open class MergePolicy : ScaleCloudRenew.RSTRelationshipPreservingMergePolicy {
+  @objc override dynamic open func resolve(constraintConflicts conflicts: [CoreData.NSConstraintConflict]) throws
+  @objc override dynamic public init()
+  @objc deinit
+}
+public struct Minimuxer {
+  public static func describeError(_ error: ScaleCloudRenew.MinimuxerError) -> Swift.String
+  public static func bindTunnelConfig(_ binding: ScaleCloudRenew.TunnelConfigBinding)
+  public static func ready() -> Swift.Bool
+  public static func setDebug(_ debug: Swift.Bool)
+  public static func start(pairingFile: Swift.String, logPath: Swift.String) throws
+  public static func startWithLogger(pairingFile: Swift.String, logPath: Swift.String, isConsoleLoggingEnabled: Swift.Bool) throws
+  public static func retargetUsbmuxdAddr()
+  public static func fetchUDID() -> Swift.String?
+  public static func testDeviceConnection(ifaddr: Swift.String?) -> Swift.Bool
+  public static func yeetAppAfc(bundleId: Swift.String, ipaBytes: Foundation.Data) throws
+  public static func installIpa(bundleId: Swift.String) throws
+  public static func removeApp(bundleId: Swift.String) throws
+  public static func debugApp(appId: Swift.String) throws
+  public static func attachDebugger(pid: Swift.UInt32) throws
+  public static func startAutoMounter(docsPath: Swift.String)
+  public static func installProvisioningProfile(profile: Foundation.Data) throws
+  public static func removeProvisioningProfile(id: Swift.String) throws
+  public static func dumpProfiles(docsPath: Swift.String) throws -> Swift.String
+}
+@_hasMissingDesignatedInitializers final public class RustDevice {
+  @objc deinit
+  public static func fetchFirst() -> ScaleCloudRenew.RustDevice?
+  final public func getUDID() -> Swift.String?
+}
+@_hasMissingDesignatedInitializers final public class RustLockdown {
+  @objc deinit
+  public static func connect(device: ScaleCloudRenew.RustDevice, label: Swift.String) -> ScaleCloudRenew.RustLockdown?
+  final public func getValue(domain: Swift.String? = nil, key: Swift.String) -> Swift.String?
+}
+@_hasMissingDesignatedInitializers final public class RustAfc {
+  @objc deinit
+  public static func connect(device: ScaleCloudRenew.RustDevice, label: Swift.String) -> ScaleCloudRenew.RustAfc?
+  final public func remove(path: Swift.String) -> Swift.Bool
+  final public func mkdir(path: Swift.String) -> Swift.Bool
+  final public func fileOpen(path: Swift.String, mode: Swift.String) -> Swift.UInt64
+  final public func fileWrite(handle: Swift.UInt64, data: Foundation.Data) -> Swift.Bool
+  final public func fileRead(handle: Swift.UInt64, size: Swift.UInt32) -> Foundation.Data?
+  final public func fileClose(handle: Swift.UInt64)
+  final public func writeFile(path: Swift.String, data: Foundation.Data) -> Swift.Bool
+  final public func getFileInfo(path: Swift.String) -> [Swift.String : Swift.String]?
+  final public func readDirectory(path: Swift.String) -> [Swift.String]?
+}
+@_hasMissingDesignatedInitializers final public class RustInstProxy {
+  @objc deinit
+  public static func connect(device: ScaleCloudRenew.RustDevice, label: Swift.String) -> ScaleCloudRenew.RustInstProxy?
+  final public func install(path: Swift.String) -> Swift.Bool
+  final public func uninstall(bundleId: Swift.String) -> Swift.Bool
+  final public func lookup(appId: Swift.String) -> Swift.String?
+  final public func getPathForBundleIdentifier(bundleId: Swift.String) -> Swift.String?
+}
+@_hasMissingDesignatedInitializers final public class RustMisagent {
+  @objc deinit
+  public static func connect(device: ScaleCloudRenew.RustDevice, label: Swift.String) -> ScaleCloudRenew.RustMisagent?
+  final public func install(profileData: Foundation.Data) -> Swift.Bool
+  final public func remove(profileId: Swift.String) -> Swift.Bool
+  final public func copyAll() -> Swift.String?
+}
+@_hasMissingDesignatedInitializers final public class RustDebugserver {
+  @objc deinit
+  public static func connect(device: ScaleCloudRenew.RustDevice, label: Swift.String) -> ScaleCloudRenew.RustDebugserver?
+  final public func sendCommand(_ command: Swift.String) -> Swift.String?
+  final public func setArgv(_ argv: [Swift.String]) -> Swift.Bool
+}
+@_hasMissingDesignatedInitializers final public class RustMounter {
+  @objc deinit
+  public static func connect(device: ScaleCloudRenew.RustDevice, label: Swift.String) -> ScaleCloudRenew.RustMounter?
+  final public func lookup(imageType: Swift.String) -> Swift.String?
+  final public func upload(path: Swift.String, signature: Swift.String, imageType: Swift.String) -> Swift.Bool
+  final public func mount(path: Swift.String, signature: Swift.String, imageType: Swift.String) -> Swift.Bool
+}
+@_hasMissingDesignatedInitializers final public class RustHeartbeat {
+  @objc deinit
+  public static func connect(device: ScaleCloudRenew.RustDevice, label: Swift.String) -> ScaleCloudRenew.RustHeartbeat?
+  final public func receive(timeoutMs: Swift.UInt32) -> Swift.String?
+  final public func send(plistXml: Swift.String) -> Swift.Bool
+}
+public func rustBridgeSetDebug(_ debug: Swift.Bool)
+public func rustBridgeDebugAppPost17(_ appId: Swift.String, muxerAddr: Swift.String, deviceIp: Swift.String) -> Swift.Int32
+public func rustBridgeMountPersonalizedDDI(image: Foundation.Data, trustcache: Foundation.Data, manifest: Foundation.Data, muxerAddr: Swift.String, deviceIp: Swift.String) -> Swift.Int32
+@_hasMissingDesignatedInitializers public class RustIdevice {
+  public static func testDeviceConnection() -> Swift.Bool
+  public static func fetchUDID() -> Swift.String?
+  public static func yeetAppAfc(bundleId: Swift.String, ipaBytes: Foundation.Data) throws
+  public static func installIpa(bundleId: Swift.String) throws
+  public static func removeApp(bundleId: Swift.String) throws
+  public static func debugApp(appId: Swift.String) throws
+  public static func debugApp(pid: Swift.UInt32) throws
+  public static func installProvisioningProfile(_ profile: Foundation.Data) throws
+  public static func dumpProfiles(_ docPath: Swift.String) throws
+  public static func removeProvisioningProfile(id: Swift.String) throws
+  public static func setRpPairingFile(_ pairingFile: Swift.String) throws
+  public static func mountPersonalizedDDI(image: Foundation.Data, trustcache: Foundation.Data, manifest: Foundation.Data) -> Swift.Int32
+  @objc deinit
+}
+public enum MinimuxerError : Swift.Error {
+  case NoDevice
+  case NoConnection
+  case PairingFile
+  case CreateDebug
+  case CreateInstproxy
+  case CreateLockdown
+  case CreateCoreDevice
+  case CreateSoftwareTunnel
+  case CreateRemoteServer
+  case CreateProcessControl
+  case GetLockdownValue
+  case Connect
+  case Close
+  case XpcHandshake
+  case NoService
+  case InvalidProductVersion
+  case LookupApps
+  case FindApp
+  case BundlePath
+  case MaxPacket
+  case WorkingDirectory
+  case Argv
+  case LaunchSuccess
+  case Detach
+  case Attach
+  case CreateAfc
+  case RwAfc
+  case InstallApp(Swift.String)
+  case UninstallApp
+  case CreateMisagent
+  case ProfileInstall
+  case ProfileRemove
+  case CreateFolder
+  case DownloadImage
+  case ImageLookup
+  case ImageRead
+  case Mount
+}
+extension ScaleCloudRenew.MinimuxerError : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+public var isMinimuxerReady: Swift.Bool {
+  get
+}
+public func minimuxerStartWithLogger(_ pairingFile: Swift.String, _ logPath: Swift.String, _ loggingEnabled: Swift.Bool) throws
+public func installProvisioningProfiles(_ profileData: Foundation.Data) throws
+public func removeProvisioningProfile(_ id: Swift.String) throws
+public func installIPA(_ bundleId: Swift.String) throws
+public func fetchUDID() -> Swift.String?
+public func removeApp(_ bundleId: Swift.String) throws
+public func yeetAppAFC(_ bundleId: Swift.String, _ rawBytes: Foundation.Data) throws
+public func debugApp(_ appId: Swift.String) throws
+extension ScaleCloudRenew.MinimuxerError : @retroactive Foundation.LocalizedError {
+  public var failureReason: Swift.String? {
+    get
+  }
+}
+public protocol MounterProvider {
+  var dmgMounted: Swift.Bool { get }
+  func startAutoMounter(docsPath: Swift.String)
+}
+@_hasMissingDesignatedInitializers public class Mounter {
+  public static var provider: (any ScaleCloudRenew.MounterProvider)?
+  public static func startAutoMounter(docsPath: Swift.String)
+  public static var dmgMounted: Swift.Bool {
+    get
+  }
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class LockDownMounter : ScaleCloudRenew.MounterProvider {
+  public var dmgMounted: Swift.Bool
+  public func startAutoMounter(docsPath: Swift.String)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class RPMounter : ScaleCloudRenew.MounterProvider {
+  public var dmgMounted: Swift.Bool
+  public func startAutoMounter(docsPath: Swift.String)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class Muxer {
+  public static var started: Swift.Bool
+  public static var usbmuxdReady: Swift.Bool
+  public static var isrppairing: Swift.Bool
+  public static func retargetUsbmuxdAddr()
+  public static func start(pairingFile: Swift.String, logPath: Swift.String) throws
+  public static func notifyDeviceAttached(deviceIP: Swift.String)
+  public static func notifyDeviceDetached()
+  @objc deinit
+}
+public typealias ALTFont = UIKit.UIFont
+extension Foundation.NSError {
+  @objc(alt_localizedFailure) dynamic public var localizedFailure: Swift.String? {
+    @objc get
+  }
+  @objc(alt_localizedDebugDescription) dynamic public var localizedDebugDescription: Swift.String? {
+    @objc get
+  }
+  @objc(alt_localizedTitle) dynamic public var localizedTitle: Swift.String? {
+    @objc get
+  }
+  @objc(alt_errorWithLocalizedFailure:) dynamic public func withLocalizedFailure(_ failure: Swift.String) -> Foundation.NSError
+  @objc(alt_errorWithLocalizedTitle:) dynamic public func withLocalizedTitle(_ title: Swift.String) -> Foundation.NSError
+  public func sanitizedForSerialization() -> Foundation.NSError
+  public func formattedDetailedDescription(with font: ScaleCloudRenew.ALTFont) -> Foundation.NSAttributedString
+}
+extension Foundation.NSError {
+  public typealias UserInfoProvider = (any Swift.Error, Swift.String) -> Any?
+  @objc dynamic public class func alt_setUserInfoValueProvider(forDomain domain: Swift.String, provider: Foundation.NSError.UserInfoProvider?)
+}
+extension Swift.Error {
+  public var underlyingError: (any Swift.Error)? {
+    get
+  }
+  public var localizedErrorCode: Swift.String {
+    get
+  }
+  public var displayCode: Swift.Int {
+    get
+  }
+}
+extension CoreData.NSManagedObjectContext {
+  nonisolated public func performAndWait<T>(_ closure: @escaping () -> T) -> T
+  nonisolated public func performAndWait<T>(_ closure: @escaping () throws -> T) throws -> T
+}
+@_hasMissingDesignatedInitializers final public class NetworkObserver {
+  public static let shared: ScaleCloudRenew.NetworkObserver
+  @discardableResult
+  final public func start() -> Swift.Bool
+  final public func refreshEndpoint()
+  @discardableResult
+  final public func stop() -> Swift.Bool
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(NewsItem) nonisolated public class NewsItem : ScaleCloudRenew.BaseEntity, Swift.Decodable {
+  @objc @NSManaged nonisolated dynamic public var identifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var date: Foundation.Date {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var title: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var caption: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var tintColor: UIKit.UIColor {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var sortIndex: Swift.Int32 {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var isSilent: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var imageURL: Foundation.URL? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var externalURL: Foundation.URL? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var appID: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var sourceIdentifier: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var storeApp: ScaleCloudRenew.StoreApp? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var source: ScaleCloudRenew.Source? {
+    @objc get
+    @objc set
+  }
+  required nonisolated public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+}
+extension ScaleCloudRenew.NewsItem {
+  nonisolated public var globallyUniqueID: Swift.String? {
+    get
+  }
+}
+extension ScaleCloudRenew.NewsItem {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.NewsItem>
+  public class func sortedFetchRequest(for source: ScaleCloudRenew.Source?) -> CoreData.NSFetchRequest<ScaleCloudRenew.NewsItem>
+}
+public func ELOG(_ message: Swift.StaticString, file: Swift.StaticString = #file, function: Swift.StaticString = #function, line: Swift.UInt = #line, _ args: any Swift.CVarArg...)
+public func ILOG(_ message: Swift.StaticString, file: Swift.StaticString = #file, function: Swift.StaticString = #function, line: Swift.UInt = #line, _ args: any Swift.CVarArg...)
+public func DLOG(_ message: Swift.StaticString, file: Swift.StaticString = #file, function: Swift.StaticString = #function, line: Swift.UInt = #line, _ args: any Swift.CVarArg...)
+extension Foundation.OperatingSystemVersion : Swift.Comparable {
+  public static func == (lhs: Foundation.OperatingSystemVersion, rhs: Foundation.OperatingSystemVersion) -> Swift.Bool
+  public static func < (lhs: Foundation.OperatingSystemVersion, rhs: Foundation.OperatingSystemVersion) -> Swift.Bool
+}
+public protocol OptionalProtocol {
+  associatedtype Wrapped
+  static var none: Self { get }
+}
+extension Swift.Optional : ScaleCloudRenew.OptionalProtocol {
+}
+extension Foundation.ProcessInfo {
+  public var shortVersion: Swift.String {
+    get
+  }
+  public var operatingSystemBuild: Swift.String {
+    get
+  }
+  public var sparseRestorePatched: Swift.Bool {
+    get
+  }
+}
+extension Foundation.ProcessInfo {
+  public var isPreview: Swift.Bool {
+    get
+  }
+}
+public protocol ProvisionProvider {
+  func installProvisioningProfile(profile: Foundation.Data) throws
+  func removeProvisioningProfile(id: Swift.String) throws
+  func dumpProfiles(docsPath: Swift.String) throws -> Swift.String
+}
+@_hasMissingDesignatedInitializers public class Provision {
+  public static var provider: (any ScaleCloudRenew.ProvisionProvider)?
+  public static func installProvisioningProfile(profile: Foundation.Data) throws
+  public static func removeProvisioningProfile(id: Swift.String) throws
+  public static func dumpProfiles(docsPath: Swift.String) throws -> Swift.String
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class LockDownProvision : ScaleCloudRenew.ProvisionProvider {
+  public func installProvisioningProfile(profile: Foundation.Data) throws
+  public func removeProvisioningProfile(id: Swift.String) throws
+  public func dumpProfiles(docsPath: Swift.String) throws -> Swift.String
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class RPProvision : ScaleCloudRenew.ProvisionProvider {
+  public func dumpProfiles(docsPath: Swift.String) throws -> Swift.String
+  public func installProvisioningProfile(profile: Foundation.Data) throws
+  public func removeProvisioningProfile(id: Swift.String) throws
+  @objc deinit
+}
+public class RawPacket {
+  final public let version: Swift.UInt32
+  final public let message: Swift.UInt32
+  final public let tag: Swift.UInt32
+  final public let plist: [Swift.String : Any]
+  public init?(data: Foundation.Data)
+  public init(plist: [Swift.String : Any], version: Swift.UInt32, message: Swift.UInt32, tag: Swift.UInt32)
+  public var data: Foundation.Data {
+    get
+  }
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(RefreshAttempt) nonisolated public class RefreshAttempt : ScaleCloudRenew.BaseEntity {
+  @objc @NSManaged nonisolated dynamic public var identifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var date: Foundation.Date {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var isSuccess: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var errorDescription: Swift.String? {
+    @objc get
+    @objc set
+  }
+  nonisolated public init(identifier: Swift.String, result: Swift.Result<[Swift.String : Swift.Result<ScaleCloudRenew.InstalledApp, any Swift.Error>], any Swift.Error>, context: CoreData.NSManagedObjectContext)
+  @objc deinit
+}
+extension ScaleCloudRenew.RefreshAttempt {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.RefreshAttempt>
+}
+@available(iOS 16, *)
+extension _StringProcessing.Regex where Output == (Swift.Substring, Swift.Substring) {
+  public static var privacyPermission: some _StringProcessing.RegexComponent<(Swift.Substring, Swift.Substring)> {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(ReleaseTrack) nonisolated public class ReleaseTrack : ScaleCloudRenew.BaseEntity, Swift.Decodable {
+  @NSManaged @objc(track) nonisolated dynamic public var _track: Swift.String? {
+    @objc get
+  }
+  @NSManaged @objc(appBundleID) nonisolated dynamic public var _appBundleID: Swift.String? {
+    @objc get
+  }
+  @NSManaged @objc(sourceID) nonisolated dynamic public var _sourceID: Swift.String? {
+    @objc get
+  }
+  @NSManaged @objc(releases) nonisolated dynamic public var _releases: Foundation.NSOrderedSet? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var storeApp: ScaleCloudRenew.StoreApp? {
+    @objc get
+  }
+  nonisolated public var track: Swift.String? {
+    get
+  }
+  nonisolated public var releases: [ScaleCloudRenew.AppVersion]? {
+    get
+  }
+  required nonisolated public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+}
+extension ScaleCloudRenew.ReleaseTrack {
+  @objc override nonisolated dynamic public func didChangeValue(forKey key: Swift.String)
+}
+extension Swift.Result {
+  public var value: Success? {
+    get
+  }
+  public var error: Failure? {
+    get
+  }
+  public init(_ value: Success?, _ error: Failure?)
+}
+extension Swift.Result where Success == () {
+  public init(_ success: Swift.Bool, _ error: Failure?)
+}
+extension Swift.Result {
+  public init<T, U>(_ values: (T?, U?), _ error: Failure?) where Success == (T, U)
+}
+public enum SecureEnclaveManager {
+  public static func generateKeyPair() throws -> (publicKeyBytes: Foundation.Data, privateKeyRef: Security.SecKey)
+  public static func decrypt(encryptedData: Foundation.Data, using privateKey: Security.SecKey) throws -> Foundation.Data
+}
+public enum SecureEnclaveError : Foundation.LocalizedError {
+  case keyGenerationFailed((any Swift.Error)?)
+  case publicKeyExtractionFailed
+  case publicKeyExportFailed((any Swift.Error)?)
+  case algorithmNotSupported
+  case decryptionFailed((any Swift.Error)?)
+  case accessControlCreationFailed((any Swift.Error)?)
+  public var errorDescription: Swift.String? {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objc(ALTSecureValueTransformer) final public class SecureValueTransformer : Foundation.NSSecureUnarchiveFromDataTransformer {
+  public static let name: Foundation.NSValueTransformerName
+  @objc override public static var allowedTopLevelClasses: [Swift.AnyClass] {
+    @objc get
+  }
+  public static func register()
+  @objc override final public class func allowsReverseTransformation() -> Swift.Bool
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension Foundation.NSNotification.Name {
+  public static let setupFlowCompleted: Foundation.Notification.Name
+}
+public class SetupCoordinator {
+  public var onCompletion: (() -> Swift.Void)?
+  public init()
+  public func start(from presentingViewController: UIKit.UIViewController)
+  @objc deinit
+}
+public struct SimpleSemanticVersion : Swift.Comparable, Swift.Equatable, Swift.Hashable {
+  public let major: Swift.Int
+  public let minor: Swift.Int
+  public let patch: Swift.Int
+  public let preRelease: Swift.String?
+  public let build: Swift.String?
+  public init?(_ versionString: Swift.String)
+  public init(major: Swift.Int, minor: Swift.Int, patch: Swift.Int, preRelease: Swift.String? = nil, build: Swift.String? = nil)
+  public static func < (lhs: ScaleCloudRenew.SimpleSemanticVersion, rhs: ScaleCloudRenew.SimpleSemanticVersion) -> Swift.Bool
+  public static func == (lhs: ScaleCloudRenew.SimpleSemanticVersion, rhs: ScaleCloudRenew.SimpleSemanticVersion) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public typealias SemanticVersion = ScaleCloudRenew.SimpleSemanticVersion
+extension ScaleCloudRenew.Source {
+  public static let altStoreGroupIdentifier: Swift.String
+  public static let altStoreSourceURL: Foundation.URL
+  public static let altStoreIdentifier: Swift.String
+}
+extension ScaleCloudRenew.Source {
+  nonisolated public var effectiveIconURL: Foundation.URL? {
+    get
+  }
+  nonisolated public var effectiveHeaderImageURL: Foundation.URL? {
+    get
+  }
+  nonisolated public var effectiveTintColor: UIKit.UIColor? {
+    get
+  }
+  nonisolated public var effectiveFeaturedApps: [ScaleCloudRenew.StoreApp] {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(Source) nonisolated public class Source : ScaleCloudRenew.BaseEntity, Swift.Decodable {
+  @objc @NSManaged nonisolated dynamic public var version: Swift.Int {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var name: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var identifier: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var groupID: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var sourceURL: Foundation.URL {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var subtitle: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var localizedDescription: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var websiteURL: Foundation.URL? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var patreonURL: Foundation.URL? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var error: Foundation.NSError? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var featuredSortID: Swift.String? {
+    @objc get
+    @objc set
+  }
+  public var userInfo: [ScaleCloudRenew.ALTSourceUserInfoKey : Swift.String]?
+  @objc(apps) @NSManaged nonisolated dynamic public var _apps: Foundation.NSOrderedSet {
+    @objc get
+  }
+  @objc(newsItems) @NSManaged nonisolated dynamic public var _newsItems: Foundation.NSOrderedSet {
+    @objc get
+  }
+  @objc(featuredApps) @NSManaged nonisolated dynamic public var _featuredApps: Foundation.NSOrderedSet {
+    @objc get
+  }
+  @nonobjc nonisolated public var apps: [ScaleCloudRenew.StoreApp] {
+    get
+    set
+  }
+  @nonobjc nonisolated public var newsItems: [ScaleCloudRenew.NewsItem] {
+    get
+    set
+  }
+  nonisolated public var isSourceAtLeastV2: Swift.Bool {
+    get
+  }
+  required nonisolated public init(from decoder: any Swift.Decoder) throws
+  @objc override nonisolated dynamic public func awakeFromInsert()
+  @objc deinit
+}
+extension ScaleCloudRenew.Source {
+  nonisolated public var isAdded: Swift.Bool {
+    get async throws
+  }
+  nonisolated public var isRecommended: Swift.Bool {
+    get
+  }
+  nonisolated public var lastUpdatedDate: Foundation.Date? {
+    get
+  }
+}
+extension ScaleCloudRenew.Source {
+  public class func sourceID(from sourceURL: Foundation.URL) throws -> Swift.String
+}
+extension ScaleCloudRenew.Source {
+  nonisolated public func setSourceURL(_ sourceURL: Foundation.URL) throws
+  nonisolated public func setSourceID(_ identifier: Swift.String) throws
+}
+extension ScaleCloudRenew.Source {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.Source>
+  public class func makeAltStoreSource(in context: CoreData.NSManagedObjectContext) -> ScaleCloudRenew.Source
+  public class func fetchAltStoreSource(in context: CoreData.NSManagedObjectContext) -> ScaleCloudRenew.Source?
+  public class func make(name: Swift.String, groupID: Swift.String, sourceURL: Foundation.URL, context: CoreData.NSManagedObjectContext) -> ScaleCloudRenew.Source
+}
+public enum ReleaseTracks : Swift.String, Swift.CodingKey, Swift.CaseIterable {
+  case unknown
+  case local
+  case alpha
+  case nightly
+  case stable
+  public static var betaTracks: [ScaleCloudRenew.ReleaseTracks] {
+    get
+  }
+  public static var nonBetaTracks: [ScaleCloudRenew.ReleaseTracks] {
+    get
+  }
+  public init?(rawValue: Swift.String)
+  public init?(stringValue: Swift.String)
+  public init?(intValue: Swift.Int)
+  public typealias AllCases = [ScaleCloudRenew.ReleaseTracks]
+  public typealias RawValue = Swift.String
+  nonisolated public static var allCases: [ScaleCloudRenew.ReleaseTracks] {
+    get
+  }
+  public var intValue: Swift.Int? {
+    get
+  }
+  public var rawValue: Swift.String {
+    get
+  }
+  public var stringValue: Swift.String {
+    get
+  }
+}
+extension ScaleCloudRenew.StoreApp {
+  public static let altstoreAppID: Swift.String
+  public static let dolphinAppID: Swift.String
+}
+@objc public enum Platform : Swift.UInt, Swift.Codable {
+  case ios
+  case tvos
+  case macos
+  public init?(rawValue: Swift.UInt)
+  public typealias RawValue = Swift.UInt
+  public var rawValue: Swift.UInt {
+    get
+  }
+}
+@objc final nonisolated public class PlatformURL : CoreData.NSManagedObject, Swift.Decodable {
+  @objc @NSManaged nonisolated dynamic final public var platform: ScaleCloudRenew.Platform {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic final public var downloadURL: Foundation.URL {
+    @objc get
+  }
+  nonisolated public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+}
+extension ScaleCloudRenew.PlatformURL : Swift.Comparable {
+  public static func < (lhs: ScaleCloudRenew.PlatformURL, rhs: ScaleCloudRenew.PlatformURL) -> Swift.Bool
+  public static func > (lhs: ScaleCloudRenew.PlatformURL, rhs: ScaleCloudRenew.PlatformURL) -> Swift.Bool
+  public static func <= (lhs: ScaleCloudRenew.PlatformURL, rhs: ScaleCloudRenew.PlatformURL) -> Swift.Bool
+  public static func >= (lhs: ScaleCloudRenew.PlatformURL, rhs: ScaleCloudRenew.PlatformURL) -> Swift.Bool
+}
+public typealias PlatformURLs = [ScaleCloudRenew.PlatformURL]
+extension ScaleCloudRenew.StoreApp {
+  @NSManaged @objc(releaseTracks) nonisolated dynamic public var _releaseTracks: Foundation.NSOrderedSet? {
+    @objc get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(StoreApp) nonisolated public class StoreApp : ScaleCloudRenew.BaseEntity, Swift.Decodable {
+  @objc @NSManaged nonisolated dynamic public var name: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var bundleIdentifier: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var subtitle: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var developerName: Swift.String {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var localizedDescription: Swift.String {
+    @objc get
+  }
+  @nonobjc nonisolated public var category: ScaleCloudRenew.StoreCategory? {
+    get
+  }
+  @NSManaged @objc(category) nonisolated dynamic public var _category: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var iconURL: Foundation.URL {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var screenshotURLs: [Foundation.URL] {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var downloadURL: Foundation.URL? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var platformURLs: ScaleCloudRenew.PlatformURLs? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var tintColor: UIKit.UIColor? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var marketplaceID: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var isPledged: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var isPledgeRequired: Swift.Bool {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var isHiddenWithoutPledge: Swift.Bool {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var pledgeCurrency: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var prefersCustomPledge: Swift.Bool {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var sortIndex: Swift.Int32 {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var featuredSortID: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc nonisolated public var sourceIdentifier: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var version: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var versionDate: Foundation.Date? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var versionDescription: Swift.String? {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var installedApp: ScaleCloudRenew.InstalledApp? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var newsItems: Swift.Set<ScaleCloudRenew.NewsItem> {
+    @objc get
+    @objc set
+  }
+  @NSManaged @objc(source) nonisolated dynamic public var _source: ScaleCloudRenew.Source? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var featuringSource: ScaleCloudRenew.Source? {
+    @objc get
+  }
+  @NSManaged @objc(latestVersion) nonisolated dynamic public var latestSupportedVersion: ScaleCloudRenew.AppVersion? {
+    @objc get
+  }
+  @NSManaged @objc(versions) nonisolated dynamic public var _versions: Foundation.NSOrderedSet {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var loggedErrors: Foundation.NSSet {
+    @objc get
+  }
+  @nonobjc nonisolated public var source: ScaleCloudRenew.Source? {
+    get
+    set
+  }
+  @nonobjc nonisolated public var permissions: Swift.Set<ScaleCloudRenew.AppPermission> {
+    get
+  }
+  @nonobjc nonisolated public var versions: [ScaleCloudRenew.AppVersion] {
+    get
+  }
+  @nonobjc nonisolated public var allScreenshots: [ScaleCloudRenew.AppScreenshot] {
+    get
+  }
+  required nonisolated public init(from decoder: any Swift.Decoder) throws
+  @objc override nonisolated dynamic public func awakeFromInsert()
+  @objc deinit
+}
+extension ScaleCloudRenew.StoreApp {
+  nonisolated public func screenshots(for deviceType: CScaleCloudSign.ALTDeviceType) -> [ScaleCloudRenew.AppScreenshot]
+  nonisolated public func preferredScreenshots() -> [ScaleCloudRenew.AppScreenshot]
+}
+extension ScaleCloudRenew.StoreApp {
+  nonisolated public var latestAvailableVersion: ScaleCloudRenew.AppVersion? {
+    get
+  }
+  nonisolated public var globallyUniqueID: Swift.String? {
+    get
+  }
+}
+extension ScaleCloudRenew.StoreApp {
+  public class var visibleAppsPredicate: Foundation.NSPredicate {
+    get
+  }
+  public class var otherCategoryPredicate: Foundation.NSPredicate {
+    get
+  }
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.StoreApp>
+  public class func makeAltStoreApp(version: Swift.String, buildVersion: Swift.String?, in context: CoreData.NSManagedObjectContext) -> ScaleCloudRenew.StoreApp
+}
+public enum StoreCategory : Swift.String, Swift.CaseIterable {
+  case developer
+  case entertainment
+  case games
+  case lifestyle
+  case photoAndVideo
+  case social
+  case utilities
+  case other
+  public var localizedName: Swift.String {
+    get
+  }
+  public var symbolName: Swift.String {
+    get
+  }
+  public var filledSymbolName: Swift.String {
+    get
+  }
+  public var tintColor: UIKit.UIColor {
+    get
+  }
+  public init?(rawValue: Swift.String)
+  public typealias AllCases = [ScaleCloudRenew.StoreCategory]
+  public typealias RawValue = Swift.String
+  nonisolated public static var allCases: [ScaleCloudRenew.StoreCategory] {
+    get
+  }
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension Swift.String {
+  public init(formatted: Swift.String, comment: Swift.String? = nil, _ args: Swift.String...)
+}
+extension CScaleCloudSign.ALTTeamType {
+  public var localizedDescription: Swift.String {
+    get
+  }
+}
+extension ScaleCloudRenew.Team {
+  public static let maximumFreeAppIDs: Swift.Int
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(Team) nonisolated public class Team : ScaleCloudRenew.BaseEntity {
+  @objc @NSManaged nonisolated dynamic public var name: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var identifier: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var type: CScaleCloudSign.ALTTeamType {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var isActiveTeam: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var account: ScaleCloudRenew.Account! {
+    @objc get
+  }
+  @objc @NSManaged nonisolated dynamic public var installedApps: Swift.Set<ScaleCloudRenew.InstalledApp> {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged nonisolated dynamic public var appIDs: Swift.Set<ScaleCloudRenew.AppID> {
+    @objc get
+  }
+  public var altTeam: CScaleCloudSign.ALTTeam?
+  nonisolated public init(_ team: CScaleCloudSign.ALTTeam, account: ScaleCloudRenew.Account, context: CoreData.NSManagedObjectContext)
+  nonisolated public func update(team: CScaleCloudSign.ALTTeam)
+  @objc deinit
+}
+extension ScaleCloudRenew.Team {
+  @nonobjc public class func fetchRequest() -> CoreData.NSFetchRequest<ScaleCloudRenew.Team>
+}
+@_hasMissingDesignatedInitializers final public class TwoFactorRequest {
+  @objc deinit
+}
+extension Foundation.NSNotification.Name {
+  public static let twoFactorRequired: Foundation.Notification.Name
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor @preconcurrency public class TwoFactorViewController : UIKit.UIViewController {
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public func viewDidLoad()
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
+  @_Concurrency.MainActor @preconcurrency @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+extension UIKit.UIApplication {
+  @_Concurrency.MainActor @preconcurrency public class var alt_shared: UIKit.UIApplication? {
+    get
+  }
+}
+extension UIKit.UIColor {
+  public static let altPrimary: UIKit.UIColor
+  public static let deltaPrimary: UIKit.UIColor?
+  public static let clipPrimary: UIKit.UIColor?
+  public static let refreshRed: UIKit.UIColor
+  public static let refreshOrange: UIKit.UIColor
+  public static let refreshYellow: UIKit.UIColor
+  public static let refreshGreen: UIKit.UIColor
+}
+extension UIKit.UIColor {
+  public var hexString: Swift.String {
+    get
+  }
+  convenience public init?(hexString: Swift.String)
+}
+extension Foundation.URL {
+  public func normalized() throws -> Swift.String
+}
+extension Foundation.UserDefaults {
+  public static let shared: Foundation.UserDefaults
+  @objc @NSManaged dynamic public var firstLaunch: Foundation.Date? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var requiresAppGroupMigration: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var textServer: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var sidejitenable: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var textInputSideJITServerurl: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var textInputAnisetteURL: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var customAnisetteURL: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var menuAnisetteList: Swift.String {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var preferredServerID: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isBackgroundRefreshEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var enableEMPforWireguard: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isIdleTimeoutDisableEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isAppLimitDisabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isBetaUpdatesEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var customizeAppId: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isExportResignedAppEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isVerboseOperationsLoggingEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isMinimuxerConsoleLoggingEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isMinimuxerStatusCheckEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var recreateDatabaseOnNextStart: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isPairingReset: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isDebugModeEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var presentedLaunchReminderNotification: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var legacySideloadedApps: [Swift.String]? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var isLegacyDeactivationSupported: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var activeAppLimitIncludesExtensions: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var localServerSupportsRefreshing: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var patchedApps: [Swift.String]? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var trustedSourceIDs: [Swift.String]? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var trustedServerURL: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var betaUdpatesTrack: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @nonobjc public var preferredAppSorting: ScaleCloudRenew.AppSorting {
+    get
+    set
+  }
+  @nonobjc public var activeAppsLimit: Swift.Int? {
+    get
+    set
+  }
+  @objc @NSManaged dynamic public var isCowExploitSupported: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var permissionCheckingDisabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @NSManaged dynamic public var responseCachingDisabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  public static let defaultBetaUpdatesTrack: Swift.String
+  public class func registerDefaults()
+}
+extension Foundation.UserDefaults {
+  @objc dynamic public var setupCompleted: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc dynamic public var lastSetupDate: Foundation.Date? {
+    @objc get
+    @objc set
+  }
+  @objc dynamic public var ipaSourceURL: Swift.String? {
+    @objc get
+    @objc set
+  }
+}
+@propertyWrapper public struct UserInfoValue<Value> {
+  public let key: Swift.String?
+  public var wrappedValue: Value
+  public init(wrappedValue: Value)
+  public init(wrappedValue: Value, key: Swift.String)
+}
+@objc @_inheritsConvenienceInitializers public class ViewAppIntentHandler : ObjectiveC.NSObject, ScaleCloudRenew.ViewAppIntentHandling {
+  @objc public func provideAppOptionsCollection(for intent: ScaleCloudRenew.ViewAppIntent, with completion: @escaping (Intents.INObjectCollection<ScaleCloudRenew.App>?, (any Swift.Error)?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+public protocol WebViewControllerDelegate : ObjectiveC.NSObject {
+  func webViewControllerDidFinish(_ webViewController: ScaleCloudRenew.WebViewController)
+}
+@objc @_hasMissingDesignatedInitializers @_Concurrency.MainActor @preconcurrency public class WebViewController : UIKit.UIViewController {
+  @_Concurrency.MainActor @preconcurrency weak public var delegate: (any ScaleCloudRenew.WebViewControllerDelegate)?
+  @_Concurrency.MainActor @preconcurrency public var webView: WebKit.WKWebView! {
+    get
+  }
+  @_Concurrency.MainActor @preconcurrency public var backButton: UIKit.UIBarButtonItem {
+    get
+  }
+  @_Concurrency.MainActor @preconcurrency public var forwardButton: UIKit.UIBarButtonItem {
+    get
+  }
+  @_Concurrency.MainActor @preconcurrency public var shareButton: UIKit.UIBarButtonItem {
+    get
+  }
+  @_Concurrency.MainActor @preconcurrency public var reloadButton: UIKit.UIBarButtonItem {
+    get
+  }
+  @_Concurrency.MainActor @preconcurrency public var stopLoadingButton: UIKit.UIBarButtonItem {
+    get
+  }
+  @_Concurrency.MainActor @preconcurrency public var doneButton: UIKit.UIBarButtonItem {
+    get
+  }
+  @_Concurrency.MainActor @preconcurrency required public init(request: Foundation.URLRequest?, configuration: WebKit.WKWebViewConfiguration = WKWebViewConfiguration())
+  @_Concurrency.MainActor @preconcurrency convenience public init(url: Foundation.URL?, configuration: WebKit.WKWebViewConfiguration = WKWebViewConfiguration())
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public func loadView()
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public func viewDidLoad()
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public func viewIsAppearing(_ animated: Swift.Bool)
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public func viewWillDisappear(_ animated: Swift.Bool)
+  @_Concurrency.MainActor @preconcurrency @objc override dynamic public func didMove(toParent parent: UIKit.UIViewController?)
+  @objc deinit
+}
+public func start_em_proxy(bind_addr: Swift.String)
+public func stop_em_proxy()
+@_inheritsConvenienceInitializers @available(iOS 12.0, macOS 11.0, watchOS 5.0, *)
+@available(tvOS, unavailable)
+@objc(ViewAppIntent) public class ViewAppIntent : Intents.INIntent {
+  @objc @NSManaged dynamic public var app: ScaleCloudRenew.App? {
+    @objc get
+    @objc set
+  }
+  @objc override dynamic public init()
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+@available(iOS 12.0, macOS 11.0, watchOS 5.0, *)
+@available(tvOS, unavailable)
+@objc(ViewAppIntentHandling) public protocol ViewAppIntentHandling : ObjectiveC.NSObjectProtocol {
+  @available(iOS 14.0, macOS 11.0, watchOS 7.0, *)
+  @available(*, renamed: "provideAppOptionsCollection(for:)")
+  @objc(provideAppOptionsCollectionForViewApp:withCompletion:) func provideAppOptionsCollection(for intent: ScaleCloudRenew.ViewAppIntent, with completion: @escaping (Intents.INObjectCollection<ScaleCloudRenew.App>?, (any Swift.Error)?) -> Swift.Void)
+  @available(iOS 14.0, macOS 11.0, watchOS 7.0, *)
+  @objc(provideAppOptionsCollectionForViewApp:withCompletion:) func provideAppOptionsCollection(for intent: ScaleCloudRenew.ViewAppIntent) async throws -> Intents.INObjectCollection<ScaleCloudRenew.App>
+  @available(*, renamed: "confirm(intent:)")
+  @objc(confirmViewApp:completion:) optional func confirm(intent: ScaleCloudRenew.ViewAppIntent, completion: @escaping (ScaleCloudRenew.ViewAppIntentResponse) -> Swift.Void)
+  @available(iOS 13.0, macOS 11.0, watchOS 6.0, *)
+  @objc(confirmViewApp:completion:) optional func confirm(intent: ScaleCloudRenew.ViewAppIntent) async -> ScaleCloudRenew.ViewAppIntentResponse
+  @available(*, renamed: "handle(intent:)")
+  @objc(handleViewApp:completion:) optional func handle(intent: ScaleCloudRenew.ViewAppIntent, completion: @escaping (ScaleCloudRenew.ViewAppIntentResponse) -> Swift.Void)
+  @available(iOS 13.0, macOS 11.0, watchOS 6.0, *)
+  @objc(handleViewApp:completion:) optional func handle(intent: ScaleCloudRenew.ViewAppIntent) async -> ScaleCloudRenew.ViewAppIntentResponse
+  @available(iOS 14.0, macOS 11.0, watchOS 7.0, *)
+  @objc(defaultAppForViewApp:) optional func defaultApp(for intent: ScaleCloudRenew.ViewAppIntent) -> ScaleCloudRenew.App?
+  @available(iOS, introduced: 13.0, deprecated: 14.0)
+  @available(watchOS, introduced: 6.0, deprecated: 7.0)
+  @objc(provideAppOptionsForViewApp:withCompletion:) optional func provideAppOptions(for intent: ScaleCloudRenew.ViewAppIntent, with completion: @escaping ([ScaleCloudRenew.App]?, (any Swift.Error)?) -> Swift.Void)
+}
+@available(iOS 12.0, macOS 11.0, watchOS 5.0, *)
+@available(tvOS, unavailable)
+@objc public enum ViewAppIntentResponseCode : Swift.Int {
+  case unspecified = 0
+  case ready
+  case continueInApp
+  case inProgress
+  case success
+  case failure
+  case failureRequiringAppLaunch
+  public init?(rawValue: Swift.Int)
+  @available(iOS 12.0, watchOS 5.0, macOS 11.0, *)
+  @available(tvOS, unavailable)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @available(iOS 12.0, macOS 11.0, watchOS 5.0, *)
+@available(tvOS, unavailable)
+@objc(ViewAppIntentResponse) public class ViewAppIntentResponse : Intents.INIntentResponse {
+  @objc public var code: ScaleCloudRenew.ViewAppIntentResponseCode {
+    get
+  }
+  @objc(initWithCode:userActivity:) convenience public init(code: ScaleCloudRenew.ViewAppIntentResponseCode, userActivity: Foundation.NSUserActivity?)
+  @objc override dynamic public init()
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @available(iOS 12.0, macOS 11.0, watchOS 5.0, *)
+@available(tvOS, unavailable)
+@objc(App) public class App : Intents.INObject {
+  @objc override dynamic public class var supportsSecureCoding: Swift.Bool {
+    @objc get
+  }
+  @objc override dynamic public init(identifier: Swift.String?, display displayString: Swift.String, pronunciationHint: Swift.String?)
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @available(iOS 13.0, macOS 11.0, watchOS 6.0, *)
+@available(tvOS, unavailable)
+@objc(AppResolutionResult) public class AppResolutionResult : Intents.INObjectResolutionResult {
+  @objc(successWithResolvedApp:) public class func success(with resolvedObject: ScaleCloudRenew.App) -> Self
+  @objc(disambiguationWithAppsToDisambiguate:) public class func disambiguation(with objectsToDisambiguate: [ScaleCloudRenew.App]) -> Self
+  @objc(confirmationRequiredWithAppToConfirm:) public class func confirmationRequired(with objectToConfirm: ScaleCloudRenew.App?) -> Self
+  @available(*, unavailable)
+  @objc override dynamic public class func success(with resolvedObject: Intents.INObject) -> Self
+  @available(*, unavailable)
+  @objc override dynamic public class func disambiguation(with objectsToDisambiguate: [Intents.INObject]) -> Self
+  @available(*, unavailable)
+  @objc override dynamic public class func confirmationRequired(with objectToConfirm: Intents.INObject?) -> Self
+  @objc deinit
+}
+extension ScaleCloudRenew.AppSorting : Swift.Equatable {}
+extension ScaleCloudRenew.AppSorting : Swift.Hashable {}
+extension ScaleCloudRenew.AppSorting : Swift.RawRepresentable {}
+extension ScaleCloudRenew.ExtensionType : Swift.Equatable {}
+extension ScaleCloudRenew.ExtensionType : Swift.Hashable {}
+extension ScaleCloudRenew.ExtensionType : Swift.RawRepresentable {}
+extension ScaleCloudRenew.LoggedError.Operation : Swift.Equatable {}
+extension ScaleCloudRenew.LoggedError.Operation : Swift.Hashable {}
+extension ScaleCloudRenew.LoggedError.Operation : Swift.RawRepresentable {}
+extension ScaleCloudRenew.MergeError.Code : Swift.Equatable {}
+extension ScaleCloudRenew.MergeError.Code : Swift.Hashable {}
+extension ScaleCloudRenew.ReleaseTracks : Swift.Equatable {}
+extension ScaleCloudRenew.ReleaseTracks : Swift.Hashable {}
+extension ScaleCloudRenew.ReleaseTracks : Swift.RawRepresentable {}
+extension ScaleCloudRenew.Platform : Swift.Equatable {}
+extension ScaleCloudRenew.Platform : Swift.Hashable {}
+extension ScaleCloudRenew.Platform : Swift.RawRepresentable {}
+extension ScaleCloudRenew.StoreCategory : Swift.Equatable {}
+extension ScaleCloudRenew.StoreCategory : Swift.Hashable {}
+extension ScaleCloudRenew.StoreCategory : Swift.RawRepresentable {}
+@available(iOS 12.0, macOS 11.0, watchOS 5.0, *)
+@available(tvOS, unavailable)
+extension ScaleCloudRenew.ViewAppIntentResponseCode : Swift.Equatable {}
+@available(iOS 12.0, macOS 11.0, watchOS 5.0, *)
+@available(tvOS, unavailable)
+extension ScaleCloudRenew.ViewAppIntentResponseCode : Swift.Hashable {}
+@available(iOS 12.0, macOS 11.0, watchOS 5.0, *)
+@available(tvOS, unavailable)
+extension ScaleCloudRenew.ViewAppIntentResponseCode : Swift.RawRepresentable {}
