@@ -9,7 +9,7 @@
 import Foundation
 import OSLog
 
-let customLog = OSLog(subsystem: "org.sidestore.sidestore",
+@usableFromInline let customLog = OSLog(subsystem: "org.sidestore.sidestore",
                       category: "ios")
 
 
