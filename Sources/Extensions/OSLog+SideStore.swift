@@ -9,7 +9,7 @@
 import Foundation
 import OSLog
 
-@usableFromInline let customLog = OSLog(subsystem: "org.sidestore.sidestore",
+let customLog = OSLog(subsystem: "org.sidestore.sidestore",
                       category: "ios")
 
 
@@ -19,7 +19,6 @@ import OSLog
 /// - Parameters:
 ///   - message: String or format string
 ///   - args: optional args for format string
-@inlinable
 public func ELOG(_ message: StaticString, file: StaticString = #file, function: StaticString = #function, line: UInt = #line, _ args: CVarArg...) {
     os_log(message, log: customLog, type: .error, args)
 }
@@ -28,7 +27,6 @@ public func ELOG(_ message: StaticString, file: StaticString = #file, function: 
 /// - Parameters:
 ///   - message: String or format string
 ///   - args: optional args for format string
-@inlinable
 public func ILOG(_ message: StaticString, file: StaticString = #file, function: StaticString = #function, line: UInt = #line, _ args: CVarArg...) {
     os_log(message, log: customLog, type: .info, args)
 }
@@ -37,7 +35,6 @@ public func ILOG(_ message: StaticString, file: StaticString = #file, function: 
 /// - Parameters:
 ///   - message: String or format string
 ///   - args: optional args for format string
-@inlinable
 public func DLOG(_ message: StaticString, file: StaticString = #file, function: StaticString = #function, line: UInt = #line, _ args: CVarArg...) {
     os_log(message, log: customLog, type: .debug, args)
 }
