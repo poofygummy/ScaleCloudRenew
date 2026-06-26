@@ -8,12 +8,12 @@
 
 import Foundation
 
-class ResultOperation<ResultType>: Operation
+public class ResultOperation<ResultType>: Operation
 {
-    var resultHandler: ((Result<ResultType, Error>) -> Void)?
+    public var resultHandler: ((Result<ResultType, Error>) -> Void)?
 
     // Should only be set by subclasses
-    var localizedFailure: String?
+    public var localizedFailure: String?
 
     @available(*, unavailable)
     override func finish()
@@ -21,7 +21,7 @@ class ResultOperation<ResultType>: Operation
         super.finish()
     }
 
-    func finish(_ result: Result<ResultType, Error>)
+    public func finish(_ result: Result<ResultType, Error>)
     {
         guard !self.isFinished else { return }
 
@@ -52,9 +52,9 @@ class ResultOperation<ResultType>: Operation
     }
 }
 
-class Operation: RSTOperation, ProgressReporting
+public class Operation: RSTOperation, ProgressReporting
 {
-    let progress = Progress.discreteProgress(totalUnitCount: 1)
+    public let progress = Progress.discreteProgress(totalUnitCount: 1)
     
     private var backgroundTaskID: UIBackgroundTaskIdentifier?
     
@@ -62,7 +62,7 @@ class Operation: RSTOperation, ProgressReporting
         return true
     }
     
-    override init()
+    public override init()
     {
         super.init()
         
