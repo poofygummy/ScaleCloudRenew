@@ -16,7 +16,7 @@ public class ResultOperation<ResultType>: Operation
     public var localizedFailure: String?
 
     @available(*, unavailable)
-    override func finish()
+    public override func finish()
     {
         super.finish()
     }
@@ -69,7 +69,7 @@ public class Operation: RSTOperation, ProgressReporting
         self.progress.cancellationHandler = { [weak self] in self?.cancel() }
     }
     
-    override func cancel()
+    public override func cancel()
     {
         super.cancel()
         
@@ -79,7 +79,7 @@ public class Operation: RSTOperation, ProgressReporting
         }
     }
     
-    override func main()
+    public override func main()
     {
         super.main()
         
@@ -94,7 +94,7 @@ public class Operation: RSTOperation, ProgressReporting
         }        
     }
     
-    override func finish()
+    public override func finish()
     {
         guard !self.isFinished else { return }
         

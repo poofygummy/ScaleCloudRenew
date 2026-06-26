@@ -75,7 +75,7 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
         super.init()
     }
     
-    override func finish(_ result: Result<[String: Result<InstalledApp, Error>], Error>)
+    public override func finish(_ result: Result<[String: Result<InstalledApp, Error>], Error>)
     {
         // Report result to caller (BGTask handler)
         switch result {
@@ -114,7 +114,7 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
         }
     }
     
-    override func main()
+    public override func main()
     {
         super.main()
         
