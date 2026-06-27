@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreData
-import SemanticVersion
+//import SemanticVersion
 
 @objc(FetchSourceOperation)
 final class FetchSourceOperation: ResultOperation<Source>
