@@ -19,8 +19,7 @@ targets:
     platform: iOS
     deploymentTarget: "14.0"
     sources:
-      - path: Resources
-        type: folder
+      - path: Silence.m4a
         buildPhase: resources
       - path: Sources
         excludes:
