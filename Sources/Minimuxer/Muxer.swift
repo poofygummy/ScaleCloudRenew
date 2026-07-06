@@ -82,11 +82,14 @@ public class Muxer {
     // just enough of the usbmuxd protocol for the library to discover the
     // device, read the pairing record, and open services (AFC, lockdown, etc.).
     private static func listenLoop() {
+        print("[minimuxer] listenLoop: entered")
         while true {
-            print("[minimuxer] Starting listener")
+            print("[minimuxer] listenLoop: iteration start — creating socket")
 
             let fd = socket(AF_INET, SOCK_STREAM, 0)
+            print("[minimuxer] listenLoop: socket() = \(fd)")
             guard fd >= 0 else {
+                print("[minimuxer] listenLoop: socket() failed, errno=\(errno), sleeping 1s")
                 Thread.sleep(forTimeInterval: 1)
                 continue
             }
@@ -94,60 +97,75 @@ public class Muxer {
             var yes = 1
             setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, socklen_t(MemoryLayout<Int>.size))
             setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &yes, socklen_t(MemoryLayout<Int32>.size))
+            print("[minimuxer] listenLoop: setsockopt done")
 
             var addr = sockaddr_in()
             addr.sin_family = sa_family_t(AF_INET)
             addr.sin_port = MuxerConstants.usbmuxdPort.bigEndian
             addr.sin_addr.s_addr = inet_addr(MuxerConstants.usbmuxdHost)
+            print("[minimuxer] listenLoop: sockaddr_in set: \(MuxerConstants.usbmuxdHost):\(MuxerConstants.usbmuxdPort)")
 
             let bindResult = withUnsafePointer(to: &addr) {
                 $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
                     bind(fd, $0, socklen_t(MemoryLayout<sockaddr_in>.size))
                 }
             }
+            print("[minimuxer] listenLoop: bind() = \(bindResult), errno=\(errno)")
 
-            let value = String(cString: getenv(MuxerConstants.usbmuxdEnvKey))
-            print("[minimuxer] muxer: (ENV) USBMUXD_SOCKET_ADDRESS =", value)
+            // Safe env read: getenv returns nil if not set
+            let envVal = getenv(MuxerConstants.usbmuxdEnvKey).map { String(cString: $0) } ?? "(not set)"
+            print("[minimuxer] listenLoop: (ENV) USBMUXD_SOCKET_ADDRESS = \(envVal)")
 
-            guard bindResult == 0, listen(fd, 16) == 0 else {
-                print("[minimuxer] WARN: Failed to bind/listen")
+            let listenResult = listen(fd, 16)
+            print("[minimuxer] listenLoop: listen() = \(listenResult), errno=\(errno)")
+            guard bindResult == 0, listenResult == 0 else {
+                print("[minimuxer] listenLoop: WARN: Failed to bind/listen (bind=\(bindResult), listen=\(listenResult))")
                 close(fd)
                 usbmuxdReady = false
                 Thread.sleep(forTimeInterval: 1)
                 continue
             }
 
-            print("[minimuxer] Bound successfully to \(MuxerConstants.usbmuxdHost):\(MuxerConstants.usbmuxdPort)")
+            print("[minimuxer] listenLoop: bound and listening on \(MuxerConstants.usbmuxdHost):\(MuxerConstants.usbmuxdPort)")
             usbmuxdReady = true
 
             // accept loop — runs until socket dies
             var consecutiveErrors = 0
+            print("[minimuxer] listenLoop: entering accept loop")
             while true {
                 var clientAddr = sockaddr()
                 var addrLen = socklen_t(MemoryLayout<sockaddr>.size)
+                print("[minimuxer] listenLoop: calling accept()...")
                 let clientFd = accept(fd, &clientAddr, &addrLen)
+                print("[minimuxer] listenLoop: accept() = \(clientFd)")
                 guard clientFd >= 0 else {
                     consecutiveErrors += 1
-                    print("[minimuxer] WARN: accept() failed (\(consecutiveErrors)): \(String(cString: strerror(errno)))")
-                    if consecutiveErrors > 0 {
-                        print("[minimuxer] ERROR: accept() repeatedly failing, restarting socket")
+                    let errnoVal = errno
+                    let errStr = strerror(errnoVal).map { String(cString: $0) } ?? "errno=\(errnoVal)"
+                    print("[minimuxer] listenLoop: accept() failed (\(consecutiveErrors)): \(errStr)")
+                    if consecutiveErrors >= 5 {
+                        print("[minimuxer] listenLoop: ERROR: accept() repeatedly failing (\(consecutiveErrors)x), restarting socket")
                         break  // break inner → outer loop recreates socket
                     }
                     Thread.sleep(forTimeInterval: 0.1)
                     continue
                 }
                 consecutiveErrors = 0
+                print("[minimuxer] listenLoop: accepted client fd=\(clientFd)")
 
                 var nosig = 1
                 setsockopt(clientFd, SOL_SOCKET, SO_NOSIGPIPE, &nosig, socklen_t(MemoryLayout<Int32>.size))
 
-                Task.detached { handleClient(fd: clientFd) }
+                print("[minimuxer] listenLoop: spawning client handler thread for fd=\(clientFd)")
+                let capturedFd = clientFd
+                Thread.detachNewThread { handleClient(fd: capturedFd) }
+                print("[minimuxer] listenLoop: client handler thread spawned")
             }
 
             // socket died — close and let outer loop restart
+            print("[minimuxer] listenLoop: closing listener fd=\(fd), restarting...")
             close(fd)
             usbmuxdReady = false
-            print("[minimuxer] listener restarting...")
             Thread.sleep(forTimeInterval: 1)
         }
     }
@@ -232,14 +250,18 @@ public class Muxer {
                 return ["DeviceList": [payload]]
                 
             case "Listen":
-                if let deviceIP = currentDeviceIP{
-                     Task.detached {
-                         if let payload = try? buildPayload(deviceIP: deviceIP, event: currentEvent){
-                             let pkt = RawPacket(plist: payload, version: 1, message: 8, tag: 0)
-                             let data = pkt.data
-                             data.withUnsafeBytes { _ = send(fd, $0.baseAddress!, data.count, 0) }
-                         }
-                     }
+                print("[minimuxer] handlePacket: Listen — currentDeviceIP=\(currentDeviceIP ?? "nil")")
+                if let deviceIP = currentDeviceIP {
+                    let capturedEvent = currentEvent
+                    let capturedFd = fd
+                    print("[minimuxer] handlePacket: spawning Listen event thread for ip=\(deviceIP)")
+                    Thread.detachNewThread {
+                        if let payload = try? buildPayload(deviceIP: deviceIP, event: capturedEvent) {
+                            let pkt = RawPacket(plist: payload, version: 1, message: 8, tag: 0)
+                            let data = pkt.data
+                            data.withUnsafeBytes { _ = send(capturedFd, $0.baseAddress!, data.count, 0) }
+                        }
+                    }
                 }
                 return ["MessageType": "Result", "Number": 0]
                 
