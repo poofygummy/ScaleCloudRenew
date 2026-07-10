@@ -74,7 +74,7 @@ targets:
         SWIFT_VERSION: "5.0"
         DEFINES_MODULE: "YES"
         MODULEMAP_FILE: "$(SRCROOT)/Sources/module.modulemap"
-        FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SRCROOT)/../ScaleCloudGo/prebuilt $(SRCROOT)/../ScaleCloudKit/prebuilt $(SRCROOT)/Sources/RustBridge/lib $(SRCROOT)/../ScaleCloudSign/Dependencies/OpenSSL.xcframework/ios-arm64"
+        FRAMEWORK_SEARCH_PATHS: "$(inherited) $(SRCROOT)/../ScaleCloudGo/prebuilt $(SRCROOT)/../ScaleCloudKit/prebuilt $(SRCROOT)/../ScaleCloudDeps/prebuilt $(SRCROOT)/Sources/RustBridge/lib $(SRCROOT)/../ScaleCloudSign/Dependencies/OpenSSL.xcframework/ios-arm64"
         LIBRARY_SEARCH_PATHS: "$(inherited) $(SRCROOT)/Sources/em_proxy $(BUILT_PRODUCTS_DIR)"
         OTHER_LDFLAGS: "$(inherited) -force_load $(BUILT_PRODUCTS_DIR)/libimobiledevice.a -force_load $(SRCROOT)/Sources/em_proxy/libem_proxy-ios.a -framework OpenSSL"
         CLANG_ENABLE_MODULES: "YES"
@@ -96,14 +96,22 @@ targets:
         embed: false
 
       # em_proxy linked via OTHER_LDFLAGS force_load above
-      - package: Starscream
-      - package: KeychainAccess
-      - package: ZIPFoundation
-      - package: Alamofire
-      - package: SwiftyJSON
-      - package: SwiftyXMLParser
-      - package: SemanticVersion
-      - package: Nuke
+      - framework: ../ScaleCloudDeps/prebuilt/Starscream.xcframework
+        embed: false
+      - framework: ../ScaleCloudDeps/prebuilt/KeychainAccess.xcframework
+        embed: false
+      - framework: ../ScaleCloudDeps/prebuilt/ZIPFoundation.xcframework
+        embed: false
+      - framework: ../ScaleCloudDeps/prebuilt/Alamofire.xcframework
+        embed: false
+      - framework: ../ScaleCloudDeps/prebuilt/SwiftyJSON.xcframework
+        embed: false
+      - framework: ../ScaleCloudDeps/prebuilt/SwiftyXMLParser.xcframework
+        embed: false
+      - framework: ../ScaleCloudDeps/prebuilt/SemanticVersion.xcframework
+        embed: false
+      - framework: ../ScaleCloudDeps/prebuilt/Nuke.xcframework
+        embed: false
       - sdk: UIKit.framework
       - sdk: Network.framework
   libimobiledevice:
@@ -151,29 +159,4 @@ targets:
         OTHER_CFLAGS: "$(inherited) -w"
         OTHER_CPLUSPLUSFLAGS: "$(inherited) -w"
 
-packages:
-  Starscream:
-    url: https://github.com/daltoniam/Starscream
-    from: 4.0.0
-  KeychainAccess:
-    url: https://github.com/kishikawakatsumi/KeychainAccess
-    from: 4.2.0
-  ZIPFoundation:
-    url: https://github.com/weichsel/ZIPFoundation
-    from: 0.9.0
-  Alamofire:
-    url: https://github.com/Alamofire/Alamofire
-    from: 5.6.0
-  SwiftyJSON:
-    url: https://github.com/SwiftyJSON/SwiftyJSON
-    from: 5.0.0
-  SwiftyXMLParser:
-    url: https://github.com/yahoojapan/SwiftyXMLParser
-    from: 5.6.0
-  SemanticVersion:
-    url: https://github.com/SwiftPackageIndex/SemanticVersion
-    exactVersion: 0.3.8
-  Nuke:
-    url: https://github.com/kean/Nuke
-    from: 10.0.0
 
