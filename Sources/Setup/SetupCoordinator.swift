@@ -267,6 +267,13 @@ public class SetupCoordinator {
                 print("[DebugChannel] Stored IPA source URL: \(ipaURL)")
             }
 
+            // Force-flush all UserDefaults to disk NOW, before iloader kills this
+            // process. UserDefaults writes are lazy/batched; without synchronize()
+            // the setupCompleted flag and other values are lost when the process is
+            // killed immediately after SCALECLOUD_CREDENTIALS_OK is received.
+            UserDefaults.standard.synchronize()
+            print("[DebugChannel] UserDefaults flushed to disk")
+
             // Confirm to iloader
             print("SCALECLOUD_CREDENTIALS_OK")
             fflush(stdout)
