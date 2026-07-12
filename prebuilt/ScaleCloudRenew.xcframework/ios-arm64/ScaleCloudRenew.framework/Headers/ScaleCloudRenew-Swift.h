@@ -696,8 +696,12 @@ SWIFT_CLASS("_TtC15ScaleCloudRenew23TwoFactorViewController")
 @end
 
 @interface NSUserDefaults (SWIFT_EXTENSION(ScaleCloudRenew))
-/// Flag indicating setup flow has been completed
-/// Once true, app will not present setup flow on launch
+/// Flag indicating setup flow has been completed.
+/// Derived at runtime from Keychain credential presence so that a fresh
+/// iloader injection run (which clears and re-stores credentials) always
+/// triggers Phase 1 again rather than being skipped because a stale
+/// UserDefaults bool was left over from a previous run.
+/// The setter is kept for call-site compatibility but is a no-op.
 @property (nonatomic) BOOL setupCompleted;
 /// Timestamp when setup was last completed
 /// Used for diagnostics only
