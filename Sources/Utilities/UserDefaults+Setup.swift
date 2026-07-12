@@ -9,14 +9,18 @@ import Foundation
 
 public extension UserDefaults {
     
-    /// Flag indicating setup flow has been completed
-    /// Once true, app will not present setup flow on launch
+    /// Flag indicating setup flow has been completed.
+    /// Derived at runtime from Keychain credential presence so that a fresh
+    /// iloader injection run (which clears and re-stores credentials) always
+    /// triggers Phase 1 again rather than being skipped because a stale
+    /// UserDefaults bool was left over from a previous run.
+    /// The setter is kept for call-site compatibility but is a no-op.
     @objc dynamic public var setupCompleted: Bool {
         get {
-            return bool(forKey: "com.scalecloud.setupCompleted")
+            return Keychain.shared.hasValidCredentials()
         }
         set {
-            set(newValue, forKey: "com.scalecloud.setupCompleted")
+            // no-op: completion is derived from Keychain state, not stored here
         }
     }
     

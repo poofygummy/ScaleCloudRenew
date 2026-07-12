@@ -242,12 +242,8 @@ public class SetupCoordinator {
             Keychain.shared.appleIDEmailAddress = appleID
             Keychain.shared.appleIDPassword = password
             print("[DebugChannel] Stored credentials in Keychain")
-
-            // Mark setup as complete immediately so that any subsequent
-            // sceneWillEnterForeground / activateSceneForAccount call does NOT
-            // re-present the credential modal while Phase 2 validation is running.
-            UserDefaults.standard.setupCompleted = true
-            UserDefaults.standard.lastSetupDate = Date()
+            // setupCompleted is now derived from Keychain.hasValidCredentials(),
+            // so storing credentials above is sufficient — no separate flag needed.
 
             // Store Anisette URL
             if let anisetteURL = anisetteURL, !anisetteURL.isEmpty {
