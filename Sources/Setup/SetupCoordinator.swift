@@ -54,42 +54,78 @@ public class SetupCoordinator {
     public func start(from presentingViewController: UIViewController) {
         self.presentingViewController = presentingViewController
         
-        guard DebuggerUtils.isDebuggerAttached() else {
-            // No debugger — show the manual credential entry screen immediately.
-            print("[Setup] No debugger attached, using manual credential entry")
-            presentingViewController.present(navigationController, animated: true)
-            return
-        }
-        
-        // Debugger is attached — run the stdin/stdout handshake on a background thread
-        // BEFORE presenting any UI. If it succeeds we go straight to validation without
-        // ever showing the credential entry screen. If it fails we fall back to manual.
-        // readLine() is a blocking syscall; it must never run on the main thread.
-        print("[Setup] Debugger detected, starting debug channel handoff on background thread")
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self else { return }
-            let success = self.performDebugChannelHandoff()
-            
-            DispatchQueue.main.async {
-                if success {
-                    print("[Setup] Debug channel handoff successful, transitioning to validation")
-                    self.currentStep = .validation
-                    let validationVC = ValidationViewController()
-                    validationVC.coordinator = self
-                    // Present the nav controller with validation as root — credential
-                    // screen is never shown to the user.
-                    self.navigationController.setViewControllers([validationVC], animated: false)
-                    self.presentingViewController?.present(self.navigationController, animated: true) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            validationVC.startValidation()
+        // Two-phase launch-args injection protocol.
+        // idevicedebug on iOS 15 does not relay stdin to the app, so we use launch
+        // arguments instead:
+        //
+        // Phase 1 — no payload args present (first idevicedebug launch):
+        //   • Generate + persist a Secure Enclave keypair.
+        //   • Print public key + SCALECLOUD_PUBKEY_READY to stdout.
+        //   • Block this thread so the process stays alive while iloader reads stdout.
+        //   • iloader kills the process, encrypts the password, re-launches with args.
+        //
+        // Phase 2 — payload args present (second idevicedebug launch):
+        //   • Decrypt with the persisted private key.
+        //   • Store credentials, print SCALECLOUD_CREDENTIALS_OK.
+        //   • Proceed to validation UI.
+        //
+        // DVT warmup (certtrust probe, no debugger / no args):
+        //   • isDebuggerAttached() == false, no payload args → wait 20 s then show
+        //     manual UI. The DVT process is killed in ~10 s so UI never appears.
+
+        let args = CommandLine.arguments
+        let hasPayload = args.contains(where: { $0.hasPrefix("--scalecloud-payload=") })
+
+        if hasPayload {
+            // Phase 2 — payload delivered via launch args
+            print("[Setup] Phase 2: payload args detected, running credential delivery on background thread")
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                guard let self else { return }
+                let success = self.performDebugChannelHandoff()
+                DispatchQueue.main.async {
+                    if success {
+                        print("[Setup] Phase 2 handoff successful, transitioning to validation")
+                        self.currentStep = .validation
+                        let validationVC = ValidationViewController()
+                        validationVC.coordinator = self
+                        self.navigationController.setViewControllers([validationVC], animated: false)
+                        self.presentingViewController?.present(self.navigationController, animated: true) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                validationVC.startValidation()
+                            }
                         }
+                    } else {
+                        print("[Setup] Phase 2 handoff failed, showing manual credential entry")
+                        self.presentingViewController?.present(self.navigationController, animated: true)
                     }
-                } else {
-                    print("[Setup] Debug channel handoff failed, falling back to manual credential entry")
-                    // Show the credential entry screen as fallback.
-                    self.presentingViewController?.present(self.navigationController, animated: true)
                 }
             }
+            return
+        }
+
+        guard DebuggerUtils.isDebuggerAttached() else {
+            // No debugger, no payload args — either a real user launch or a DVT warmup.
+            // Wait 20 s: DVT kills the process in ~10 s so UI never appears during
+            // injection; a genuine user launch just sees a brief delay.
+            print("[Setup] No debugger, no payload — waiting 20 s before showing manual credential UI")
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                Thread.sleep(forTimeInterval: 20)
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    print("[Setup] 20 s elapsed, showing manual credential entry")
+                    presentingViewController.present(self.navigationController, animated: true)
+                }
+            }
+            return
+        }
+
+        // Phase 1 — debugger attached, no payload args yet.
+        // Generate + persist keypair, advertise pubkey, then block until killed.
+        print("[Setup] Phase 1: debugger attached, advertising public key")
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self else { return }
+            self.performPhase1KeyAdvertisement()
+            // iloader kills us after reading the pubkey — we never reach here.
         }
     }
     
@@ -147,95 +183,67 @@ public class SetupCoordinator {
     }
     
     // MARK: - Debug Channel Handoff
-    
-    /// Perform credential handoff via debug channel (stdin/stdout)
-    /// Returns true if credentials successfully received and stored
-    private func performDebugChannelHandoff() -> Bool {
+
+    /// Phase 1: generate + persist keypair, print pubkey, block until iloader kills us.
+    /// Never returns under normal operation.
+    private func performPhase1KeyAdvertisement() {
         do {
-            print("[DebugChannel] Starting credential handoff")
-            
-            // Step 1: Generate Secure Enclave key pair
-            let (publicKeyBytes, privateKey) = try SecureEnclaveManager.generateKeyPair()
-            
-            // Step 2: Send public key to computer via stdout
-            // Protocol: bare base64 line immediately followed by sentinel — no prefix on the key line.
-            // iloader captures the last non-empty line before SCALECLOUD_PUBKEY_READY as the key.
+            print("[DebugChannel] Phase 1: generating persistent Secure Enclave keypair")
+            let (publicKeyBytes, _) = try SecureEnclaveManager.loadOrGenerateKeyPair()
             let publicKeyBase64 = publicKeyBytes.base64EncodedString()
             print(publicKeyBase64)
             print("SCALECLOUD_PUBKEY_READY")
             fflush(stdout)
-            
-            print("[DebugChannel] Sent public key, waiting for encrypted payload...")
-            
-            // Step 3: Read credential payload from stdin.
-            // iloader sends 5 plain lines (no key: prefixes):
-            //   Line 1: base64-encoded encrypted password
-            //   Line 2: plaintext email
-            //   Line 3: anisette server URL
-            //   Line 4: tailscale hostname
-            //   Line 5: SCALECLOUD_PAYLOAD_COMPLETE
-            var encryptedPasswordBase64: String?
-            var appleID: String?
-            var anisetteURL: String?
-            var tailscaleHost: String?
-            var lineIndex = 0
-            
-            while let line = readLine() {
-                let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
-                
-                if trimmed == "SCALECLOUD_PAYLOAD_COMPLETE" {
-                    print("[DebugChannel] Payload transmission complete")
-                    break
-                }
-                
-                switch lineIndex {
-                case 0:
-                    encryptedPasswordBase64 = trimmed
-                    print("[DebugChannel] Received encrypted password (\(trimmed.count) chars)")
-                case 1:
-                    appleID = trimmed
-                    print("[DebugChannel] Received Apple ID: \(trimmed)")
-                case 2:
-                    anisetteURL = trimmed
-                    print("[DebugChannel] Received Anisette URL: \(trimmed)")
-                case 3:
-                    tailscaleHost = trimmed
-                    print("[DebugChannel] Received Tailscale host: \(trimmed)")
-                default:
-                    break
-                }
-                lineIndex += 1
+            print("[DebugChannel] Phase 1: pubkey advertised, blocking until iloader kills this process")
+            // Block indefinitely — iloader will kill this process after reading the pubkey
+            // and then re-launch with the encrypted payload as launch args.
+            Thread.sleep(forTimeInterval: 300)
+        } catch {
+            print("[DebugChannel] Phase 1 ERROR: \(error.localizedDescription)")
+        }
+    }
+
+    /// Phase 2: read payload from launch args, decrypt password, store credentials.
+    /// Returns true on success.
+    private func performDebugChannelHandoff() -> Bool {
+        do {
+            print("[DebugChannel] Phase 2: reading payload from launch args")
+
+            let args = CommandLine.arguments
+            func argValue(_ prefix: String) -> String? {
+                args.first(where: { $0.hasPrefix(prefix) }).map { String($0.dropFirst(prefix.count)) }
             }
-            
-            // Step 4: Validate received data
-            guard let encryptedPasswordBase64 = encryptedPasswordBase64,
-                  let appleID = appleID,
+
+            guard let encryptedPasswordBase64 = argValue("--scalecloud-payload="),
+                  let appleID = argValue("--scalecloud-email="),
                   !appleID.isEmpty,
                   let encryptedPasswordData = Data(base64Encoded: encryptedPasswordBase64) else {
-                print("[DebugChannel] ERROR: Missing or invalid payload data")
+                print("[DebugChannel] ERROR: Missing or invalid payload args")
                 return false
             }
-            
-            // Step 5: Decrypt password using Secure Enclave.
-            // iloader encrypts with: X9.63 KDF (SHA-256) → AES-128-GCM, 16-byte IV, no AAD,
-            // wire format: ephemeral_pubkey(65) || ciphertext || tag(16).
-            // This matches exactly what Apple's eciesEncryptionStandardVariableIVX963SHA256AESGCM
-            // expects — the "VariableIV" name indicates the non-standard 16-byte IV derived from
-            // the KDF rather than a 12-byte counter IV. SecureEnclaveManager uses that algorithm.
+            let anisetteURL  = argValue("--scalecloud-anisette=")
+            let tailscaleHost = argValue("--scalecloud-tailscale=")
+
+            print("[DebugChannel] Received encrypted password (\(encryptedPasswordBase64.count) chars)")
+            print("[DebugChannel] Received Apple ID: \(appleID)")
+
+            // Load the private key that was persisted in Phase 1
+            let (_, privateKey) = try SecureEnclaveManager.loadOrGenerateKeyPair()
+
+            // Decrypt password
             let passwordData = try SecureEnclaveManager.decrypt(encryptedData: encryptedPasswordData, using: privateKey)
             guard let password = String(data: passwordData, encoding: .utf8), !password.isEmpty else {
                 print("[DebugChannel] ERROR: Decrypted password is invalid")
                 return false
             }
-            
             print("[DebugChannel] Successfully decrypted password")
-            
-            // Step 6: Store credentials in Keychain
+
+            // Store credentials
             Keychain.shared.appleIDEmailAddress = appleID
             Keychain.shared.appleIDPassword = password
             print("[DebugChannel] Stored credentials in Keychain")
-            
-            // Step 7: Store Anisette URL if provided
+
+            // Store Anisette URL
             if let anisetteURL = anisetteURL, !anisetteURL.isEmpty {
                 var servers = UserDefaults.standard.menuAnisetteServersList
                 if !servers.contains(anisetteURL) {
@@ -245,23 +253,22 @@ public class SetupCoordinator {
                 UserDefaults.standard.menuAnisetteURL = anisetteURL
                 print("[DebugChannel] Stored Anisette URL: \(anisetteURL)")
             }
-            
-            // Step 7b: Tailscale hostname is the machine where iloader lives and where
-            // the ScaleCloud.ipa is served. Store it as the IPA source URL so that
-            // InstalledApp bootstrap and BackgroundRefreshAppsOperation can re-download
-            // the IPA if the local cached copy is ever deleted.
-            // iloader serves the IPA at http://<host>/ScaleCloud.ipa by convention.
+
+            // Store IPA source URL
             if let tailscaleHost = tailscaleHost, !tailscaleHost.isEmpty {
                 let ipaURL = "http://\(tailscaleHost)/ScaleCloud.ipa"
                 UserDefaults.standard.ipaSourceURL = ipaURL
                 print("[DebugChannel] Stored IPA source URL: \(ipaURL)")
             }
-            
-            // Step 8: Send success confirmation
+
+            // Confirm to iloader
             print("SCALECLOUD_CREDENTIALS_OK")
             fflush(stdout)
-            
-            print("[DebugChannel] Handoff complete")
+
+            // Clean up the ephemeral keypair — it served its purpose
+            SecureEnclaveManager.deleteStoredKeyPair()
+
+            print("[DebugChannel] Phase 2 complete")
             return true
             
         } catch {

@@ -11,47 +11,100 @@ import Security
 /// Manages Secure Enclave cryptographic operations for credential handoff
 public enum SecureEnclaveManager {
     
+    // MARK: - Keychain label for persisted injection keypair
+    private static let injectionKeyLabel = "com.scalecloud.injection.eckey"
+
     // MARK: - Key Generation
-    
-    /// Generate an ECIES key pair in the Secure Enclave
-    /// Returns the public key bytes (for transmission to computer) and a reference to the private key (stays in Secure Enclave)
-    /// - Returns: Tuple of (publicKeyBytes: Data, privateKeyRef: SecKey)
-    /// - Throws: SecureEnclaveError if key generation or export fails
+
+    /* generateKeyPair() replaced by loadOrGenerateKeyPair() for the two-phase injection protocol.
+       Kept here for reference — it created a transient (non-persistent) keypair.
     public static func generateKeyPair() throws -> (publicKeyBytes: Data, privateKeyRef: SecKey) {
-        // Define key attributes: P-256 elliptic curve, stored in Secure Enclave
         let attributes: [CFString: Any] = [
             kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
             kSecAttrKeySizeInBits: 256,
             kSecAttrTokenID: kSecAttrTokenIDSecureEnclave,
             kSecPrivateKeyAttrs: [
-                kSecAttrIsPermanent: false,  // Transient key - never persisted
+                kSecAttrIsPermanent: false,
                 kSecAttrAccessControl: try createAccessControl()
             ]
         ]
-        
         var error: Unmanaged<CFError>?
         guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
-            if let error = error?.takeRetainedValue() {
-                throw SecureEnclaveError.keyGenerationFailed(error as Error)
-            }
-            throw SecureEnclaveError.keyGenerationFailed(nil)
+            throw SecureEnclaveError.keyGenerationFailed(error?.takeRetainedValue() as Error?)
         }
-        
-        // Extract public key from private key
         guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
             throw SecureEnclaveError.publicKeyExtractionFailed
         }
-        
-        // Export public key as raw bytes (X9.63 format)
         guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? else {
-            if let error = error?.takeRetainedValue() {
-                throw SecureEnclaveError.publicKeyExportFailed(error as Error)
-            }
-            throw SecureEnclaveError.publicKeyExportFailed(nil)
+            throw SecureEnclaveError.publicKeyExportFailed(error?.takeRetainedValue() as Error?)
         }
-        
         print("[SecureEnclave] Generated key pair: public key \(publicKeyData.count) bytes")
         return (publicKeyBytes: publicKeyData, privateKeyRef: privateKey)
+    }
+    */
+
+    // MARK: - Persistent keypair for two-phase injection protocol
+
+    /// Load the persisted injection keypair from the Keychain, or generate and persist a new one.
+    /// Phase 1: generate + persist, advertise public key, block until iloader kills the process.
+    /// Phase 2: load the same private key to decrypt the payload delivered via launch args.
+    public static func loadOrGenerateKeyPair() throws -> (publicKeyBytes: Data, privateKeyRef: SecKey) {
+        let query: [CFString: Any] = [
+            kSecClass: kSecClassKey,
+            kSecAttrLabel: injectionKeyLabel as CFString,
+            kSecReturnRef: true
+        ]
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        if status == errSecSuccess, let privateKey = item as! SecKey? {
+            guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
+                throw SecureEnclaveError.publicKeyExtractionFailed
+            }
+            var cfError: Unmanaged<CFError>?
+            guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &cfError) as Data? else {
+                throw SecureEnclaveError.publicKeyExportFailed(cfError?.takeRetainedValue() as Error?)
+            }
+            print("[SecureEnclave] Loaded persisted injection keypair: public key \(publicKeyData.count) bytes")
+            return (publicKeyBytes: publicKeyData, privateKeyRef: privateKey)
+        }
+
+        // None found — generate and persist
+        let attributes: [CFString: Any] = [
+            kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
+            kSecAttrKeySizeInBits: 256,
+            kSecAttrTokenID: kSecAttrTokenIDSecureEnclave,
+            kSecPrivateKeyAttrs: [
+                kSecAttrIsPermanent: true,
+                kSecAttrLabel: injectionKeyLabel as CFString,
+                kSecAttrAccessControl: try createAccessControl()
+            ] as [CFString: Any]
+        ]
+        var cfError: Unmanaged<CFError>?
+        guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &cfError) else {
+            throw SecureEnclaveError.keyGenerationFailed(cfError?.takeRetainedValue() as Error?)
+        }
+        guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
+            throw SecureEnclaveError.publicKeyExtractionFailed
+        }
+        guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &cfError) as Data? else {
+            throw SecureEnclaveError.publicKeyExportFailed(cfError?.takeRetainedValue() as Error?)
+        }
+        print("[SecureEnclave] Generated and persisted injection keypair: public key \(publicKeyData.count) bytes")
+        return (publicKeyBytes: publicKeyData, privateKeyRef: privateKey)
+    }
+
+    /// Delete the persisted injection keypair. Called after Phase 2 completes successfully.
+    public static func deleteStoredKeyPair() {
+        let query: [CFString: Any] = [
+            kSecClass: kSecClassKey,
+            kSecAttrLabel: injectionKeyLabel as CFString
+        ]
+        let status = SecItemDelete(query as CFDictionary)
+        if status == errSecSuccess || status == errSecItemNotFound {
+            print("[SecureEnclave] Deleted persisted injection keypair")
+        } else {
+            print("[SecureEnclave] Warning: failed to delete injection keypair, status=\(status)")
+        }
     }
     
     // MARK: - Decryption
