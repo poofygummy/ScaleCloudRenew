@@ -120,6 +120,16 @@ public class SetupCoordinator {
         }
 
         // Phase 1 — debugger attached, no payload args yet.
+        // Wipe any stale credentials and the setupCompleted flag so that
+        // presentSetupFlowIfNeeded never short-circuits on a re-injection run.
+        // Phase 2 (payload args present) never reaches this branch, so it
+        // won't wipe the credentials it just stored.
+        print("[Setup] Phase 1: wiping stale credentials before key advertisement")
+        Keychain.shared.appleIDEmailAddress = nil
+        Keychain.shared.appleIDPassword = nil
+        UserDefaults.standard.setupCompleted = false
+        UserDefaults.standard.synchronize()
+
         // Generate + persist keypair, advertise pubkey, then block until killed.
         print("[Setup] Phase 1: debugger attached, advertising public key")
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
