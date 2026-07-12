@@ -19,6 +19,7 @@ public class SetupCoordinator {
     
     private let navigationController: UINavigationController
     private var currentStep: SetupStep = .credentials
+    private weak var presentingViewController: UIViewController?
     
     /// Completion handler called when setup finishes
     public var onCompletion: (() -> Void)?
@@ -34,9 +35,9 @@ public class SetupCoordinator {
     // MARK: - Initialization
     
     public init() {
-        // Always start with the credential VC — it will be replaced if/when the debug
-        // channel handshake succeeds, but UIKit needs a real root view controller
-        // immediately so the main run loop keeps pumping.
+        // Start with the credential VC as the nav root. When a debugger is attached
+        // we never present this immediately — the modal is only shown if the debug
+        // channel handoff fails (fallback) or when there is no debugger attached.
         let credentialVC = CredentialInputViewController()
         navigationController = UINavigationController(rootViewController: credentialVC)
         credentialVC.coordinator = self
@@ -51,16 +52,19 @@ public class SetupCoordinator {
     /// If a debugger is attached (i.e. launched via idevicedebug), the credential handshake
     /// runs on a background thread so the main run loop is never blocked by readLine().
     public func start(from presentingViewController: UIViewController) {
-        presentingViewController.present(navigationController, animated: true)
+        self.presentingViewController = presentingViewController
         
         guard DebuggerUtils.isDebuggerAttached() else {
+            // No debugger — show the manual credential entry screen immediately.
             print("[Setup] No debugger attached, using manual credential entry")
+            presentingViewController.present(navigationController, animated: true)
             return
         }
         
-        // Debugger is attached — perform the stdin/stdout handshake on a background thread.
-        // readLine() is a blocking syscall; calling it on the main thread would freeze UIKit
-        // and could deadlock the debug bridge's own run-loop pumping.
+        // Debugger is attached — run the stdin/stdout handshake on a background thread
+        // BEFORE presenting any UI. If it succeeds we go straight to validation without
+        // ever showing the credential entry screen. If it fails we fall back to manual.
+        // readLine() is a blocking syscall; it must never run on the main thread.
         print("[Setup] Debugger detected, starting debug channel handoff on background thread")
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self else { return }
@@ -72,14 +76,18 @@ public class SetupCoordinator {
                     self.currentStep = .validation
                     let validationVC = ValidationViewController()
                     validationVC.coordinator = self
-                    // Replace the credential VC with validation — no back button possible
-                    self.navigationController.setViewControllers([validationVC], animated: true)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        validationVC.startValidation()
+                    // Present the nav controller with validation as root — credential
+                    // screen is never shown to the user.
+                    self.navigationController.setViewControllers([validationVC], animated: false)
+                    self.presentingViewController?.present(self.navigationController, animated: true) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            validationVC.startValidation()
+                        }
                     }
                 } else {
-                    print("[Setup] Debug channel handoff failed, staying on manual credential entry")
-                    // credentialVC is already the root — nothing to do
+                    print("[Setup] Debug channel handoff failed, falling back to manual credential entry")
+                    // Show the credential entry screen as fallback.
+                    self.presentingViewController?.present(self.navigationController, animated: true)
                 }
             }
         }
