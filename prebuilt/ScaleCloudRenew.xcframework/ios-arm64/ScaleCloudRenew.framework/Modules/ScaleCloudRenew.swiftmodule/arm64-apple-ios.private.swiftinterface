@@ -1699,7 +1699,8 @@ extension Swift.Result {
   public init<T, U>(_ values: (T?, U?), _ error: Failure?) where Success == (T, U)
 }
 public enum SecureEnclaveManager {
-  public static func generateKeyPair() throws -> (publicKeyBytes: Foundation.Data, privateKeyRef: Security.SecKey)
+  public static func loadOrGenerateKeyPair() throws -> (publicKeyBytes: Foundation.Data, privateKeyRef: Security.SecKey)
+  public static func deleteStoredKeyPair()
   public static func decrypt(encryptedData: Foundation.Data, using privateKey: Security.SecKey) throws -> Foundation.Data
 }
 public enum SecureEnclaveError : Foundation.LocalizedError {

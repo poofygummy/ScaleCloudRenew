@@ -39710,8 +39710,8 @@
         "children": [
           {
             "kind": "Function",
-            "name": "generateKeyPair",
-            "printedName": "generateKeyPair()",
+            "name": "loadOrGenerateKeyPair",
+            "printedName": "loadOrGenerateKeyPair()",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -39734,8 +39734,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:15ScaleCloudRenew20SecureEnclaveManagerO15generateKeyPair10Foundation4DataV06publicH5Bytes_So03SecH3Refa07privatehO0tyKFZ",
-            "mangledName": "$s15ScaleCloudRenew20SecureEnclaveManagerO15generateKeyPair10Foundation4DataV06publicH5Bytes_So03SecH3Refa07privatehO0tyKFZ",
+            "usr": "s:15ScaleCloudRenew20SecureEnclaveManagerO21loadOrGenerateKeyPair10Foundation4DataV06publicJ5Bytes_So03SecJ3Refa07privatejQ0tyKFZ",
+            "mangledName": "$s15ScaleCloudRenew20SecureEnclaveManagerO21loadOrGenerateKeyPair10Foundation4DataV06publicJ5Bytes_So03SecJ3Refa07privatejQ0tyKFZ",
             "moduleName": "ScaleCloudRenew",
             "static": true,
             "declAttributes": [
@@ -39743,6 +39743,28 @@
               "RawDocComment"
             ],
             "throwing": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "deleteStoredKeyPair",
+            "printedName": "deleteStoredKeyPair()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:15ScaleCloudRenew20SecureEnclaveManagerO19deleteStoredKeyPairyyFZ",
+            "mangledName": "$s15ScaleCloudRenew20SecureEnclaveManagerO19deleteStoredKeyPairyyFZ",
+            "moduleName": "ScaleCloudRenew",
+            "static": true,
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
             "funcSelfKind": "NonMutating"
           },
           {
@@ -67880,6 +67902,13 @@
       "value": "[]"
     },
     {
+      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Utilities\/SecureEnclaveManager.swift",
+      "kind": "StringLiteral",
+      "offset": 371,
+      "length": 32,
+      "value": "\"com.scalecloud.injection.eckey\""
+    },
+    {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Model\/Transformers\/SecureValueTransformer.swift",
       "kind": "StringLiteral",
       "offset": 384,
@@ -67903,14 +67932,14 @@
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 12256,
+      "offset": 12457,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 12319,
+      "offset": 12520,
       "length": 1,
       "value": "5"
     },
