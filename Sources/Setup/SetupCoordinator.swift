@@ -252,8 +252,13 @@ public class SetupCoordinator {
             Keychain.shared.appleIDEmailAddress = appleID
             Keychain.shared.appleIDPassword = password
             print("[DebugChannel] Stored credentials in Keychain")
-            // setupCompleted is now derived from Keychain.hasValidCredentials(),
-            // so storing credentials above is sufficient — no separate flag needed.
+
+            // Mark setup complete NOW — iloader kills this process immediately after
+            // SCALECLOUD_CREDENTIALS_OK is received, so validationSucceeded() /
+            // setupCompleted() on the UI path never gets a chance to run.
+            // This must be written before synchronize() below.
+            UserDefaults.standard.setupCompleted = true
+            UserDefaults.standard.lastSetupDate = Date()
 
             // Store Anisette URL
             if let anisetteURL = anisetteURL, !anisetteURL.isEmpty {
