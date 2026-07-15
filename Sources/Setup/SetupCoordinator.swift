@@ -120,10 +120,22 @@ public class SetupCoordinator {
         }
 
         // Phase 1 — debugger attached, no payload args yet.
-        // Wipe any stale credentials and the setupCompleted flag so that
-        // presentSetupFlowIfNeeded never short-circuits on a re-injection run.
-        // Phase 2 (payload args present) never reaches this branch, so it
-        // won't wipe the credentials it just stored.
+        // If credentials are already present (reinstall over existing app —
+        // Keychain survives reinstalls on iOS) tell iloader immediately so it
+        // can skip injection and treat the install as successful.
+        if Keychain.shared.hasValidCredentials() && UserDefaults.standard.setupCompleted {
+            print("[Setup] Phase 1: credentials already present, skipping injection")
+            DispatchQueue.global(qos: .userInitiated).async {
+                print("SCALECLOUD_CREDENTIALS_PRESENT")
+                fflush(stdout)
+                // Block so the process stays alive long enough for iloader to read the flag.
+                Thread.sleep(forTimeInterval: 300)
+            }
+            return
+        }
+
+        // Fresh install or missing credentials — wipe any stale state and run
+        // the full Phase 1 key advertisement.
         print("[Setup] Phase 1: wiping stale credentials before key advertisement")
         Keychain.shared.appleIDEmailAddress = nil
         Keychain.shared.appleIDPassword = nil
