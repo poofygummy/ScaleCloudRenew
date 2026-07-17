@@ -40612,6 +40612,13 @@
         ]
       },
       {
+        "kind": "Import",
+        "name": "Security",
+        "printedName": "Security",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
         "kind": "TypeDecl",
         "name": "SetupCoordinator",
         "printedName": "SetupCoordinator",
@@ -67925,21 +67932,21 @@
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "StringLiteral",
-      "offset": 288,
+      "offset": 304,
       "length": 35,
       "value": "\"com.scalecloud.setupFlowCompleted\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 13479,
+      "offset": 14656,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 13542,
+      "offset": 14719,
       "length": 1,
       "value": "5"
     },
