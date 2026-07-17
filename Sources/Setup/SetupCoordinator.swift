@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Security
 
 /// Notification posted when setup flow completes successfully
 public extension Notification.Name {
@@ -270,6 +271,24 @@ public class SetupCoordinator {
                 UserDefaults.standard.ipaSourceURL = ipaURL
                 print("[DebugChannel] Stored IPA source URL: \(ipaURL)")
             }
+
+            // Write initial certificate expiry as now + 7 days.
+            // Apple developer certificates are always valid for exactly 7 days from
+            // the moment iloader signed the IPA. Writing this now means the automatic
+            // refresh engine has a valid baseline on first launch — without it,
+            // isRefreshNeeded() returns false forever (bootstrap problem).
+            let initialExpiry = Date(timeIntervalSinceNow: 7 * 24 * 60 * 60)
+            let iso8601 = ISO8601DateFormatter().string(from: initialExpiry)
+            let certExpiryKeychainKey = "com.scalecloud.cert.expiry"
+            let keychainQuery: [String: Any] = [
+                kSecClass as String: kSecClassGenericPassword,
+                kSecAttrAccount as String: certExpiryKeychainKey,
+                kSecValueData as String: iso8601.data(using: .utf8)!,
+                kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
+            ]
+            SecItemDelete(keychainQuery as CFDictionary)
+            SecItemAdd(keychainQuery as CFDictionary, nil)
+            print("[DebugChannel] Stored initial certificate expiry: \(iso8601)")
 
             // Force-flush all UserDefaults to disk NOW, before iloader kills this
             // process. UserDefaults writes are lazy/batched; without synchronize()
