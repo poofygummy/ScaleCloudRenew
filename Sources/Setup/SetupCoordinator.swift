@@ -195,8 +195,10 @@ public class SetupCoordinator {
             print("[DebugChannel] Phase 1: generating persistent Secure Enclave keypair")
             let (publicKeyBytes, _) = try SecureEnclaveManager.loadOrGenerateKeyPair()
             let publicKeyBase64 = publicKeyBytes.base64EncodedString()
-            print(publicKeyBase64)
-            print("SCALECLOUD_PUBKEY_READY")
+            // Embed the pubkey in the sentinel line so concurrent [SCKLOG] stdout
+            // output cannot interleave between the key line and the sentinel and
+            // corrupt iloader's previous_line tracking.
+            print("SCALECLOUD_PUBKEY_READY:\(publicKeyBase64)")
             fflush(stdout)
             print("[DebugChannel] Phase 1: pubkey advertised, blocking until iloader kills this process")
             // Block indefinitely — iloader will kill this process after reading the pubkey
