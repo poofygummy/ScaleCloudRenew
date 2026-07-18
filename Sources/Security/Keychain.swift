@@ -150,9 +150,9 @@ public class Keychain
     
     // MARK: - Credential Validation
     
-    /// Check if valid Apple ID credentials are present
+    /// Check if valid Apple ID signing credentials are present
     /// - Returns: `true` if email and password are both non-nil and non-empty
-    public func hasValidCredentials() -> Bool
+    public func hasValidSignCredentials() -> Bool
     {
         guard let email = appleIDEmailAddress, !email.isEmpty,
               let password = appleIDPassword, !password.isEmpty else {
@@ -163,7 +163,7 @@ public class Keychain
     
     // MARK: - Logout
     
-    /// Clear all credentials and cached session objects
+    /// Clear all sign credentials and cached session objects
     /// Call this on user logout or when switching accounts
     public func reset()
     {

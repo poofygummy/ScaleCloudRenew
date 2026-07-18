@@ -196,7 +196,7 @@ class CredentialInputViewController: SetupViewController {
         }
         
         dismissKeyboard()
-        coordinator?.credentialsEntered(email: email, password: password)
+        coordinator?.signCredentialsEntered(email: email, password: password)
     }
     
     @objc private func twoFactorInfoTapped() {

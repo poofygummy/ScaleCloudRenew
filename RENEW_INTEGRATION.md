@@ -170,7 +170,7 @@ Every user-facing interaction in the SideStore original has been stripped. The c
 The `Keychain` class is completely rewritten (not just moved):
 - Service identifier: `"com.scalecloud"` (was `Bundle.Info.appbundleIdentifier` which evaluated to the SideStore bundle ID). This means keychain items are stored under a fixed shared identifier — usable by any app or extension with the same keychain access group.
 - Added: `extensionProvisioningProfile(forBundleID:)` / `setExtensionProvisioningProfile(_:forBundleID:)` / `removeExtensionProvisioningProfile(forBundleID:)` — stores per-extension provisioning profile data.
-- Added: `hasValidCredentials()` helper.
+- Added: `hasValidSignCredentials()` helper.
 - `reset()` now also clears `signingCertificate`, `signingCertificatePassword`, the cert expiry UserDefault, and all stored extension profiles. The SideStore original did not clear those.
 - The `AltStoreCore/Components/Keychain.swift` file is explicitly excluded from the XcodeGen sources (`"AltStoreCore/Components/Keychain.swift"`) so the new version at `Sources/Security/Keychain.swift` wins.
 
@@ -450,7 +450,7 @@ Refresh requires:
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `com.scalecloud.credentialsInjected` | `Bool` | Set by `SetupCoordinator.credentialsInjected()` after debug channel handoff completes |
+| `com.scalecloud.credentialsInjected` | `Bool` | Set by `SetupCoordinator.setupCompleted()` via `signCredentialsInjected` after debug channel handoff completes |
 | `com.scalecloud.lastSetupDate` | `Date` | Timestamp of last completed setup |
 | `com.scalecloud.cert.expiry` | `Date` | Certificate expiry, written by `BackgroundRefreshAppsOperation` |
 | `com.scalecloud.ipaSourceURL` | `String?` | IPA download URL, set by debug channel handoff. Staging value: `DatabaseManager.prepareDatabase()` syncs it into `AppVersion.downloadURL` in CoreData on every launch. Format: `http://<tailscale-host>/ScaleCloud.ipa`. Also cleared by `resetSetup()`. |

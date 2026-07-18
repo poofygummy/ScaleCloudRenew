@@ -19,7 +19,7 @@ public class SetupCoordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
-    private var currentStep: SetupStep = .credentials
+    private var currentStep: SetupStep = .signCredentials
     private weak var presentingViewController: UIViewController?
     
     /// Completion handler called when setup finishes
@@ -28,7 +28,7 @@ public class SetupCoordinator {
     // MARK: - Setup Steps
     
     private enum SetupStep {
-        case credentials
+        case signCredentials
         case validation
         case complete
     }
@@ -135,7 +135,7 @@ public class SetupCoordinator {
     
     // MARK: - Flow Navigation
     
-    func credentialsEntered(email: String, password: String) {
+    func signCredentialsEntered(email: String, password: String) {
         // Store credentials immediately
         Keychain.shared.appleIDEmailAddress = email
         Keychain.shared.appleIDPassword = password
@@ -174,7 +174,7 @@ public class SetupCoordinator {
     
     func setupCompleted() {
         // Mark setup as complete
-        UserDefaults.standard.credentialsInjected = true
+        UserDefaults.standard.signCredentialsInjected = true
         UserDefaults.standard.lastSetupDate = Date()
         
         // Post notification
@@ -249,11 +249,11 @@ public class SetupCoordinator {
             Keychain.shared.appleIDPassword = password
             print("[DebugChannel] Stored credentials in Keychain")
 
-            // Mark credentials injected NOW — iloader kills this process immediately after
+            // Mark sign credentials injected NOW — iloader kills this process immediately after
             // SCALECLOUD_CREDENTIALS_OK is received, so validationSucceeded() /
             // setupCompleted() on the UI path never gets a chance to run.
             // This must be written before synchronize() below.
-            UserDefaults.standard.credentialsInjected = true
+            UserDefaults.standard.signCredentialsInjected = true
             UserDefaults.standard.lastSetupDate = Date()
 
             // Store Anisette URL
@@ -307,7 +307,7 @@ public class SetupCoordinator {
             print("[DebugChannel] UserDefaults flushed to disk")
             print("[DebugChannel] POST-SYNC verify menuAnisetteServersList: \(verifyList)")
             print("[DebugChannel] POST-SYNC verify menuAnisetteURL: \(verifyURL.isEmpty ? "(empty)" : verifyURL)")
-            print("[DebugChannel] POST-SYNC verify credentialsInjected: \(UserDefaults.standard.credentialsInjected)")
+            print("[DebugChannel] POST-SYNC verify signCredentialsInjected: \(UserDefaults.standard.signCredentialsInjected)")
 
             // Confirm to iloader
             print("SCALECLOUD_CREDENTIALS_OK")

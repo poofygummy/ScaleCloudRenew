@@ -9,11 +9,11 @@ import Foundation
 
 public extension UserDefaults {
     
-    /// Flag indicating credentials have been injected via the debug channel.
+    /// Flag indicating Apple ID signing credentials have been injected via the debug channel.
     /// Stored as a plain bool in UserDefaults. Reset automatically by
-    /// presentSetupFlowIfNeeded whenever credentials are absent from Keychain,
+    /// presentSetupFlowIfNeeded whenever signing credentials are absent from Keychain,
     /// so a fresh iloader run always triggers the injection flow again.
-    @objc dynamic public var credentialsInjected: Bool {
+    @objc dynamic public var signCredentialsInjected: Bool {
         get {
             return bool(forKey: "com.scalecloud.credentialsInjected")
         }
@@ -52,7 +52,7 @@ public extension UserDefaults {
     /// Debug-only method to reset setup state and credentials
     /// Useful for testing setup flow without reinstalling app
     func resetSetup() {
-        removeObject(forKey: "com.scalecloud.credentialsInjected")
+        removeObject(forKey: "com.scalecloud.credentialsInjected") // signCredentialsInjected
         removeObject(forKey: "com.scalecloud.lastSetupDate")
         removeObject(forKey: "menuAnisetteServersList")
         removeObject(forKey: "menuAnisetteURL")
@@ -61,7 +61,7 @@ public extension UserDefaults {
         // Clear credentials from Keychain
         ScaleCloudRenew.Keychain.shared.reset()
         
-        print("[Setup] Reset setup state and credentials")
+        print("[Setup] Reset setup state and sign credentials")
     }
     #endif
 }
