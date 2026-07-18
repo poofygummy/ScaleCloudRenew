@@ -257,14 +257,18 @@ public class SetupCoordinator {
             UserDefaults.standard.lastSetupDate = Date()
 
             // Store Anisette URL
+            print("[DebugChannel] --scalecloud-anisette arg: \(anisetteURL == nil ? "(not passed)" : anisetteURL!.isEmpty ? "(empty string)" : anisetteURL!)")
             if let anisetteURL = anisetteURL, !anisetteURL.isEmpty {
                 var servers = UserDefaults.standard.menuAnisetteServersList
+                print("[DebugChannel] menuAnisetteServersList before write: \(servers)")
                 if !servers.contains(anisetteURL) {
                     servers.append(anisetteURL)
                     UserDefaults.standard.menuAnisetteServersList = servers
                 }
                 UserDefaults.standard.menuAnisetteURL = anisetteURL
                 print("[DebugChannel] Stored Anisette URL: \(anisetteURL)")
+            } else {
+                print("[DebugChannel] WARNING: anisette URL not stored — arg was nil or empty")
             }
 
             // Store IPA source URL
@@ -297,7 +301,13 @@ public class SetupCoordinator {
             // the setupCompleted flag and other values are lost when the process is
             // killed immediately after SCALECLOUD_CREDENTIALS_OK is received.
             UserDefaults.standard.synchronize()
+            // Read back immediately to confirm the write survived synchronize()
+            let verifyList = UserDefaults.standard.array(forKey: "menuAnisetteServersList") as? [String] ?? []
+            let verifyURL  = UserDefaults.standard.string(forKey: "menuAnisetteURL") ?? ""
             print("[DebugChannel] UserDefaults flushed to disk")
+            print("[DebugChannel] POST-SYNC verify menuAnisetteServersList: \(verifyList)")
+            print("[DebugChannel] POST-SYNC verify menuAnisetteURL: \(verifyURL.isEmpty ? "(empty)" : verifyURL)")
+            print("[DebugChannel] POST-SYNC verify setupCompleted: \(UserDefaults.standard.setupCompleted)")
 
             // Confirm to iloader
             print("SCALECLOUD_CREDENTIALS_OK")
