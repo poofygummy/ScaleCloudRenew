@@ -9,6 +9,7 @@
 import Foundation
 import OSLog
 import ScaleCloudSign
+import ScaleCloudKit
 
 extension BackupAppOperation
 {
@@ -87,7 +88,7 @@ class BackupAppOperation: ResultOperation<Void>
                                 // Failed too quickly for human to respond to alert, possibly still finalizing installation.
                                 // Try again in a couple seconds.
                                 
-                                Logger.sideload.error("Failed to open app too quickly, retrying after a few seconds...")
+                                nkLog(warning: "[Signing] Failed to open app too quickly, retrying after a few seconds...")
                                                                 
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                                     UIApplication.shared.open(openURL, options: [:]) { (success) in

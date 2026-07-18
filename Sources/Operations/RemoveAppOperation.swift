@@ -8,6 +8,7 @@
 
 import Foundation
 import OSLog
+import ScaleCloudKit
 
 @objc(RemoveAppOperation)
 final class RemoveAppOperation: ResultOperation<InstalledApp>
@@ -35,7 +36,7 @@ final class RemoveAppOperation: ResultOperation<InstalledApp>
             return self.finish(.failure(OperationError.invalidParameters("RemoveAppOperation.main: self.context.installedApp is nil")))
         }
         
-        Logger.sideload.notice("Removing app \(self.context.bundleIdentifier, privacy: .public)...")
+        nkLog(debug: "[Signing] Removing app \(self.context.bundleIdentifier)...")
         
         installedApp.managedObjectContext?.perform {
             let resignedBundleIdentifier = installedApp.resignedBundleIdentifier

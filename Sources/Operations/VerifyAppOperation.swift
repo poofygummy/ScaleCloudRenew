@@ -10,6 +10,7 @@ import Foundation
 import OSLog
 import CryptoKit
 import ScaleCloudSign
+import ScaleCloudKit
 
 import RegexBuilder
 
@@ -120,7 +121,7 @@ private extension VerifyAppOperation
         let sha256Hash = SHA256.hash(data: data)
         let hashString = sha256Hash.compactMap { String(format: "%02x", $0) }.joined()
         
-        Logger.sideload.debug("Comparing app hash (\(hashString, privacy: .public)) against expected hash (\(expectedHash, privacy: .public))...")
+        nkLog(debug: "[Signing] Comparing app hash (\(hashString)) against expected hash (\(expectedHash))...")
         
         guard hashString == expectedHash else { throw VerificationError.mismatchedHash(hashString, expectedHash: expectedHash, app: app) }
     }

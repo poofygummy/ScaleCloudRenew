@@ -9,6 +9,7 @@
 import CoreData
 import OSLog
 import ScaleCloudSign
+import ScaleCloudKit
 
 
 extension CFNotificationName
@@ -287,7 +288,7 @@ public extension DatabaseManager
             }
             catch
             {
-                Logger.main.error("Failed to update source order. \(error.localizedDescription, privacy: .public)")
+                nkLog(error: "[Signing] Failed to update source order: \(error.localizedDescription)")
             }
             
             do
@@ -305,7 +306,7 @@ public extension DatabaseManager
             }
             catch
             {
-                Logger.main.error("Failed to update app order. \(error.localizedDescription, privacy: .public)")
+                nkLog(error: "[Signing] Failed to update app order: \(error.localizedDescription)")
             }
         }
     }

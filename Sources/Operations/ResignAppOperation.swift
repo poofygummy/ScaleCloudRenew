@@ -9,6 +9,7 @@
 import Foundation
 import OSLog
 import ScaleCloudSign
+import ScaleCloudKit
 
 @objc(ResignAppOperation)
 final class ResignAppOperation: ResultOperation<ALTApplication>
@@ -46,7 +47,7 @@ final class ResignAppOperation: ResultOperation<ALTApplication>
                                                                          "self.context.certificate is nil")))
         }
         
-        Logger.sideload.notice("Resigning app \(self.context.bundleIdentifier, privacy: .public)...")
+        nkLog(debug: "[Signing] Resigning app \(self.context.bundleIdentifier)...")
         
         // Prepare app bundle
         let prepareAppProgress = Progress.discreteProgress(totalUnitCount: 2)
@@ -71,12 +72,12 @@ final class ResignAppOperation: ResultOperation<ALTApplication>
                     )
                     let destinationURL = InstalledApp.refreshedIPAURL(for: updatedApp)
                     try FileManager.default.copyItem(at: resignedURL, to: destinationURL, shouldReplace: true)
-                    print("Successfully resigned app to \(destinationURL.absoluteString)")
+                    nkLog(debug: "[Signing] Resigned app to \(destinationURL.absoluteString)")
                     
                     // Use appBundleURL since we need an app bundle, not .ipa.
                     guard let resignedApplication = ALTApplication(fileURL: appBundleURL) else { throw OperationError.invalidApp }
                     
-                    Logger.sideload.notice("Resigned app \(self.context.bundleIdentifier, privacy: .public) to \(resignedApplication.bundleIdentifier, privacy: .public).")
+                    nkLog(debug: "[Signing] Resigned \(self.context.bundleIdentifier) → \(resignedApplication.bundleIdentifier).")
                     
                     self.finish(.success(resignedApplication))
                 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ScaleCloudKit
 
 
 @objc(RefreshAppOperation)
@@ -32,7 +33,7 @@ final class RefreshAppOperation: ResultOperation<InstalledApp>
         do
         {
             if let error = self.context.error {
-                print("RefreshAppOperation.main: ERROR: self.context.app = \(self.context.app!); self.context.error is \(error)")
+                nkLog(error: "[Signing] RefreshAppOperation error for \(self.context.app?.bundleIdentifier ?? "?") : \(error.localizedDescription)")
                 return self.finish(.failure(error))
             }
             

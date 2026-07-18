@@ -8,6 +8,7 @@
 
 import Foundation
 import OSLog
+import ScaleCloudKit
 
 @objc(RemoveAppBackupOperation)
 final class RemoveAppBackupOperation: ResultOperation<Void>
@@ -65,14 +66,14 @@ final class RemoveAppBackupOperation: ResultOperation<Void>
 //                    
 //                    #else
                     
-                    Logger.sideload.error("Failed to remove app backup directory \(backupDirectoryURL.lastPathComponent, privacy: .public). \(error.localizedDescription, privacy: .public)")
+                    nkLog(error: "[Signing] Failed to remove app backup directory \(backupDirectoryURL.lastPathComponent): \(error.localizedDescription)")
                     self.finish(.failure(error))
                     
 //                    #endif
                 }
                 catch
                 {
-                    Logger.sideload.error("Failed to remove app backup directory \(backupDirectoryURL.lastPathComponent, privacy: .public). \(error.localizedDescription, privacy: .public)")
+                    nkLog(error: "[Signing] Failed to remove app backup directory \(backupDirectoryURL.lastPathComponent): \(error.localizedDescription)")
                     self.finish(.failure(error))
                 }
             }

@@ -39,3 +39,24 @@ public extension OSLogEntryLog.Level
     }
 }
 */
+
+/* Commented out: OSLogEntryLog lives in the Swift OSLog module, but "OSLog" is also a C type name.
+   The compiler qualifies this as "OSLog.OSLogEntryLog.Level" in the swiftinterface, which then
+   fails to re-compile because OSLog resolves as the C type. Unused — restore in ScaleCloudApp if needed.
+@available(iOS 15, *)
+public extension OSLogEntryLog.Level
+{
+    var localizedName: String {
+        switch self
+        {
+        case .undefined: return NSLocalizedString("Undefined", comment: "")
+        case .debug: return NSLocalizedString("Debug", comment: "")
+        case .info: return NSLocalizedString("Info", comment: "")
+        case .notice: return NSLocalizedString("Notice", comment: "")
+        case .error: return NSLocalizedString("Error", comment: "")
+        case .fault: return NSLocalizedString("Fault", comment: "")
+        @unknown default: return NSLocalizedString("Unknown", comment: "")
+        }
+    }
+}
+*/

@@ -9,6 +9,7 @@
 import Foundation
 import OSLog
 import UIKit
+import ScaleCloudKit
 import UserNotifications
 import Intents
 import Combine
@@ -159,7 +160,7 @@ extension AppManager
             }
             catch
             {
-                print("Error while fetching installed apps.", error)
+                nkLog(error: "[Signing] Error while fetching installed apps: \(error.localizedDescription)")
             }
             #endif
             
@@ -179,19 +180,19 @@ extension AppManager
                         
                         if isDirectory && !installedAppBundleIDs.contains(bundleID) && !self.isActivelyManagingApp(withBundleID: bundleID)
                         {
-                            print("DELETING CACHED APP:", bundleID)
+                            nkLog(debug: "[Signing] Deleting cached app: \(bundleID)")
                             try FileManager.default.removeItem(at: appDirectory)
                         }
                     }
                     catch
                     {
-                        print("Failed to remove cached app directory.", error)
+                        nkLog(error: "[Signing] Failed to remove cached app directory: \(error.localizedDescription)")
                     }
                 }
             }
             catch
             {
-                print("Failed to remove cached apps.", error)
+                nkLog(error: "[Signing] Failed to remove cached apps: \(error.localizedDescription)")
             }
         }
     }
@@ -323,12 +324,12 @@ extension AppManager
             do
             {
                 _ = LoggedError(error: sanitizedError, app: app, operation: operation, context: context)
-                print("AppManager.log(): error:\(sanitizedError) app:\(app.bundleIdentifier) operation:\(operation)")
+                nkLog(error: "[Signing] Operation error: \(sanitizedError.localizedDescription) app:\(app.bundleIdentifier) op:\(operation)")
                 try context.save()
             }
             catch let saveError
             {
-                print("[ALTLog] Failed to log error \(sanitizedError.domain) code \(sanitizedError.code) for \(app.bundleIdentifier):", saveError)
+                nkLog(error: "[Signing] Failed to log error \(sanitizedError.domain) \(sanitizedError.code) for \(app.bundleIdentifier): \(saveError.localizedDescription)")
             }
         }
     }
@@ -640,7 +641,7 @@ extension AppManager
                         }
                         catch
                         {
-                            Logger.main.error("Failed to assign error \(sanitizedError.localizedErrorCode) to source \(sourceID, privacy: .public). \(error.localizedDescription, privacy: .public)")
+                            nkLog(error: "[Signing] Failed to assign error \(sanitizedError.localizedErrorCode) to source \(sourceID): \(error.localizedDescription)")
                         }
                     }
                     
@@ -903,7 +904,7 @@ extension AppManager
             switch result
             {
             case .success: break
-            case .failure(let error): print("Failed to remove app backup.", error)
+            case .failure(let error): nkLog(error: "[Signing] Failed to remove app backup: \(error.localizedDescription)")
             }
             
             // Throw the error from removeAppOperation,
@@ -1283,7 +1284,7 @@ private extension AppManager
                 context.error = error
             case .success(let provisioningProfiles):
                 context.provisioningProfiles = provisioningProfiles
-                print("PROVISIONING PROFILES \(context.provisioningProfiles)")
+                nkLog(debug: "[Signing] Provisioning profiles fetched: \(context.provisioningProfiles?.keys.joined(separator: ", ") ?? "none")")
             }
         }
         fetchProvisioningProfilesOperation.addDependency(refreshAnisetteDataOperation)
@@ -1382,7 +1383,7 @@ private extension AppManager
             {
             case .failure(let error):
                 context.error = error
-            case .success(_): print("App reported as installed")
+            case .success(_): nkLog(debug: "[Signing] App reported as installed")
             }
         }
         sendAppOperation.addDependency(resignAppOperation)
@@ -1464,7 +1465,7 @@ private extension AppManager
                 try FileManager.default.createDirectory(at: resignedAppsURL, withIntermediateDirectories: true, attributes: nil)
             }
         } catch {
-            print("Failed to create ResignedApps folder: \(error)")
+            nkLog(error: "[Signing] Failed to create ResignedApps folder: \(error.localizedDescription)")
             return
         }
         
@@ -1481,16 +1482,16 @@ private extension AppManager
                 try FileManager.default.removeItem(at: destinationURL)
             }
         } catch {
-            print("Failed to delete existing file at destination: \(error)")
+            nkLog(error: "[Signing] Failed to delete existing resigned app: \(error.localizedDescription)")
             return
         }
         
         // Copy the file to the ResignedApps folder
         do {
             try FileManager.default.copyItem(at: sourceURL, to: destinationURL)
-            print("File copied to: \(destinationURL.path)")
+            nkLog(debug: "[Signing] Resigned app exported to: \(destinationURL.path)")
         } catch {
-            print("Failed to copy file: \(error)")
+            nkLog(error: "[Signing] Failed to export resigned app: \(error.localizedDescription)")
         }
     }
     
@@ -1514,7 +1515,7 @@ private extension AppManager
            
            let errMessage = "AppManager.refresh: App Extensions in DB and Disk are matching: \(isMatching)\n"
                           + "AppManager.refresh: dbAppEx: \(dbAppExNames); diskAppEx: \(String(describing: diskAppExNames))\n"
-           print(errMessage)
+           nkLog(error: "[Signing] \(errMessage)")
            if(!isMatching){
                completionHandler(.failure(OperationError.refreshAppFailed(message: errMessage)))
            }
@@ -1659,7 +1660,7 @@ private extension AppManager
                         {
                         case .failure(let error):
                             // Don't report error, since it doesn't really matter.
-                            print("Failed to delete app backup.", error)
+                            nkLog(error: "[Signing] Failed to delete app backup: \(error.localizedDescription)")
                             
                         case .success: break
                         }
@@ -1878,7 +1879,7 @@ private extension AppManager
                                 }
                                 catch
                                 {
-                                    print("Failed to write app icon data.", error)
+                                    nkLog(error: "[Signing] Failed to write app icon data: \(error.localizedDescription)")
                                 }
                             }
                         }
@@ -1893,7 +1894,7 @@ private extension AppManager
                 }
                 catch
                 {
-                    print(error)
+                    nkLog(error: "[Signing] Failed to prepare backup app: \(error.localizedDescription)")
                     
                     context.error = error
                 }
@@ -1972,7 +1973,7 @@ private extension AppManager
             }
             catch
             {
-                Logger.main.error("Failed to save InstalledApp to database. \(error.localizedDescription, privacy: .public)")
+                nkLog(error: "[Signing] Failed to save InstalledApp to database: \(error.localizedDescription)")
                 throw error
             }
         }

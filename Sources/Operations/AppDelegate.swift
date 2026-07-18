@@ -15,6 +15,7 @@ import AltStoreCore
 import AltSign
 import Roxas
 import OSLog
+import ScaleCloudKit
 
 
 import Nuke
@@ -222,7 +223,7 @@ private extension AppDelegate
             }
             catch
             {
-                Logger.main.error("Failed to create image disk cache. Falling back to URL cache. \(error.localizedDescription, privacy: .public)")
+                nkLog(error: "[Signing] Failed to create image disk cache: \(error.localizedDescription)")
             }
         }
         
@@ -230,7 +231,7 @@ private extension AppDelegate
         
         if let dataCache = ImagePipeline.shared.configuration.dataCache as? DataCache, #available(iOS 15, *)
         {
-            Logger.main.info("Current image cache size: \(dataCache.totalSize.formatted(.byteCount(style: .file)), privacy: .public)")
+            nkLog(debug: "[Signing] Image cache size: \(dataCache.totalSize.formatted(.byteCount(style: .file)))")
         }
     }
     

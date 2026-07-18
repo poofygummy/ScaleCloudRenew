@@ -8,8 +8,8 @@
 
 import Foundation
 import CoreData
-import os.log
 import ScaleCloudSign
+import ScaleCloudKit
 
 
 typealias RefreshError = RefreshErrorCode.Error
@@ -62,7 +62,7 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
     
     private let refreshIdentifier: String = UUID().uuidString
     private var runningApplications: Set<String> = []
-    private let log = OSLog(subsystem: "com.scalecloud.sign", category: "refresh")
+
     
     // Completion handler to report signing results back to caller (BGTask handler)
     public var refreshCompletionHandler: ((Bool, Date?) -> Void)?
@@ -92,16 +92,16 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
                     guard case .success(let app) = result else { return nil }
                     return app.expirationDate
                 }.min()
-                os_log("Certificate expires: %{public}@", log: log, type: .info, expiryDate?.description ?? "unknown")
-                os_log("Refresh completed successfully", log: log, type: .info)
+                nkLog(debug: "[Signing] Certificate expires: \(expiryDate?.description ?? "unknown")")
+                nkLog(debug: "[Signing] Refresh completed successfully")
                 refreshCompletionHandler?(true, expiryDate)
             } else {
-                os_log("Refresh completed with failures", log: log, type: .error)
+                nkLog(error: "[Signing] Refresh completed with failures")
                 refreshCompletionHandler?(false, nil)
             }
             
         case .failure(let error):
-            os_log("Refresh failed: %{public}@", log: log, type: .error, error.localizedDescription)
+            nkLog(error: "[Signing] Refresh failed: \(error.localizedDescription)")
             refreshCompletionHandler?(false, nil)
         }
         
@@ -121,7 +121,7 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
             return
         }
 
-        os_log("BackgroundRefreshAppsOperation starting with silent audio protection", log: log, type: .info)
+        nkLog(debug: "[Signing] BackgroundRefreshAppsOperation starting")
         
         // Wrap entire signing operation in silent audio playback (SideStore defensive mechanism)
         // This extends execution time and prevents iOS from suspending during signing
@@ -129,14 +129,14 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
             
             if let error = taskResult.error
             {
-                os_log("Error starting silent audio protection: %{public}@", log: self.log, type: .error, error.localizedDescription)
+                nkLog(error: "[Signing] Error starting silent audio protection: \(error.localizedDescription)")
                 self.finish(.failure(error))
                 taskCompletionHandler()
                 return
             }
             
             self.managedObjectContext.perform {
-                Logger.sideload.notice("Refreshing apps in background: \(self.installedApps.map(\.bundleIdentifier), privacy: .public)")
+                nkLog(debug: "[Signing] Refreshing apps: \(self.installedApps.map(\.bundleIdentifier).joined(separator: ", "))")
                 
                 self.startListeningForRunningApps()
                 
@@ -149,7 +149,7 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
                         let filteredApps = self.installedApps.filter { !self.runningApplications.contains($0.bundleIdentifier) }
                         if !self.runningApplications.isEmpty
                         {
-                            Logger.sideload.notice("Skipping refreshing running apps: \(self.runningApplications, privacy: .public)")
+                            nkLog(debug: "[Signing] Skipping running apps: \(self.runningApplications.joined(separator: ", "))")
                         }
                         
                         let group = AppManager.shared.refresh(filteredApps, presentingViewController: nil)
