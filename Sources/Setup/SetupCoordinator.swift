@@ -70,14 +70,12 @@ public class SetupCoordinator {
         //   • Store credentials, print SCALECLOUD_CREDENTIALS_OK.
         //   • Proceed to validation UI.
         //
-        // DVT warmup / normal user launch (no iloader args):
-        //   • no --scalecloud-reset, no payload args → wait 20 s then show
-        //     manual UI. DVT cert-trust probe kills the process in ~10 s so
-        //     UI never appears; a genuine user launch just sees a brief delay.
+        // DVT warmup (certtrust probe, no debugger / no args):
+        //   • isDebuggerAttached() == false, no payload args → wait 20 s then show
+        //     manual UI. The DVT process is killed in ~10 s so UI never appears.
 
         let args = CommandLine.arguments
         let hasPayload = args.contains(where: { $0.hasPrefix("--scalecloud-payload=") })
-        let hasReset   = args.contains("--scalecloud-reset")
 
         if hasPayload {
             // Phase 2 — payload delivered via launch args
@@ -106,32 +104,32 @@ public class SetupCoordinator {
             return
         }
 
-        if hasReset {
-            // Phase 1 — launched by iloader with --scalecloud-reset, no payload yet.
-            // idevicedebug on iOS 15 uses the DVT/Instruments protocol to launch the app;
-            // it does NOT set the P_TRACED ptrace flag, so isDebuggerAttached() always
-            // returns false here. Use --scalecloud-reset as the reliable Phase 1 signal.
-            // Credential wipe already happened in SceneDelegate.presentSetupFlowIfNeeded.
-            print("[Setup] Phase 1: --scalecloud-reset detected, advertising public key")
+        guard DebuggerUtils.isDebuggerAttached() else {
+            // No debugger, no payload args — either a real user launch or a DVT warmup.
+            // Wait 20 s: DVT kills the process in ~10 s so UI never appears during
+            // injection; a genuine user launch just sees a brief delay.
+            print("[Setup] No debugger, no payload — waiting 20 s before showing manual credential UI")
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                guard let self else { return }
-                self.performPhase1KeyAdvertisement()
-                // iloader kills us after reading the pubkey — we never reach here.
+                Thread.sleep(forTimeInterval: 20)
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    print("[Setup] 20 s elapsed, showing manual credential entry")
+                    presentingViewController.present(self.navigationController, animated: true)
+                }
             }
             return
         }
 
-        // No iloader args — either a real user launch or a DVT cert-trust warmup.
-        // Wait 20 s: DVT kills the process in ~10 s so UI never appears during
-        // injection; a genuine user launch just sees a brief delay.
-        print("[Setup] No iloader args — waiting 20 s before showing manual credential UI")
+        // Phase 1 — debugger attached, no payload args yet.
+        // Credential wipe already happened in SceneDelegate.presentSetupFlowIfNeeded
+        // when it saw --scalecloud-reset, so nothing to wipe here.
+
+        // Generate + persist keypair, advertise pubkey, then block until killed.
+        print("[Setup] Phase 1: debugger attached, advertising public key")
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            Thread.sleep(forTimeInterval: 20)
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                print("[Setup] 20 s elapsed, showing manual credential entry")
-                presentingViewController.present(self.navigationController, animated: true)
-            }
+            guard let self else { return }
+            self.performPhase1KeyAdvertisement()
+            // iloader kills us after reading the pubkey — we never reach here.
         }
     }
     
