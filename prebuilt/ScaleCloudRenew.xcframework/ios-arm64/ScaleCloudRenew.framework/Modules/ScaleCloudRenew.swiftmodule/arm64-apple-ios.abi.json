@@ -5613,6 +5613,13 @@
       },
       {
         "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
         "name": "UserNotifications",
         "printedName": "UserNotifications",
         "declKind": "Import",
@@ -11133,6 +11140,13 @@
       },
       {
         "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
@@ -11150,15 +11164,15 @@
       },
       {
         "kind": "Import",
-        "name": "os.log",
-        "printedName": "os.log",
+        "name": "ScaleCloudSign",
+        "printedName": "ScaleCloudSign",
         "declKind": "Import",
         "moduleName": "ScaleCloudRenew"
       },
       {
         "kind": "Import",
-        "name": "ScaleCloudSign",
-        "printedName": "ScaleCloudSign",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
         "declKind": "Import",
         "moduleName": "ScaleCloudRenew"
       },
@@ -11936,6 +11950,13 @@
       },
       {
         "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
         "name": "CoreData",
         "printedName": "CoreData",
         "declKind": "Import",
@@ -12104,6 +12125,13 @@
         "kind": "Import",
         "name": "OSLog",
         "printedName": "OSLog",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
         "declKind": "Import",
         "moduleName": "ScaleCloudRenew"
       },
@@ -12855,6 +12883,13 @@
         "kind": "Import",
         "name": "ScaleCloudSign",
         "printedName": "ScaleCloudSign",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
         "declKind": "Import",
         "moduleName": "ScaleCloudRenew"
       },
@@ -15454,6 +15489,13 @@
         "kind": "Import",
         "name": "ScaleCloudSign",
         "printedName": "ScaleCloudSign",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
         "declKind": "Import",
         "moduleName": "ScaleCloudRenew"
       },
@@ -38288,6 +38330,13 @@
       },
       {
         "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
         "name": "CoreData",
         "printedName": "CoreData",
         "declKind": "Import",
@@ -39620,6 +39669,13 @@
       },
       {
         "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
@@ -39654,6 +39710,13 @@
       },
       {
         "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
         "declKind": "Import",
@@ -39673,6 +39736,13 @@
         "kind": "Import",
         "name": "ScaleCloudSign",
         "printedName": "ScaleCloudSign",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
         "declKind": "Import",
         "moduleName": "ScaleCloudRenew"
       },
@@ -50988,6 +51058,13 @@
         "kind": "Import",
         "name": "ScaleCloudSign",
         "printedName": "ScaleCloudSign",
+        "declKind": "Import",
+        "moduleName": "ScaleCloudRenew"
+      },
+      {
+        "kind": "Import",
+        "name": "ScaleCloudKit",
+        "printedName": "ScaleCloudKit",
         "declKind": "Import",
         "moduleName": "ScaleCloudRenew"
       },
@@ -66399,14 +66476,14 @@
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppDelegate.swift",
       "kind": "StringLiteral",
-      "offset": 657,
+      "offset": 678,
       "length": 21,
       "value": "\".AppBackupDidFinish\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppDelegate.swift",
       "kind": "StringLiteral",
-      "offset": 716,
+      "offset": 737,
       "length": 8,
       "value": "\"result\""
     },
@@ -66420,105 +66497,105 @@
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "StringLiteral",
-      "offset": 391,
+      "offset": 412,
       "length": 40,
       "value": "\"io.sidestore.AppManager.didFetchSource\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "StringLiteral",
-      "offset": 493,
+      "offset": 514,
       "length": 38,
       "value": "\"io.sidestore.AppManager.didAddSource\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "StringLiteral",
-      "offset": 596,
+      "offset": 617,
       "length": 41,
       "value": "\"io.sidestore.AppManager.didRemoveSource\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "StringLiteral",
-      "offset": 714,
+      "offset": 735,
       "length": 53,
       "value": "\"io.sidestore.AppManager.willInstallAppFromNewSource\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "StringLiteral",
-      "offset": 823,
+      "offset": 844,
       "length": 30,
       "value": "\"sidestore-expiration-warning\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "StringLiteral",
-      "offset": 901,
+      "offset": 922,
       "length": 22,
       "value": "\"sidestore-enable-jit\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "Array",
-      "offset": 1720,
+      "offset": 1741,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "IntegerLiteral",
-      "offset": 2090,
+      "offset": 2111,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "Array",
-      "offset": 22787,
+      "offset": 22997,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "StringLiteral",
-      "offset": 41157,
+      "offset": 41376,
       "length": 29,
       "value": "\"Failed to Enable JIT for %@\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "StringLiteral",
-      "offset": 41197,
+      "offset": 41416,
       "length": 2,
       "value": "\"\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 41529,
+      "offset": 41748,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 42506,
+      "offset": 42725,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 51301,
+      "offset": 51520,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AppManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 91674,
+      "offset": 92282,
       "length": 5,
       "value": "false"
     },
@@ -66567,86 +66644,72 @@
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AuthenticationOperation.swift",
       "kind": "IntegerLiteral",
-      "offset": 527,
+      "offset": 548,
       "length": 13,
       "value": "1"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AuthenticationOperation.swift",
       "kind": "IntegerLiteral",
-      "offset": 550,
+      "offset": 571,
       "length": 17,
       "value": "2"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AuthenticationOperation.swift",
       "kind": "IntegerLiteral",
-      "offset": 582,
+      "offset": 603,
       "length": 17,
       "value": "3"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AuthenticationOperation.swift",
       "kind": "IntegerLiteral",
-      "offset": 609,
+      "offset": 630,
       "length": 18,
       "value": "4"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/AuthenticationOperation.swift",
       "kind": "BooleanLiteral",
-      "offset": 2183,
+      "offset": 2204,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/BackgroundRefreshAppsOperation.swift",
       "kind": "StringLiteral",
-      "offset": 651,
+      "offset": 658,
       "length": 30,
       "value": "\"com.altstore.RequestAppState\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/BackgroundRefreshAppsOperation.swift",
       "kind": "StringLiteral",
-      "offset": 744,
+      "offset": 751,
       "length": 31,
       "value": "\"com.altstore.AppState.Running\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/BackgroundRefreshAppsOperation.swift",
       "kind": "BooleanLiteral",
-      "offset": 1984,
+      "offset": 1991,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/BackgroundRefreshAppsOperation.swift",
       "kind": "BooleanLiteral",
-      "offset": 2039,
+      "offset": 2046,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/BackgroundRefreshAppsOperation.swift",
       "kind": "Array",
-      "offset": 2162,
+      "offset": 2169,
       "length": 2,
       "value": "[]"
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/BackgroundRefreshAppsOperation.swift",
-      "kind": "StringLiteral",
-      "offset": 2204,
-      "length": 21,
-      "value": "\"com.scalecloud.sign\""
-    },
-    {
-      "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Operations\/BackgroundRefreshAppsOperation.swift",
-      "kind": "StringLiteral",
-      "offset": 2237,
-      "length": 9,
-      "value": "\"refresh\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Utilities\/BackgroundTaskManager.swift",
@@ -66980,28 +67043,28 @@
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Model\/DatabaseManager\/DatabaseManager.swift",
       "kind": "StringLiteral",
-      "offset": 298,
+      "offset": 319,
       "length": 46,
       "value": "\"com.rileytestut.AltStore.WillMigrateDatabase\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Model\/DatabaseManager\/DatabaseManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 1490,
+      "offset": 1511,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Model\/DatabaseManager\/DatabaseManager.swift",
       "kind": "StringLiteral",
-      "offset": 1617,
+      "offset": 1638,
       "length": 30,
       "value": "\"io.sidestore.DatabaseManager\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Model\/DatabaseManager\/DatabaseManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 1817,
+      "offset": 1838,
       "length": 5,
       "value": "false"
     },
