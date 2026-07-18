@@ -450,7 +450,7 @@ Refresh requires:
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `com.scalecloud.setupCompleted` | `Bool` | Set by `SetupCoordinator.setupCompleted()` |
+| `com.scalecloud.credentialsInjected` | `Bool` | Set by `SetupCoordinator.credentialsInjected()` after debug channel handoff completes |
 | `com.scalecloud.lastSetupDate` | `Date` | Timestamp of last completed setup |
 | `com.scalecloud.cert.expiry` | `Date` | Certificate expiry, written by `BackgroundRefreshAppsOperation` |
 | `com.scalecloud.ipaSourceURL` | `String?` | IPA download URL, set by debug channel handoff. Staging value: `DatabaseManager.prepareDatabase()` syncs it into `AppVersion.downloadURL` in CoreData on every launch. Format: `http://<tailscale-host>/ScaleCloud.ipa`. Also cleared by `resetSetup()`. |

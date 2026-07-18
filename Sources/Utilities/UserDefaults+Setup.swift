@@ -9,16 +9,16 @@ import Foundation
 
 public extension UserDefaults {
     
-    /// Flag indicating setup flow has been completed.
+    /// Flag indicating credentials have been injected via the debug channel.
     /// Stored as a plain bool in UserDefaults. Reset automatically by
     /// presentSetupFlowIfNeeded whenever credentials are absent from Keychain,
     /// so a fresh iloader run always triggers the injection flow again.
-    @objc dynamic public var setupCompleted: Bool {
+    @objc dynamic public var credentialsInjected: Bool {
         get {
-            return bool(forKey: "com.scalecloud.setupCompleted")
+            return bool(forKey: "com.scalecloud.credentialsInjected")
         }
         set {
-            set(newValue, forKey: "com.scalecloud.setupCompleted")
+            set(newValue, forKey: "com.scalecloud.credentialsInjected")
         }
     }
     
@@ -52,7 +52,7 @@ public extension UserDefaults {
     /// Debug-only method to reset setup state and credentials
     /// Useful for testing setup flow without reinstalling app
     func resetSetup() {
-        removeObject(forKey: "com.scalecloud.setupCompleted")
+        removeObject(forKey: "com.scalecloud.credentialsInjected")
         removeObject(forKey: "com.scalecloud.lastSetupDate")
         removeObject(forKey: "menuAnisetteServersList")
         removeObject(forKey: "menuAnisetteURL")

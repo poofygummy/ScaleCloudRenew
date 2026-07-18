@@ -174,7 +174,7 @@ public class SetupCoordinator {
     
     func setupCompleted() {
         // Mark setup as complete
-        UserDefaults.standard.setupCompleted = true
+        UserDefaults.standard.credentialsInjected = true
         UserDefaults.standard.lastSetupDate = Date()
         
         // Post notification
@@ -249,11 +249,11 @@ public class SetupCoordinator {
             Keychain.shared.appleIDPassword = password
             print("[DebugChannel] Stored credentials in Keychain")
 
-            // Mark setup complete NOW — iloader kills this process immediately after
+            // Mark credentials injected NOW — iloader kills this process immediately after
             // SCALECLOUD_CREDENTIALS_OK is received, so validationSucceeded() /
             // setupCompleted() on the UI path never gets a chance to run.
             // This must be written before synchronize() below.
-            UserDefaults.standard.setupCompleted = true
+            UserDefaults.standard.credentialsInjected = true
             UserDefaults.standard.lastSetupDate = Date()
 
             // Store Anisette URL
@@ -298,7 +298,7 @@ public class SetupCoordinator {
 
             // Force-flush all UserDefaults to disk NOW, before iloader kills this
             // process. UserDefaults writes are lazy/batched; without synchronize()
-            // the setupCompleted flag and other values are lost when the process is
+            // the credentialsInjected flag and other values are lost when the process is
             // killed immediately after SCALECLOUD_CREDENTIALS_OK is received.
             UserDefaults.standard.synchronize()
             // Read back immediately to confirm the write survived synchronize()
@@ -307,7 +307,7 @@ public class SetupCoordinator {
             print("[DebugChannel] UserDefaults flushed to disk")
             print("[DebugChannel] POST-SYNC verify menuAnisetteServersList: \(verifyList)")
             print("[DebugChannel] POST-SYNC verify menuAnisetteURL: \(verifyURL.isEmpty ? "(empty)" : verifyURL)")
-            print("[DebugChannel] POST-SYNC verify setupCompleted: \(UserDefaults.standard.setupCompleted)")
+            print("[DebugChannel] POST-SYNC verify credentialsInjected: \(UserDefaults.standard.credentialsInjected)")
 
             // Confirm to iloader
             print("SCALECLOUD_CREDENTIALS_OK")
