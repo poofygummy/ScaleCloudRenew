@@ -424,16 +424,19 @@ private extension AuthenticationOperation
                 switch result
                 {
                 case .success((let account, let session)):
+                    nkLog(success: "[Signing] Apple ID authenticated successfully for \(account.appleID)")
                     self.appleIDPassword = password
                     completionHandler(.success((account, session)))
                     
                 case .failure(ALTAppleAPIError.incorrectCredentials), .failure(ALTAppleAPIError.appSpecificPasswordRequired):
+                    nkLog(error: "[Signing] Apple ID authentication failed: incorrect credentials or app-specific password required")
                     /* HEADLESS: no authenticate() UI fallback
                     authenticate()
                     */
                     completionHandler(.failure(OperationError.notAuthenticated))
                     
                 case .failure(let error):
+                    nkLog(error: "[Signing] Apple ID authentication failed: \(error)")
                     completionHandler(.failure(error))
                 }
             }
@@ -476,6 +479,7 @@ private extension AuthenticationOperation
             {
             case .failure(let error): completionHandler(.failure(error))
             case .success(let anisetteData):
+                nkLog(debug: "[Signing] Anisette data fetched, calling ALTAppleAPI.authenticate")
                 let verificationHandler: ((@escaping (String?) -> Void) -> Void)?
                 
                 /* HEADLESS: no 2FA alert UI; always use nil verificationHandler
