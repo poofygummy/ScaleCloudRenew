@@ -66757,76 +66757,76 @@
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
       "offset": 563,
-      "length": 15,
-      "value": "\"com.SideStore\""
+      "length": 16,
+      "value": "\"com.scalecloud\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 650,
-      "length": 12,
-      "value": "\".SideStore\""
+      "offset": 651,
+      "length": 16,
+      "value": "\".ScaleCloudApp\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 711,
+      "offset": 716,
       "length": 16,
       "value": "\"ALTPairingFile\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 765,
+      "offset": 770,
       "length": 18,
       "value": "\"CFBundleURLTypes\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 825,
+      "offset": 830,
       "length": 28,
       "value": "\"UTExportedTypeDeclarations\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 898,
+      "offset": 903,
       "length": 19,
       "value": "\"UIBackgroundModes\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 967,
+      "offset": 972,
       "length": 22,
       "value": "\"ALTFugu14UntetherURL\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 1035,
+      "offset": 1040,
       "length": 27,
       "value": "\"ALTFugu14UntetherRequired\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 1117,
+      "offset": 1122,
       "length": 33,
       "value": "\"ALTFugu14UntetherMinimumVersion\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 1205,
+      "offset": 1210,
       "length": 33,
       "value": "\"ALTFugu14UntetherMaximumVersion\""
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/AltStoreCore\/Extensions\/Bundle+AltStore.swift",
       "kind": "StringLiteral",
-      "offset": 1996,
+      "offset": 2001,
       "length": 8,
       "value": "\"group.\""
     },
