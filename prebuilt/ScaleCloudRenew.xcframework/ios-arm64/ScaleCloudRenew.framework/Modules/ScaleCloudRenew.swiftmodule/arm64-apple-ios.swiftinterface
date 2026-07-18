@@ -1080,7 +1080,7 @@ public protocol JITProvider {
   public var certificate: CScaleCloudSign.ALTCertificate?
   public var session: CScaleCloudSign.ALTAppleAPISession?
   public var team: CScaleCloudSign.ALTTeam?
-  public func hasValidCredentials() -> Swift.Bool
+  public func hasValidSignCredentials() -> Swift.Bool
   public func reset()
   @objc deinit
 }
@@ -2327,7 +2327,7 @@ extension Foundation.UserDefaults {
   public class func registerDefaults()
 }
 extension Foundation.UserDefaults {
-  @objc dynamic public var setupCompleted: Swift.Bool {
+  @objc dynamic public var signCredentialsInjected: Swift.Bool {
     @objc get
     @objc set
   }

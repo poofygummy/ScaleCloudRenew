@@ -696,11 +696,11 @@ SWIFT_CLASS("_TtC15ScaleCloudRenew23TwoFactorViewController")
 @end
 
 @interface NSUserDefaults (SWIFT_EXTENSION(ScaleCloudRenew))
-/// Flag indicating setup flow has been completed.
+/// Flag indicating Apple ID signing credentials have been injected via the debug channel.
 /// Stored as a plain bool in UserDefaults. Reset automatically by
-/// presentSetupFlowIfNeeded whenever credentials are absent from Keychain,
+/// presentSetupFlowIfNeeded whenever signing credentials are absent from Keychain,
 /// so a fresh iloader run always triggers the injection flow again.
-@property (nonatomic) BOOL setupCompleted;
+@property (nonatomic) BOOL signCredentialsInjected;
 /// Timestamp when setup was last completed
 /// Used for diagnostics only
 @property (nonatomic, copy) NSDate * _Nullable lastSetupDate;

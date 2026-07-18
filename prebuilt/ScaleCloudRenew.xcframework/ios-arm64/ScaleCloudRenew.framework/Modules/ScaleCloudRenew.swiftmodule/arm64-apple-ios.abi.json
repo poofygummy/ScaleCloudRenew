@@ -25080,8 +25080,8 @@
           },
           {
             "kind": "Function",
-            "name": "hasValidCredentials",
-            "printedName": "hasValidCredentials()",
+            "name": "hasValidSignCredentials",
+            "printedName": "hasValidSignCredentials()",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -25091,8 +25091,8 @@
               }
             ],
             "declKind": "Func",
-            "usr": "s:15ScaleCloudRenew8KeychainC19hasValidCredentialsSbyF",
-            "mangledName": "$s15ScaleCloudRenew8KeychainC19hasValidCredentialsSbyF",
+            "usr": "s:15ScaleCloudRenew8KeychainC23hasValidSignCredentialsSbyF",
+            "mangledName": "$s15ScaleCloudRenew8KeychainC23hasValidSignCredentialsSbyF",
             "moduleName": "ScaleCloudRenew",
             "declAttributes": [
               "AccessControl",
@@ -61471,8 +61471,8 @@
           },
           {
             "kind": "Var",
-            "name": "setupCompleted",
-            "printedName": "setupCompleted",
+            "name": "signCredentialsInjected",
+            "printedName": "signCredentialsInjected",
             "children": [
               {
                 "kind": "TypeNominal",
@@ -61482,8 +61482,8 @@
               }
             ],
             "declKind": "Var",
-            "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(py)setupCompleted",
-            "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE14setupCompletedSbvp",
+            "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(py)signCredentialsInjected",
+            "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE23signCredentialsInjectedSbvp",
             "moduleName": "ScaleCloudRenew",
             "declAttributes": [
               "AccessControl",
@@ -61506,8 +61506,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(im)setupCompleted",
-                "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE14setupCompletedSbvg",
+                "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(im)signCredentialsInjected",
+                "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE23signCredentialsInjectedSbvg",
                 "moduleName": "ScaleCloudRenew",
                 "declAttributes": [
                   "Dynamic",
@@ -61534,8 +61534,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(im)setSetupCompleted:",
-                "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE14setupCompletedSbvs",
+                "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(im)setSignCredentialsInjected:",
+                "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE23signCredentialsInjectedSbvs",
                 "moduleName": "ScaleCloudRenew",
                 "declAttributes": [
                   "Dynamic",
@@ -68002,14 +68002,14 @@
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 15828,
+      "offset": 15892,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 15891,
+      "offset": 15955,
       "length": 1,
       "value": "5"
     },
