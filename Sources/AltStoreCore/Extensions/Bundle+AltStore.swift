@@ -19,8 +19,8 @@ public extension Bundle
         public static let appGroups = "ALTAppGroups"
         public static let altBundleID = "ALTBundleIdentifier"
 
-        public static let orgbundleIdentifier =  "com.SideStore"
-        public static let appbundleIdentifier =  orgbundleIdentifier + ".SideStore"
+        public static let orgbundleIdentifier =  "com.scalecloud"
+        public static let appbundleIdentifier =  orgbundleIdentifier + ".ScaleCloudApp"
         public static let devicePairingString = "ALTPairingFile"
         public static let urlTypes = "CFBundleURLTypes"
         public static let exportedUTIs = "UTExportedTypeDeclarations"

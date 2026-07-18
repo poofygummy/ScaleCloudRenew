@@ -73,6 +73,13 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
         var serverUrls = UserDefaults.standard.menuAnisetteServersList
         let currentServer = UserDefaults.standard.menuAnisetteURL
 
+        nkLog(debug: "[Signing] Anisette server list (\(serverUrls.count)): \(serverUrls.joined(separator: ", "))")
+        nkLog(debug: "[Signing] Current anisette URL: \(currentServer.isEmpty ? "(none)" : currentServer)")
+
+        if serverUrls.isEmpty {
+            nkLog(error: "[Signing] menuAnisetteServersList is empty — anisette URL was never saved by setup")
+        }
+
         // Prioritize the current server by moving it to the top of the list
         if let currentServerIndex = serverUrls.firstIndex(of: currentServer) {
             serverUrls.remove(at: currentServerIndex)
