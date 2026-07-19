@@ -104,7 +104,9 @@ public class SetupCoordinator {
             return
         }
 
-        guard DebuggerUtils.isDebuggerAttached() else {
+        let debuggerAttached = DebuggerUtils.isDebuggerAttached()
+        print("[Setup] isDebuggerAttached=\(debuggerAttached), args=\(args.joined(separator: " "))"); fflush(stdout)
+        guard debuggerAttached else {
             // No debugger, no payload args — either a real user launch or a DVT warmup.
             // Wait 20 s: DVT kills the process in ~10 s so UI never appears during
             // injection; a genuine user launch just sees a brief delay.
