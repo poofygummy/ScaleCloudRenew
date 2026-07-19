@@ -701,6 +701,12 @@ SWIFT_CLASS("_TtC15ScaleCloudRenew23TwoFactorViewController")
 /// presentSetupFlowIfNeeded whenever signing credentials are absent from Keychain,
 /// so a fresh iloader run always triggers the injection flow again.
 @property (nonatomic) BOOL signCredentialsInjected;
+/// The modification time of the main executable recorded at setup completion.
+/// On every launch, <code>detectFreshInstall()</code> compares the current exe mod time against
+/// this value. A mismatch means the binary was replaced (reinstall/sideload) and the
+/// full reset wipe must run before setup proceeds.
+/// Written only on confirmed setup completion — never on detection.
+@property (nonatomic, copy) NSDate * _Nullable lastKnownExecutableModTime;
 /// Timestamp when setup was last completed
 /// Used for diagnostics only
 @property (nonatomic, copy) NSDate * _Nullable lastSetupDate;

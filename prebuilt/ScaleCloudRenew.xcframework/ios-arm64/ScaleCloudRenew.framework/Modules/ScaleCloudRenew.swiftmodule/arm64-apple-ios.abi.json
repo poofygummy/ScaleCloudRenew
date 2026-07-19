@@ -61548,6 +61548,107 @@
           },
           {
             "kind": "Var",
+            "name": "lastKnownExecutableModTime",
+            "printedName": "lastKnownExecutableModTime",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Date?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(py)lastKnownExecutableModTime",
+            "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE26lastKnownExecutableModTime10Foundation4DateVSgvp",
+            "moduleName": "ScaleCloudRenew",
+            "declAttributes": [
+              "AccessControl",
+              "Dynamic",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(im)lastKnownExecutableModTime",
+                "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE26lastKnownExecutableModTime10Foundation4DateVSgvg",
+                "moduleName": "ScaleCloudRenew",
+                "declAttributes": [
+                  "Dynamic",
+                  "ObjC"
+                ],
+                "isFromExtension": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@CM@ScaleCloudRenew@@objc(cs)NSUserDefaults(im)setLastKnownExecutableModTime:",
+                "mangledName": "$sSo14NSUserDefaultsC15ScaleCloudRenewE26lastKnownExecutableModTime10Foundation4DateVSgvs",
+                "moduleName": "ScaleCloudRenew",
+                "declAttributes": [
+                  "Dynamic",
+                  "ObjC"
+                ],
+                "isFromExtension": true,
+                "accessorKind": "set"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
             "name": "lastSetupDate",
             "printedName": "lastSetupDate",
             "children": [
@@ -68002,14 +68103,14 @@
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 16057,
+      "offset": 16609,
       "length": 1,
       "value": "1"
     },
     {
       "filePath": "\/Users\/runner\/work\/scalecloud-ios\/scalecloud-ios\/ScaleCloudRenew\/Sources\/Setup\/SetupCoordinator.swift",
       "kind": "IntegerLiteral",
-      "offset": 16120,
+      "offset": 16672,
       "length": 1,
       "value": "5"
     },

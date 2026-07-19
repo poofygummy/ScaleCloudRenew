@@ -2331,6 +2331,10 @@ extension Foundation.UserDefaults {
     @objc get
     @objc set
   }
+  @objc dynamic public var lastKnownExecutableModTime: Foundation.Date? {
+    @objc get
+    @objc set
+  }
   @objc dynamic public var lastSetupDate: Foundation.Date? {
     @objc get
     @objc set
