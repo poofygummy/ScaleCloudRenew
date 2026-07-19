@@ -22,6 +22,20 @@ public extension UserDefaults {
         }
     }
     
+    /// The modification time of the main executable recorded at setup completion.
+    /// On every launch, `detectFreshInstall()` compares the current exe mod time against
+    /// this value. A mismatch means the binary was replaced (reinstall/sideload) and the
+    /// full reset wipe must run before setup proceeds.
+    /// Written only on confirmed setup completion — never on detection.
+    @objc dynamic public var lastKnownExecutableModTime: Date? {
+        get {
+            return object(forKey: "com.scalecloud.lastKnownExecutableModTime") as? Date
+        }
+        set {
+            set(newValue, forKey: "com.scalecloud.lastKnownExecutableModTime")
+        }
+    }
+
     /// Timestamp when setup was last completed
     /// Used for diagnostics only
     @objc dynamic public var lastSetupDate: Date? {
@@ -54,6 +68,7 @@ public extension UserDefaults {
     func resetSetup() {
         removeObject(forKey: "com.scalecloud.credentialsInjected") // signCredentialsInjected
         removeObject(forKey: "com.scalecloud.lastSetupDate")
+        removeObject(forKey: "com.scalecloud.lastKnownExecutableModTime")
         removeObject(forKey: "menuAnisetteServersList")
         removeObject(forKey: "menuAnisetteURL")
         removeObject(forKey: "com.scalecloud.ipaSourceURL")

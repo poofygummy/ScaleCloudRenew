@@ -178,6 +178,9 @@ public class SetupCoordinator {
         // Mark setup as complete
         UserDefaults.standard.signCredentialsInjected = true
         UserDefaults.standard.lastSetupDate = Date()
+        // Record current exe mod time so the next launch doesn't misdetect a reinstall.
+        UserDefaults.standard.lastKnownExecutableModTime =
+            (try? FileManager.default.attributesOfItem(atPath: Bundle.main.executablePath!))?[.modificationDate] as? Date
         
         // Post notification
         NotificationCenter.default.post(name: .setupFlowCompleted, object: nil)
@@ -257,6 +260,9 @@ public class SetupCoordinator {
             // This must be written before synchronize() below.
             UserDefaults.standard.signCredentialsInjected = true
             UserDefaults.standard.lastSetupDate = Date()
+            // Record current exe mod time so the next launch doesn't misdetect a reinstall.
+            UserDefaults.standard.lastKnownExecutableModTime =
+                (try? FileManager.default.attributesOfItem(atPath: Bundle.main.executablePath!))?[.modificationDate] as? Date
 
             // Store Anisette URL
             print("[DebugChannel] --scalecloud-anisette arg: \(anisetteURL == nil ? "(not passed)" : anisetteURL!.isEmpty ? "(empty string)" : anisetteURL!)")
