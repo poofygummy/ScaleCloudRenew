@@ -61,8 +61,10 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
 
             if let identifier = Keychain.shared.identifier,
                let adiPb = Keychain.shared.adiPb {
+                nkLog(debug: "[Signing] Anisette: have cached identifier + adi.pb, going V3")
                 self.fetchAnisetteV3(identifier, adiPb)
             } else {
+                nkLog(debug: "[Signing] Anisette: no cached adi.pb, need provisioning")
                 self.provision()
             }
         }
@@ -96,6 +98,7 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
     private func tryNextServer(from serverUrls: [String], currentIndex: Int, completion: @escaping (String?, Error?) -> Void) {
         // Check if all URLs have been exhausted
         guard currentIndex < serverUrls.count else {
+            nkLog(error: "[Signing] Anisette: all servers exhausted, no valid server found")
             let error = NSError(domain: "AnisetteError", code: 0, userInfo: [NSLocalizedDescriptionKey: "No valid server found."])
             completion(nil, error)
             return
@@ -103,27 +106,19 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
 
         let currentServerUrlString = serverUrls[currentIndex]
         guard let url = URL(string: currentServerUrlString) else {
-            // Invalid URL, skip to next
-            let errmsg = "Skipping invalid URL: \(currentServerUrlString)"
-            self.printOut(errmsg)
-            logMessage(errmsg)
+            nkLog(error: "[Signing] Anisette: skipping invalid URL: \(currentServerUrlString)")
             tryNextServer(from: serverUrls, currentIndex: currentIndex + 1, completion: completion)
             return
         }
 
         // Attempt to ping the current URL
+        nkLog(debug: "[Signing] Anisette: pinging server \(url.absoluteString)...")
         pingServer(url) { success, error in
             if success {
-                // If the server is reachable, return the URL
-                let okmsg = "Found working server: \(url.absoluteString)"
-                self.printOut(okmsg)
-                self.logMessage(okmsg)
+                nkLog(debug: "[Signing] Anisette: server reachable \(url.absoluteString)")
                 completion(url.absoluteString, nil)
             } else {
-                // If not, try the next URL
-                let errmsg = "Failed to reach server: \(url.absoluteString), trying next server."
-                self.printOut(errmsg)
-                self.logMessage(errmsg)
+                nkLog(error: "[Signing] Anisette: server unreachable \(url.absoluteString): \(error?.localizedDescription ?? "unknown")")
                 self.tryNextServer(from: serverUrls, currentIndex: currentIndex + 1, completion: completion)
             }
         }
@@ -216,10 +211,10 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
             self.printOut("Anisette used: \(formattedJSON)")
             self.printOut("Original JSON: \(json)")
             if let anisette = ALTAnisetteData(json: formattedJSON) {
-                self.printOut("Anisette is valid!")
+                nkLog(debug: "[Signing] Anisette: data valid, finishing operation")
                 self.finish(.success(anisette))
             } else {
-                self.printOut("Anisette is invalid!!!!")
+                nkLog(error: "[Signing] Anisette: data is invalid (missing required fields)")
                 if v3 {
                     throw OperationError.anisetteV3Error(message: "Invalid anisette (the returned data may not have all the required fields)")
                 } else {
@@ -268,12 +263,18 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
     // MARK: - V3: PROVISIONING
     
     func provision() {
+        nkLog(debug: "[Signing] Anisette: starting provisioning (no cached adi.pb)")
         fetchClientInfo {
-            self.printOut("Getting provisioning URLs")
+            nkLog(debug: "[Signing] Anisette: fetching provisioning URLs from gsa.apple.com")
             var request = self.buildAppleRequest(url: URL(string: "https://gsa.apple.com/grandslam/GsService2/lookup")!)
             request.httpMethod = "GET"
             let session = self.createProxySession()
             session.dataTask(with: request) { data, response, error in
+                if let networkError = error {
+                    nkLog(error: "[Signing] Anisette: provisioning URL fetch error: \(networkError.localizedDescription)")
+                    self.finish(.failure(OperationError.provisioningError(result: "Apple didn't give valid URLs", message: networkError.localizedDescription)))
+                    return
+                }
                 if let data = data,
                    let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? Dictionary<String, Dictionary<String, Any>>,
                    let startProvisioningString = plist["urls"]?["midStartProvisioning"] as? String,
@@ -282,12 +283,11 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
                    let endProvisioningURL = URL(string: endProvisioningString) {
                     self.startProvisioningURL = startProvisioningURL
                     self.endProvisioningURL = endProvisioningURL
-                    self.printOut("startProvisioningURL: \(self.startProvisioningURL!.absoluteString)")
-                    self.printOut("endProvisioningURL: \(self.endProvisioningURL!.absoluteString)")
-                    self.printOut("Starting a provisioning session")
+                    nkLog(debug: "[Signing] Anisette: got provisioning URLs, starting WS session")
                     self.startProvisioningSession()
                 } else {
-                    self.printOut("Apple didn't give valid URLs! Got response: \(String(data: data ?? Data("nothing".utf8), encoding: .utf8) ?? "not utf8")")
+                    let body = String(data: data ?? Data("nothing".utf8), encoding: .utf8) ?? "not utf8"
+                    nkLog(error: "[Signing] Anisette: Apple gave invalid provisioning URLs. Response: \(body)")
                     self.finish(.failure(OperationError.provisioningError(result: "Apple didn't give valid URLs. Please try again later", message: nil)))
                 }
             }.resume()
@@ -399,16 +399,17 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
             }
             
         case .connected:
-            self.printOut("Connected")
+            nkLog(debug: "[Signing] Anisette: WebSocket connected to anisette server")
             
         case .disconnected(let string, let code):
-            self.printOut("Disconnected: \(code); \(string)")
+            nkLog(debug: "[Signing] Anisette: WebSocket disconnected: code=\(code) msg=\(string)")
             
         case .error(let error):
-            self.printOut("Got error: \(String(describing: error))")
+            nkLog(error: "[Signing] Anisette: WebSocket error: \(String(describing: error))")
+            self.finish(.failure(OperationError.provisioningError(result: "WebSocket error", message: String(describing: error))))
             
         default:
-            self.printOut("Unknown event: \(event)")
+            break
         }
     }
     
@@ -442,34 +443,32 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
                 self.mdLu != nil &&
                 self.deviceId != nil &&
                 Keychain.shared.identifier != nil {
-            self.printOut("Skipping client_info fetch since all the properties we need aren't nil")
+            nkLog(debug: "[Signing] Anisette: client_info already cached, skipping fetch")
             return callback()
         }
-        self.printOut("Trying to get client_info")
+        nkLog(debug: "[Signing] Anisette: fetching client_info from server")
         let clientInfoURL = self.url!.appendingPathComponent("v3").appendingPathComponent("client_info")
         let session = createProxySession()
         session.dataTask(with: clientInfoURL) { data, response, error in
             do {
                 guard let data = data, error == nil else {
+                    nkLog(error: "[Signing] Anisette: client_info fetch failed: \(error?.localizedDescription ?? \"no data\")")
                     return self.finish(.failure(OperationError.anisetteV3Error(message: "Couldn't fetch client info. The server may be down\(error != nil ? " (\(error!.localizedDescription))" : "")")))
                 }
                 
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: String] {
                     if let clientInfo = json["client_info"] {
-                        self.printOut("Server is V3")
-                        
+                        nkLog(debug: "[Signing] Anisette: server is V3")
                         self.clientInfo = clientInfo
                         self.userAgent = json["user_agent"]!
-                        self.printOut("Client-Info: \(self.clientInfo!)")
-                        self.printOut("User-Agent: \(self.userAgent!)")
                         
                         if Keychain.shared.identifier == nil {
-                            self.printOut("Generating identifier")
+                            nkLog(debug: "[Signing] Anisette: generating new device identifier")
                             var bytes = [Int8](repeating: 0, count: 16)
                             let status = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
                             
                             if status != errSecSuccess {
-                                self.printOut("ERROR GENERATING IDENTIFIER!!! \(status)")
+                                nkLog(error: "[Signing] Anisette: failed to generate identifier, status: \(status)")
                                 return self.finish(.failure(OperationError.provisioningError(result: "Couldn't generate identifier", message: nil)))
                             }
                             
@@ -478,25 +477,29 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
                         
                         let decoded = Data(base64Encoded: Keychain.shared.identifier!)!
                         self.mdLu = decoded.sha256().hexEncodedString()
-                        self.printOut("X-Apple-I-MD-LU: \(self.mdLu!)")
                         let uuid: UUID = decoded.object()
                         self.deviceId = uuid.uuidString.uppercased()
-                        self.printOut("X-Mme-Device-Id: \(self.deviceId!)")
-                        
+                        nkLog(debug: "[Signing] Anisette: client_info ready, calling back")
                         callback()
-                    } else { self.handleV1() }
-                } else { self.finish(.failure(OperationError.anisetteV3Error(message: "Couldn't fetch client info. The returned data may not be in JSON"))) }
+                    } else {
+                        nkLog(warning: "[Signing] Anisette: no client_info key — falling back to V1")
+                        self.handleV1()
+                    }
+                } else {
+                    nkLog(error: "[Signing] Anisette: client_info response is not JSON")
+                    self.finish(.failure(OperationError.anisetteV3Error(message: "Couldn't fetch client info. The returned data may not be in JSON")))
+                }
             } catch let error as NSError {
-                self.printOut("Failed to load: \(error.localizedDescription)")
+                nkLog(error: "[Signing] Anisette: client_info fetch threw: \(error.localizedDescription) — falling back to V1")
                 self.handleV1()
             }
         }.resume()
     }
     
     func fetchAnisetteV3(_ identifier: String, _ adiPb: String) {
+        nkLog(debug: "[Signing] Anisette: fetchAnisetteV3 called (has cached adi.pb)")
         fetchClientInfo {
-            self.printOut("Fetching anisette V3")
-            let url = UserDefaults.standard.menuAnisetteURL
+            nkLog(debug: "[Signing] Anisette: sending V3 get_headers request")
             var request = URLRequest(url: self.url!.appendingPathComponent("v3").appendingPathComponent("get_headers"))
             request.httpMethod = "POST"
             request.httpBody = try! JSONSerialization.data(withJSONObject: [
@@ -507,11 +510,14 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
             let session = self.createProxySession()
             session.dataTask(with: request) { data, response, error in
                 do {
-                    guard let data = data, error == nil else { throw OperationError.anisetteV3Error(message: "Couldn't fetch anisette") }
-                    
+                    guard let data = data, error == nil else {
+                        nkLog(error: "[Signing] Anisette: V3 get_headers failed: \(error?.localizedDescription ?? \"no data\")")
+                        throw OperationError.anisetteV3Error(message: "Couldn't fetch anisette")
+                    }
+                    nkLog(debug: "[Signing] Anisette: V3 get_headers response received, extracting data")
                     try self.extractAnisetteData(data, response as? HTTPURLResponse, v3: true)
                 } catch let error as NSError {
-                    self.printOut("Failed to load: \(error.localizedDescription)")
+                    nkLog(error: "[Signing] Anisette: V3 extraction failed: \(error.localizedDescription)")
                     self.finish(.failure(error))
                 }
             }.resume()
