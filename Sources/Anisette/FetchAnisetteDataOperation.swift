@@ -296,7 +296,25 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
     
     func startProvisioningSession() {
         let provisioningSessionURL = self.url!.appendingPathComponent("v3").appendingPathComponent("provisioning_session")
-        var wsRequest = URLRequest(url: provisioningSessionURL)
+
+        // WebSocket provisioning for Anisette V3 requires ws:// or wss:// scheme.
+        var wsComponents = URLComponents(url: provisioningSessionURL, resolvingAgainstBaseURL: false)
+        if let scheme = wsComponents?.scheme?.lowercased() {
+            switch scheme {
+            case "https": wsComponents?.scheme = "wss"
+            case "http": wsComponents?.scheme = "ws"
+            default: break
+            }
+        }
+
+        guard let wsURL = wsComponents?.url else {
+            nkLog(error: "[Signing] Anisette: invalid provisioning session URL")
+            self.finish(.failure(OperationError.provisioningError(result: "Invalid provisioning session URL", message: nil)))
+            return
+        }
+
+        nkLog(debug: "[Signing] Anisette: connecting to provisioning session via WebSocket: \(wsURL.absoluteString)")
+        var wsRequest = URLRequest(url: wsURL)
         wsRequest.timeoutInterval = 5
         self.socket = WebSocket(request: wsRequest)
         self.socket.delegate = self
@@ -306,14 +324,17 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
     func didReceive(event: WebSocketEvent, client: WebSocketClient) {
         switch event {
         case .text(let string):
+            nkLog(debug: "[Signing] Anisette: WebSocket received text: \(string)")
             do {
                 if let json = try JSONSerialization.jsonObject(with: string.data(using: .utf8)!, options: []) as? [String: Any] {
                     guard let result = json["result"] as? String else {
+                        nkLog(error: "[Signing] Anisette: WebSocket message missing result field")
                         self.printOut("The server didn't give us a result")
                         client.disconnect(closeCode: 0)
                         self.finish(.failure(OperationError.provisioningError(result: "The server didn't give us a result", message: nil)))
                         return
                     }
+                    nkLog(debug: "[Signing] Anisette: WebSocket result=\(result)")
                     self.printOut("Received result: \(result)")
                     switch result {
                     case "GiveIdentifier":
@@ -403,12 +424,14 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
             
         case .disconnected(let string, let code):
             nkLog(debug: "[Signing] Anisette: WebSocket disconnected: code=\(code) msg=\(string)")
+            self.finish(.failure(OperationError.provisioningError(result: "WebSocket disconnected", message: "code=\(code) msg=\(string)")))
             
         case .error(let error):
             nkLog(error: "[Signing] Anisette: WebSocket error: \(String(describing: error))")
             self.finish(.failure(OperationError.provisioningError(result: "WebSocket error", message: String(describing: error))))
             
         default:
+            nkLog(debug: "[Signing] Anisette: WebSocket event ignored: \(event)")
             break
         }
     }
