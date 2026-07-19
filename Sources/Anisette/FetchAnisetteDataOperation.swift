@@ -451,9 +451,10 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
         let session = createProxySession()
         session.dataTask(with: clientInfoURL) { data, response, error in
             do {
-                guard let data = data, error == nil else {
-                    nkLog(error: "[Signing] Anisette: client_info fetch failed: \(error?.localizedDescription ?? \"no data\")")
-                    return self.finish(.failure(OperationError.anisetteV3Error(message: "Couldn't fetch client info. The server may be down\(error != nil ? " (\(error!.localizedDescription))" : "")")))
+                                guard let data = data, error == nil else {
+                    let errMsg = error?.localizedDescription ?? "no data"
+                    nkLog(error: "[Signing] Anisette: client_info fetch failed: \(errMsg)")
+                    return self.finish(.failure(OperationError.anisetteV3Error(message: "Couldn't fetch client info. The server may be down (\(errMsg))")))
                 }
                 
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: String] {
@@ -511,8 +512,9 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
             session.dataTask(with: request) { data, response, error in
                 do {
                     guard let data = data, error == nil else {
-                        nkLog(error: "[Signing] Anisette: V3 get_headers failed: \(error?.localizedDescription ?? \"no data\")")
-                        throw OperationError.anisetteV3Error(message: "Couldn't fetch anisette")
+                        let errMsg = error?.localizedDescription ?? "no data"
+                        nkLog(error: "[Signing] Anisette: V3 get_headers failed: \(errMsg)")
+                        throw OperationError.anisetteV3Error(message: "Couldn't fetch anisette: \(errMsg)")
                     }
                     nkLog(debug: "[Signing] Anisette: V3 get_headers response received, extracting data")
                     try self.extractAnisetteData(data, response as? HTTPURLResponse, v3: true)
