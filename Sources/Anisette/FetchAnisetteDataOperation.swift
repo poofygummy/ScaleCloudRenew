@@ -359,6 +359,9 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
         }
 
         nkLog(debug: "[Signing] Anisette: connecting to provisioning session via WebSocket: \(wsURL.absoluteString)")
+        // Dump recent tsnet logs to help diagnose proxy/connect issues
+        let tsLogs = SCKSession.getTsnetLogs()
+        nkLog(debug: "[Signing] Anisette: tsnet logs:\n\(tsLogs)")
         var wsRequest = URLRequest(url: wsURL)
         wsRequest.timeoutInterval = 5
         self.socket = WebSocket(request: wsRequest)
