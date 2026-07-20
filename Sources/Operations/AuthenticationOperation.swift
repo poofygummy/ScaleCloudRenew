@@ -683,7 +683,9 @@ private extension AuthenticationOperation
         func replaceCertificate(from certificates: [ALTCertificate])
         {
             let ourCertificates = certificates.filter { a in
-                a.machineName?.starts(with: "SideStore") == true || a.machineName?.starts(with: "AltStore") == true
+                a.machineName?.starts(with: "SideStore") == true ||
+                a.machineName?.starts(with: "AltStore") == true ||
+                a.machineName?.starts(with: "iloader") == true
             }
             
             if ourCertificates.isEmpty {
@@ -730,15 +732,28 @@ private extension AuthenticationOperation
                 }
             }
             */
+            let revokeGroup = DispatchGroup()
+            var revokeError: Error? = nil
+
             for certificate in ourCertificates {
+                revokeGroup.enter()
                 ALTAppleAPI.shared.revoke(certificate, for: team, session: session) { (success, error) in
-                    if let error = error, !success
-                    {
-                        completionHandler(.failure(error))
+                    if let error = error, !success {
+                        if revokeError == nil {
+                            revokeError = error
+                        }
                     }
+                    revokeGroup.leave()
                 }
             }
-            requestCertificate()
+
+            revokeGroup.notify(queue: .main) {
+                if let error = revokeError {
+                    completionHandler(.failure(error))
+                } else {
+                    requestCertificate()
+                }
+            }
         }
         
         ALTAppleAPI.shared.fetchCertificates(for: team, session: session) { (certificates, error) in
