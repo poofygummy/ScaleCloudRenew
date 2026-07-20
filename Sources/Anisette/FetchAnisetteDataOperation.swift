@@ -129,51 +129,7 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
     func pingServer(_ url: URL, completion: @escaping (Bool, Error?) -> Void) {
         var request = URLRequest(url: url)
         request.timeoutInterval = 10 // Timeout after 10 seconds
-        
         let session = createProxySession()
-            // WebSocket provisioning for Anisette V3 requires ws:// or wss:// scheme.
-            var wsComponents = URLComponents(url: provisioningSessionURL, resolvingAgainstBaseURL: false)
-            if let scheme = wsComponents?.scheme?.lowercased() {
-                switch scheme {
-                case "https": wsComponents?.scheme = "wss"
-                case "http": wsComponents?.scheme = "ws"
-                default: break
-                }
-            }
-        
-            guard let wsURL = wsComponents?.url else {
-                nkLog(error: "[Signing] Anisette: invalid provisioning session URL")
-                self.finish(.failure(OperationError.provisioningError(result: "Invalid provisioning session URL", message: nil)))
-                return
-            }
-        
-            nkLog(debug: "[Signing] Anisette: connecting to provisioning session via WebSocket: \(wsURL.absoluteString)")
-        
-            // Try to use Starscream WebSocket (existing code path). If it doesn't connect
-            // within a short timeout, fall back to a proxy-aware URLSessionWebSocketTask
-            var wsRequest = URLRequest(url: wsURL)
-            wsRequest.timeoutInterval = 5
-            self.socket = WebSocket(request: wsRequest)
-            self.socket.delegate = self
-            self.socket.connect()
-        
-            // Ensure the local proxy is started and create a proxy-aware URLSession for fallback
-            let proxyConfig = SCKSession.applyProxySettings()
-            if proxyConfig != nil {
-                let session = createProxySession()
-                // Keep a reference so SCKSession can track lifecycle
-                SCKSession.registerSession(session)
-            
-                // Schedule a fallback attempt in 4 seconds if Starscream didn't connect
-                DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 4.0) { [weak self] in
-                    guard let self = self else { return }
-                    // If Starscream hasn't reported connected, try URLSessionWebSocketTask
-                    if self.urlSessionWebSocketTask == nil {
-                        nkLog(debug: "[Signing] Anisette: Starscream WS not connected — trying URLSessionWebSocketTask fallback")
-                        self.startURLSessionWebSocketFallback(with: wsURL, session: session)
-                    }
-                }
-            }
         let task = session.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(false, error)
