@@ -298,157 +298,46 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
     func startProvisioningSession() {
         let provisioningSessionURL = self.url!.appendingPathComponent("v3").appendingPathComponent("provisioning_session")
 
-        // WebSocket provisioning for Anisette V3 requires ws:// or wss:// scheme.
-        var wsComponents = URLComponents(url: provisioningSessionURL, resolvingAgainstBaseURL: false)
-        if let scheme = wsComponents?.scheme?.lowercased() {
-            switch scheme {
-            case "https": wsComponents?.scheme = "wss"
-            case "http":  wsComponents?.scheme = "ws"
-            default: break
-            }
-        }
-
-        guard let wsURL = wsComponents?.url else {
-            nkLog(error: "[Signing] Anisette: invalid provisioning session URL")
-            self.finish(.failure(OperationError.provisioningError(result: "Invalid provisioning session URL", message: nil)))
-            return
-        }
-
-        nkLog(debug: "[Signing] Anisette: connecting to provisioning session via proxy-aware URLSession WebSocket: \(wsURL.absoluteString)")
         let tsLogs = SCKSession.getTsnetLogs()
         nkLog(debug: "[Signing] Anisette: tsnet logs:\n\(tsLogs)")
 
-        // Use proxy-aware URLSession (goes through Tailscale) instead of raw Starscream WebSocket
-        let session = createProxySession()
-        var wsRequest = URLRequest(url: wsURL)
+        // The Tailscale proxy is an HTTP proxy on 127.0.0.1:proxyPort.
+        // For plain ws:// (non-TLS) WebSocket, HTTP proxies forward the Upgrade request
+        // directly — no CONNECT tunnel needed. We point Starscream at the proxy host/port
+        // and set the correct Host header so the proxy knows where to forward it.
+        guard let proxyDict = SCKSession.applyProxySettings(),
+              let proxyHost = proxyDict["HTTPProxy"] as? String,
+              let proxyPort = proxyDict["HTTPPort"] as? Int,
+              let targetHost = provisioningSessionURL.host,
+              let targetPort = provisioningSessionURL.port ?? (provisioningSessionURL.scheme == "https" ? 443 : 80) as Int? else {
+            nkLog(error: "[Signing] Anisette: proxy not available, cannot connect to provisioning session")
+            self.finish(.failure(OperationError.provisioningError(result: "Proxy not available", message: nil)))
+            return
+        }
+
+        // Build a ws:// URL pointing at the proxy, with the real target path
+        var proxyWSComponents = URLComponents()
+        proxyWSComponents.scheme = "ws"
+        proxyWSComponents.host = proxyHost
+        proxyWSComponents.port = proxyPort
+        proxyWSComponents.path = provisioningSessionURL.path
+        guard let proxyWSURL = proxyWSComponents.url else {
+            nkLog(error: "[Signing] Anisette: could not build proxy WebSocket URL")
+            self.finish(.failure(OperationError.provisioningError(result: "Invalid proxy WebSocket URL", message: nil)))
+            return
+        }
+
+        nkLog(debug: "[Signing] Anisette: connecting WebSocket via proxy \(proxyHost):\(proxyPort) → target \(targetHost):\(targetPort)")
+
+        var wsRequest = URLRequest(url: proxyWSURL)
         wsRequest.timeoutInterval = 30
-        let task = session.webSocketTask(with: wsRequest)
-        self.urlSessionWebSocketTask = task
-        task.resume()
-        receiveNextWebSocketMessage(task: task)
+        // Set Host header to the real target so the proxy forwards correctly
+        wsRequest.setValue("\(targetHost):\(targetPort)", forHTTPHeaderField: "Host")
+        self.socket = WebSocket(request: wsRequest)
+        self.socket.delegate = self
+        self.socket.connect()
     }
 
-    private func receiveNextWebSocketMessage(task: URLSessionWebSocketTask) {
-        task.receive { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let nsError = error as NSError
-                // Code 57 = socket not connected (closed cleanly after ProvisioningSuccess)
-                if nsError.code == 57 {
-                    nkLog(debug: "[Signing] Anisette: WebSocket closed cleanly")
-                } else {
-                    nkLog(error: "[Signing] Anisette: WebSocket error: \(error.localizedDescription)")
-                    self.finish(.failure(OperationError.provisioningError(result: "WebSocket error", message: error.localizedDescription)))
-                }
-            case .success(let message):
-                switch message {
-                case .string(let text):
-                    nkLog(debug: "[Signing] Anisette: WebSocket received text: \(text)")
-                    self.handleWebSocketText(text, send: { [weak task] dict in
-                        guard let task = task else { return }
-                        let data = try! JSONSerialization.data(withJSONObject: dict, options: [])
-                        task.send(.string(String(data: data, encoding: .utf8)!)) { err in
-                            if let err = err { nkLog(error: "[Signing] Anisette: WebSocket send error: \(err.localizedDescription)") }
-                        }
-                    }, disconnect: { [weak task] in
-                        task?.cancel(with: .normalClosure, reason: nil)
-                    })
-                    self.receiveNextWebSocketMessage(task: task)
-                case .data(let data):
-                    nkLog(debug: "[Signing] Anisette: WebSocket received data (\(data.count) bytes), ignoring")
-                    self.receiveNextWebSocketMessage(task: task)
-                @unknown default:
-                    self.receiveNextWebSocketMessage(task: task)
-                }
-            }
-        }
-    }
-
-    private func handleWebSocketText(_ string: String, send: @escaping ([String: String]) -> Void, disconnect: @escaping () -> Void) {
-        do {
-            guard let json = try JSONSerialization.jsonObject(with: string.data(using: .utf8)!, options: []) as? [String: Any],
-                  let result = json["result"] as? String else {
-                nkLog(error: "[Signing] Anisette: WebSocket message missing result field")
-                disconnect()
-                self.finish(.failure(OperationError.provisioningError(result: "The server didn't give us a result", message: nil)))
-                return
-            }
-            nkLog(debug: "[Signing] Anisette: WebSocket result=\(result)")
-            switch result {
-            case "GiveIdentifier":
-                send(["identifier": Keychain.shared.identifier!])
-
-            case "GiveStartProvisioningData":
-                let body = ["Header": [String: Any](), "Request": [String: Any]()]
-                var request = self.buildAppleRequest(url: self.startProvisioningURL!)
-                request.httpMethod = "POST"
-                request.httpBody = try! PropertyListSerialization.data(fromPropertyList: body, format: .xml, options: 0)
-                let session = self.createProxySession()
-                session.dataTask(with: request) { data, response, error in
-                    if let data = data,
-                       let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? Dictionary<String, Dictionary<String, Any>>,
-                       let spim = plist["Response"]?["spim"] as? String {
-                        send(["spim": spim])
-                    } else {
-                        let body = String(data: data ?? Data("nothing".utf8), encoding: .utf8) ?? "not utf8"
-                        nkLog(error: "[Signing] Anisette: Apple didn't give valid start provisioning data: \(body)")
-                        disconnect()
-                        self.finish(.failure(OperationError.provisioningError(result: "Apple didn't give valid start provisioning data", message: nil)))
-                    }
-                }.resume()
-
-            case "GiveEndProvisioningData":
-                guard let cpim = json["cpim"] as? String else {
-                    nkLog(error: "[Signing] Anisette: no cpim in GiveEndProvisioningData")
-                    disconnect()
-                    self.finish(.failure(OperationError.provisioningError(result: "The server didn't give us a cpim", message: nil)))
-                    return
-                }
-                let body = ["Header": [String: Any](), "Request": ["cpim": cpim]]
-                var request = self.buildAppleRequest(url: self.endProvisioningURL!)
-                request.httpMethod = "POST"
-                request.httpBody = try! PropertyListSerialization.data(fromPropertyList: body, format: .xml, options: 0)
-                let session = self.createProxySession()
-                session.dataTask(with: request) { data, response, error in
-                    if let data = data,
-                       let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? Dictionary<String, Dictionary<String, Any>>,
-                       let ptm = plist["Response"]?["ptm"] as? String,
-                       let tk  = plist["Response"]?["tk"]  as? String {
-                        send(["ptm": ptm, "tk": tk])
-                    } else {
-                        let body = String(data: data ?? Data("nothing".utf8), encoding: .utf8) ?? "not utf8"
-                        nkLog(error: "[Signing] Anisette: Apple didn't give valid end provisioning data: \(body)")
-                        disconnect()
-                        self.finish(.failure(OperationError.provisioningError(result: "Apple didn't give valid end provisioning data", message: nil)))
-                    }
-                }.resume()
-
-            case "ProvisioningSuccess":
-                disconnect()
-                guard let adiPb = json["adi_pb"] as? String else {
-                    nkLog(error: "[Signing] Anisette: no adi_pb in ProvisioningSuccess")
-                    self.finish(.failure(OperationError.provisioningError(result: "The server didn't give us an adi.pb file", message: nil)))
-                    return
-                }
-                nkLog(debug: "[Signing] Anisette: provisioning succeeded, caching adi.pb")
-                Keychain.shared.adiPb = adiPb
-                self.fetchAnisetteV3(Keychain.shared.identifier!, Keychain.shared.adiPb!)
-
-            default:
-                if result.contains("Error") || result.contains("Invalid") || result == "ClosingPerRequest" || result == "Timeout" || result == "TextOnly" {
-                    nkLog(error: "[Signing] Anisette: provisioning failed with result: \(result)")
-                    disconnect()
-                    self.finish(.failure(OperationError.provisioningError(result: result, message: json["message"] as? String)))
-                }
-            }
-        } catch {
-            nkLog(error: "[Signing] Anisette: failed to handle WebSocket text: \(error.localizedDescription)")
-            disconnect()
-            self.finish(.failure(OperationError.provisioningError(result: error.localizedDescription, message: nil)))
-        }
-    }
-    
     func didReceive(event: WebSocketEvent, client: WebSocketClient) {
         switch event {
         case .text(let string):
@@ -548,13 +437,14 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
             }
             
         case .connected:
-            nkLog(debug: "[Signing] Anisette: Starscream WebSocket connected (legacy path)")
+            nkLog(debug: "[Signing] Anisette: WebSocket connected")
 
         case .disconnected(let string, let code):
-            nkLog(debug: "[Signing] Anisette: Starscream WebSocket disconnected: code=\(code) msg=\(string)")
+            nkLog(debug: "[Signing] Anisette: WebSocket disconnected: code=\(code) msg=\(string)")
 
         case .error(let error):
-            nkLog(error: "[Signing] Anisette: Starscream WebSocket error: \(String(describing: error))")
+            nkLog(error: "[Signing] Anisette: WebSocket error: \(String(describing: error))")
+            self.finish(.failure(OperationError.provisioningError(result: "WebSocket error", message: String(describing: error))))
 
         default:
             break
