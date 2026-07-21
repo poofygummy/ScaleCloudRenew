@@ -127,11 +127,31 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
     }
 
     func pingServer(_ url: URL, completion: @escaping (Bool, Error?) -> Void) {
+        pingServerWithRetry(url: url, attemptsRemaining: 6, completion: completion)
+    }
+
+    // Retries the ping to give the tsnet node time to connect to the Tailscale
+    // network after a cold start. CFNetwork error 306 means the proxy is up but
+    // tsnet hasn't established a route yet — retrying every 5s for up to 30s is
+    // enough for a warm node reconnect.
+    private func pingServerWithRetry(url: URL, attemptsRemaining: Int, completion: @escaping (Bool, Error?) -> Void) {
         var request = URLRequest(url: url)
-        request.timeoutInterval = 10 // Timeout after 10 seconds
+        request.timeoutInterval = 10
         let session = createProxySession()
         let task = session.dataTask(with: request) { (data, response, error) in
             if let error = error {
+                let nsError = error as NSError
+                // CFNetwork 306 = proxy connection failure (tsnet not ready yet)
+                // CFNetwork 310 = HTTPS proxy connection failure
+                let isProxyNotReady = (nsError.domain == "kCFErrorDomainCFNetwork" || nsError.domain == NSURLErrorDomain)
+                    && (nsError.code == 306 || nsError.code == 310 || nsError.code == -1200 || nsError.code == NSURLErrorCannotConnectToHost)
+                if isProxyNotReady && attemptsRemaining > 1 {
+                    nkLog(debug: "[Signing] Anisette: proxy not ready (code \(nsError.code)), waiting 5s (\(attemptsRemaining - 1) retries left)...")
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
+                        self.pingServerWithRetry(url: url, attemptsRemaining: attemptsRemaining - 1, completion: completion)
+                    }
+                    return
+                }
                 completion(false, error)
                 return
             }
@@ -148,7 +168,6 @@ final class FetchAnisetteDataOperation: ResultOperation<ALTAnisetteData>, WebSoc
             
             completion(true, nil)
         }
-        
         task.resume()
     }
     
