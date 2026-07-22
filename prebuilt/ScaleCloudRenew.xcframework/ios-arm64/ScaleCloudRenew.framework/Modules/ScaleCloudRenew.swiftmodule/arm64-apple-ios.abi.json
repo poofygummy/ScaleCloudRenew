@@ -34327,6 +34327,37 @@
           },
           {
             "kind": "Function",
+            "name": "cachedUDID",
+            "printedName": "cachedUDID()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:15ScaleCloudRenew5MuxerC10cachedUDIDSSSgyFZ",
+            "mangledName": "$s15ScaleCloudRenew5MuxerC10cachedUDIDSSSgyFZ",
+            "moduleName": "ScaleCloudRenew",
+            "static": true,
+            "declAttributes": [
+              "Final",
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
             "name": "notifyDeviceAttached",
             "printedName": "notifyDeviceAttached(deviceIP:)",
             "children": [

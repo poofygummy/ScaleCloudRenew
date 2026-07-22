@@ -1421,6 +1421,7 @@ public protocol MounterProvider {
   public static var isrppairing: Swift.Bool
   public static func retargetUsbmuxdAddr()
   public static func start(pairingFile: Swift.String, logPath: Swift.String) throws
+  public static func cachedUDID() -> Swift.String?
   public static func notifyDeviceAttached(deviceIP: Swift.String)
   public static func notifyDeviceDetached()
   @objc deinit
