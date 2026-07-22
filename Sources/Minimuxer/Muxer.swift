@@ -279,6 +279,10 @@ public class Muxer {
     }
     
     
+    public static func cachedUDID() -> String? {
+        return cachedPairingDict?["UDID"] as? String
+    }
+
     public static func notifyDeviceAttached(deviceIP: String){
         currentDeviceIP = deviceIP
         currentEvent = DEVICE_ATTACH
