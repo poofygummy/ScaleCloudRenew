@@ -96,9 +96,18 @@ public struct Minimuxer {
         if Muxer.isrppairing {
             udid = RustIdevice.fetchUDID()
         } else {
-            // For lockdown pairing files, the UDID is stored directly in the
-            // pairing file — no live device connection needed.
-            udid = Muxer.cachedUDID()
+            // For lockdown pairing files, try reading the UDID directly from
+            // the cached pairing dict first (fast, no live device needed).
+            // If that returns nil for any reason, fall back to the original
+            // path: query the device through our fake usbmuxd socket.
+            // This ensures compatibility with pairing files from all platforms.
+            if let cached = Muxer.cachedUDID() {
+                print("[minimuxer] fetchUDID: got UDID from cached pairing dict")
+                udid = cached
+            } else {
+                print("[minimuxer] fetchUDID: cached UDID not available, trying Device.getFirstDevice()")
+                udid = (try? Device.getFirstDevice())?.getUDID()
+            }
         }
 
         if let udid = udid {
