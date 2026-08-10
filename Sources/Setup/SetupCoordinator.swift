@@ -232,8 +232,10 @@ public class SetupCoordinator {
                 print("[DebugChannel] ERROR: Missing or invalid payload args")
                 return false
             }
-            let anisetteURL  = argValue("--scalecloud-anisette=")
+            let anisetteURL   = argValue("--scalecloud-anisette=")
             let tailscaleHost = argValue("--scalecloud-tailscale=")
+            let nasUser       = argValue("--scalecloud-nas-user=")
+            let nasPassword   = argValue("--scalecloud-nas-password=")
 
             print("[DebugChannel] Received encrypted password (\(encryptedPasswordBase64.count) chars)")
             print("[DebugChannel] Received Apple ID: \(appleID)")
@@ -277,6 +279,20 @@ public class SetupCoordinator {
                 print("[DebugChannel] Stored Anisette URL: \(anisetteURL)")
             } else {
                 print("[DebugChannel] WARNING: anisette URL not stored — arg was nil or empty")
+            }
+
+            // Store NAS credentials
+            if let nasUser = nasUser, !nasUser.isEmpty {
+                Keychain.shared.nasUsername = nasUser
+                print("[DebugChannel] Stored NAS username: \(nasUser)")
+            } else {
+                print("[DebugChannel] WARNING: NAS username not stored — arg was nil or empty")
+            }
+            if let nasPassword = nasPassword, !nasPassword.isEmpty {
+                Keychain.shared.nasPassword = nasPassword
+                print("[DebugChannel] Stored NAS password")
+            } else {
+                print("[DebugChannel] WARNING: NAS password not stored — arg was nil or empty")
             }
 
             // Store IPA source URL

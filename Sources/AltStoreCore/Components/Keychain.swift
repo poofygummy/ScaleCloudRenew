@@ -76,6 +76,12 @@ public class Keychain
     @KeychainItem(key: "adiPb")
     public var adiPb: String?
     
+    @KeychainItem(key: "nasUsername")
+    public var nasUsername: String?
+    
+    @KeychainItem(key: "nasPassword")
+    public var nasPassword: String?
+    
     // for some reason authenticated cert/session/team is completely not cached, which result in logging in for every request
     // we save it here so when user logs out we can clear cached account/session/team
     public var certificate: ALTCertificate? = nil

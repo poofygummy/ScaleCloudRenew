@@ -95,6 +95,14 @@ public class Keychain
     @KeychainItem(key: "adiPb")
     public var adiPb: String?
     
+    // MARK: - NAS Credentials
+    
+    @KeychainItem(key: "nasUsername")
+    public var nasUsername: String?
+    
+    @KeychainItem(key: "nasPassword")
+    public var nasPassword: String?
+    
     // MARK: - Extension Provisioning Profiles
     
     /// Store provisioning profile data for an extension
@@ -182,6 +190,10 @@ public class Keychain
         // Clear Anisette data
         self.identifier = nil
         self.adiPb = nil
+        
+        // Clear NAS credentials
+        self.nasUsername = nil
+        self.nasPassword = nil
         
         // Clear in-memory session cache
         self.certificate = nil
